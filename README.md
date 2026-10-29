@@ -71,7 +71,7 @@ zeros, and the elliptic-integral identities) is not formalised.
 | Release | Tag | Zenodo DOI |
 | --- | --- | --- |
 | 1.0.0 | `v1.0.0` | [10.5281/zenodo.23761044](https://doi.org/10.5281/zenodo.23761044) |
-| 1.1.0 | `v1.1.0` | to be recorded after the release |
+| 1.1.0 | `v1.1.0` | [10.5281/zenodo.23764158](https://doi.org/10.5281/zenodo.23764158) |
 
 Concept DOI of all versions: [10.5281/zenodo.23761043](https://doi.org/10.5281/zenodo.23761043).
 
