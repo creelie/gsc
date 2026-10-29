@@ -13,8 +13,10 @@ H(\omega)=\exp\Big(\frac{i\omega n(\omega)L}c\Big),\qquad
 n=\sqrt{\epsilon\mu_r}=n_r+in_i .
 \]
 Passivity of the medium means that $z\epsilon(z)$ and $z\mu_r(z)$ are
-Herglotz functions, real on $i\R_+$ and tending to $z$ as $z\to i\infty$
-\cite{nussenzveig,gustafsson,bernland}.\footnote{Analyticity in $\Cp$ is
+Herglotz functions and that $\epsilon$ and $\mu_r$ tend to $1$ as
+$z\to i\infty$ \cite{nussenzveig,gustafsson,bernland}. Reality of the fields
+makes $\epsilon$ and $\mu_r$ real on $i\R_+$, so that $z\epsilon(z)$ and
+$z\mu_r(z)$ lie on the closed positive imaginary axis there.\footnote{Analyticity in $\Cp$ is
 causality of the constitutive relations; $\Im(\omega\epsilon(\omega))\ge0$ for
 real $\omega$ is the absence of gain; the limit expresses that every medium is
 transparent at very high frequency. The Herglotz property in $\Cp$ follows from
@@ -122,7 +124,8 @@ networks whose phases differ by approximately $\pi/2$ across a band
 difference is nearly constant. This is consistent with \cref{cor:stable}:
 what the theorem forbids is a lossless network whose own phase is nearly
 constant on the band, and a pair of networks never needs one. A device that
-shifts a single signal by $\theta$ without a reference channel must absorb.
+shifts a single signal by $\theta$ without a reference channel must lose
+transmitted power.
 \end{remark}
 
 \subsection{What the bound means for energy}\label{sec:energy}
@@ -140,8 +143,9 @@ $1-e^{-2\theta\Lambda}-\varepsilon$ of its energy.
 \item[(ii)] The geometric mean of $T$ over the band is at most
 $e^{-2\theta\Lambda}$.
 \item[(iii)] In a quantised description, a single quantum of frequency
-$\omega_1$ is absorbed with probability at least $1-e^{-2\theta\Lambda}$, and
-the mean energy it deposits is at least $(1-e^{-2\theta\Lambda})\hbar\omega_1$.
+$\omega_1$ fails to be transmitted with probability at least
+$1-e^{-2\theta\Lambda}$, and the mean energy it removes from the transmitted
+channel is at least $(1-e^{-2\theta\Lambda})\hbar\omega_1$.
 \item[(iv)] For a narrow band of relative width $\Delta f/f$ and
 $\theta$ in degrees,
 $1-e^{-2\theta\Lambda}=\frac{\pi^2}{720}\,\theta\,\frac{\Delta f}f\,
@@ -155,15 +159,20 @@ so $\alpha(\omega_1)\ge\theta\Lambda$ at some $\omega_1$. A signal whose
 spectrum is concentrated near $\pm\omega_1$ transmits a fraction of its
 energy arbitrarily close to $T(\omega_1)$ by Parseval's identity and the
 continuity of $T$. (ii) is \cref{cor:worst}. (iii) A linear lossy element
-acts on a single quantum as a beam splitter coupling it to the absorbing
-degrees of freedom; the quantum is transmitted with probability
-$T(\omega_1)$. (iv) By \eqref{eq:narrow}, $\Lambda=\frac\pi8\frac{\Delta f}{f}
+acts on a single quantum as a beam splitter coupling the transmitted mode
+to the other modes of the device; the quantum is transmitted with
+probability $T(\omega_1)$. (iv) By \eqref{eq:narrow}, $\Lambda=\frac\pi8\frac{\Delta f}{f}
 (1+O((\Delta f/f)^2))$, and $\theta$ degrees are $\pi\theta/180$ radians, so
 $2\theta\Lambda=\frac{\pi^2}{720}\theta\frac{\Delta f}f(1+\cdots)$; finally
 $1-e^{-x}=x(1+O(x))$.
 \end{proof}
 
-The energy that is lost is not the ``energy of the phase shift''. A phase
+The bound is on transmission. The power that is not transmitted may be
+absorbed, reflected or routed to other ports, and \cref{prop:energy} does not
+say which: a scalar transfer function sees only the output channel. For the
+impedance-matched slab of \cref{thm:slab}, which reflects nothing and has no
+other port, all of it is absorbed. The energy that is lost is not the
+``energy of the phase shift''. A phase
 factor is energy neutral (\cref{prop:static}). The loss is the price that
 causality and passivity attach to producing that factor on a band.
 
@@ -178,10 +187,10 @@ $\kappa=0.1$ and
 =0.011951\,\text{dB}.
 \end{gather*}
 A passive device that shifts the carrier--envelope phase by $1^\circ$
-across this band therefore absorbs at least $0.275\%$ of the power at its
-worst frequency, $1-e^{-2\theta\Lambda}=2.748\times10^{-3}$, against
+across this band therefore fails to transmit at least $0.275\%$ of the power
+at its worst frequency, $1-e^{-2\theta\Lambda}=2.748\times10^{-3}$, against
 $2.742\times10^{-3}$ from \cref{prop:energy}(iv). A quantum of
-$hf=3.313\times10^{-27}$\,J at that frequency deposits on average at least
+$hf=3.313\times10^{-27}$\,J at that frequency removes from the output on average at least
 $9.10\times10^{-30}$\,J. This happens to be close to the value
 $hf/360=9.20\times10^{-30}$\,J that a phase slipping by $1^\circ$ per period
 would remove (\cref{prop:slip}), but the agreement is accidental: the ratio

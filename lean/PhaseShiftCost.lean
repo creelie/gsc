@@ -15,11 +15,14 @@ What is checked here, and what is not.
     the proofs (moments of the weight, the Landen step, the two forms of
     tau_star, the upper bound for Lambda, the value of W at 0, the inversion
     of the band, the plain mean of the lead extremal, the threshold of the
-    one-zero corollary, the constants pi^2/720 and pi/24).
+    one-zero corollary, the constants pi^2/720 and pi/24, the closed form
+    of the optimum at a right angle, and the signs, comparisons and
+    linear coefficients of the pointwise bounds without zeros).
 
   * Not checked: the analytic theorems themselves (the sum rule, the
     identification of Lambda with an elliptic integral and with its power
-    series, the extremal system, the one-zero proposition).  These rest on
+    series, the extremal system, the one-zero proposition, the
+    reconstruction of Section 9).  These rest on
     Cauchy integrals, the M. Riesz theorem and complete elliptic integrals,
     which are not formalised here.  Where a theorem below is the finite or
     algebraic step of an analytic argument, its comment names that step.
@@ -200,7 +203,7 @@ theorem ratio_lt_one (m : Nat) : (m + 2) * m < (m + 3) * (m + 1) := by
 
 /-- The coefficients decrease, for every n ≥ 1: d_{n+1} < d_n, i.e.
     dnum(n+1) dden(n) < dnum(n) dden(n+1) (stated for n = m + 1).  This is
-    Proposition 5.2(ii) of the paper: d_n ≤ d_1 = 1/2. -/
+    Proposition 7.2(ii) of the paper: d_n ≤ d_1 = 1/2. -/
 theorem d_decreasing (m : Nat) :
     dnum (m + 2) * dden (m + 1) < dnum (m + 1) * dden (m + 2) := by
   have hP : 0 < cn (m+1) * cn (m+1) * (cd (m+1) * cd (m+1)) * ((2*m+3)*(2*m+4)) :=
@@ -314,30 +317,30 @@ theorem lambda_3 : encloses 1 2 14 ⟨138966549, 10^9⟩ ⟨138966550, 10^9⟩ =
 All variables are integers; an identity of rational functions is checked
 after clearing denominators.  A = a², B = b², σ = t². -/
 
-/-- ρ² = (z²-a²)/(z²-b²) = 1 + (b²-a²)/(z²-b²) (Lemma 4.1(i)), cleared:
+/-- ρ² = (z²-a²)/(z²-b²) = 1 + (b²-a²)/(z²-b²) (Lemma 5.1(i)), cleared:
     z² - a² = (z² - b²) + (b² - a²). -/
 theorem rho_square (z a b : Int) :
     z*z - a*a = (z*z - b*b) + (b*b - a*a) := by grind
 
-/-- The two forms of the weight p (equation (4.2)): with
+/-- The two forms of the weight p (equation (5.2)): with
     s = sqrt((σ-A)/(B-σ)), 1/s - s = (A+B-2σ)/sqrt((σ-A)(B-σ)), which after
     multiplication by sqrt((σ-A)(B-σ)) is (B - σ) - (σ - A) = A + B - 2σ. -/
 theorem weight_two_forms (A B σ : Int) : (B - σ) - (σ - A) = A + B - 2*σ := by
   grind
 
 /-- ∫ p/x = (1/2)((A+B) pi/sqrt(AB) - 2 pi) = pi (b-a)²/(2ab)
-    (Lemma 4.3(iii)); the algebraic step is a² + b² - 2ab = (b-a)². -/
+    (Lemma 5.3(iii)); the algebraic step is a² + b² - 2ab = (b-a)². -/
 theorem moment_inverse (a b : Int) : a*a + b*b - 2*a*b = (b - a)*(b - a) := by
   grind
 
-/-- ∫ x³ p = -(pi/8)(B-A)² (Lemma 4.3(iv)), from ∫σ/√ = pi(A+B)/2 and
+/-- ∫ x³ p = -(pi/8)(B-A)² (Lemma 5.3(iv)), from ∫σ/√ = pi(A+B)/2 and
     ∫σ²/√ = pi(3A²+2AB+3B²)/8:
     (1/2)[(A+B) pi (A+B)/2 - 2 pi (3A²+2AB+3B²)/8] = -(pi/8)(B-A)²,
     i.e. 2(A+B)² - (3A²+2AB+3B²) = -(B-A)². -/
 theorem moment_cubic (A B : Int) :
     2*(A+B)*(A+B) - (3*A*A + 2*A*B + 3*B*B) = -((B - A)*(B - A)) := by grind
 
-/-- The antisymmetry ϖ(A+B-σ) = -ϖ(σ) of Lemma 4.3(i): the numerator
+/-- The antisymmetry ϖ(A+B-σ) = -ϖ(σ) of Lemma 5.3(i): the numerator
     changes sign, A + B - 2(A+B-σ) = -(A+B-2σ), and the two factors of the
     denominator are exchanged, ((A+B-σ)-A)(B-(A+B-σ)) = (σ-A)(B-σ). -/
 theorem varpi_antisymmetry (A B σ : Int) :
@@ -358,7 +361,7 @@ k' = a/b, κ = (b-a)/(b+a).  We write the identities in a, b. -/
 /-- 1 + κ = 2b/(a+b): (b+a) + (b-a) = 2b. -/
 theorem one_plus_kappa (a b : Int) : (b + a) + (b - a) = 2*b := by grind
 
-/-- The Landen step of Proposition 5.1: b(1+κ)(1+k')² = 2(a+b), i.e.
+/-- The Landen step of Proposition 7.1: b(1+κ)(1+k')² = 2(a+b), i.e.
     b · 2b · (a+b)² = 2(a+b) · (a+b) · b² after clearing (a+b) b². -/
 theorem landen_K_coefficient (a b : Int) :
     b * (2*b) * ((a + b)*(a + b)) = 2*(a + b) * ((a + b) * (b*b)) := by grind
@@ -374,7 +377,7 @@ theorem one_plus_kprime_square (a b : Int) :
 /-- 2(b-a) = 2κ(a+b), the divisor in Lambda = J/(2(b-a)). -/
 theorem two_b_minus_a (a b : Int) : 2*(b - a)*(b + a) = 2*(b - a)*(a + b) := by grind
 
-/-- The upper bound κ/(1-κ²) = (b²-a²)/(4ab) of Proposition 5.2(ii):
+/-- The upper bound κ/(1-κ²) = (b²-a²)/(4ab) of Proposition 7.2(ii):
     (b+a)² - (b-a)² = 4ab. -/
 theorem upper_bound_form (a b : Int) :
     (b + a)*(b + a) - (b - a)*(b - a) = 4*a*b := by grind
@@ -434,7 +437,7 @@ theorem coefficients_positive : ((List.range 60).map (· + 1)).all
 
 /-! ## Section 7. The lead branch and the zeros -/
 
-/-- The inversion x = ab/ω of Theorem 5.5: r(ab/ω) = ab r(ω)/ω², from
+/-- The inversion x = ab/ω of Theorem 6.6: r(ab/ω) = ab r(ω)/ω², from
     ((ab)² - a²ω²)(b²ω² - (ab)²) = a²b² (ω²-a²)(b²-ω²). -/
 theorem inversion_r (a b w : Int) :
     ((a*b)*(a*b) - a*a*(w*w)) * (b*b*(w*w) - (a*b)*(a*b)) =
@@ -446,7 +449,7 @@ theorem inversion_weight (a b w : Int) :
     (a*a + b*b)*(w*w) - 2*((a*b)*(a*b)) = (w*w)*(a*a + b*b) - 2*(a*a)*(b*b) := by
   grind
 
-/-- The plain mean of the lead extremal (Remark 5.8):
+/-- The plain mean of the lead extremal (Remark 6.8):
     -|θ|Λ + (pi/4)(b-a)τ⋆ with Λ = (K-E)/κ and (pi/4)(b-a)τ⋆ = |θ|κK gives
     |θ|(κK - (K-E)/κ) = |θ|(E - (1-κ²)K)/κ; cleared by κ:
     κ²K - (K - E) = E - (1 - κ²)K. -/
@@ -458,7 +461,7 @@ theorem lead_mean (κ K E : Int) : κ*κ*K - (K - E) = E - (1 - κ*κ)*K := by g
 theorem lead_atom_cost (a b : Int) :
     (b - a) * 4 * (b + a) = 4 * (b - a) * (a + b) := by grind
 
-/-- Corollary 7.4: (a/b)(pi-θ) > θ iff θ < a pi/(a+b); the two sides differ
+/-- Corollary 10.3: (a/b)(pi-θ) > θ iff θ < a pi/(a+b); the two sides differ
     by the identity a(pi - θ) - bθ = a pi - (a+b)θ. -/
 theorem threshold_identity (a b pi θ : Int) :
     a*(pi - θ) - b*θ = a*pi - (a + b)*θ := by grind
@@ -557,6 +560,37 @@ theorem right_mean (p q : Int) : (q - p)*(q - p)*(q + p) = (q - p)*(q*q - p*p) :
 /-- For an octave: (√2-1)² = 3-2√2 in ℤ[√2], (x+y√2)² = (x²+2y²) + 2xy√2. -/
 theorem octave_right : (-1)*(-1) + 2*(1*1) = (3 : Int) ∧ 2*(-1)*1 = (-2 : Int) := by decide
 
+/-- Lemma 9.1: for t off the band, R(t) and t² - x² have the same sign, so
+    the kernel k_t is positive; below the band both factors are negative. -/
+theorem kernel_sign (R d : Int) :
+    (R < 0 → d < 0 → 0 < R*d) ∧ (0 < R → 0 < d → 0 < R*d) :=
+  ⟨fun h1 h2 => Int.mul_pos_of_neg_of_neg h1 h2, fun h1 h2 => Int.mul_pos h1 h2⟩
+
+/-- Corollary 9.3: for 0 < t < a < x, 2x/(x² - t²) exceeds 2/x because,
+    cleared by x(x² - t²) > 0, 2x² - 2(x² - t²) = 2t² > 0. -/
+theorem low_kernel_gap (x t : Int) :
+    2*(x*x) - 2*(x*x - t*t) = 2*(t*t) ∧ 0 ≤ t*t := by
+  refine ⟨by grind, ?_⟩
+  rcases Int.le_total 0 t with h | h
+  · exact Int.mul_nonneg h h
+  · exact Int.mul_nonneg_of_nonpos_of_nonpos h h
+
+/-- Corollary 9.7(iv): ∫ r/x = (pi/2)(√B - √A)²/2 with A = a², B = b²;
+    the step 2c - 2√(AB) = (√B - √A)², c = (A + B)/2, with p = √A, q = √B. -/
+theorem r_over_x_square (p q : Int) : p*p + q*q - 2*(p*q) = (q - p)*(q - p) := by grind
+
+/-- Theorems 9.4 and 9.6: at the threshold the compensated linear
+    coefficient θτ∘ + τ + C vanishes, C = -θτ∘ - τ, and for a lead
+    -sτ∘ + τ + (sτ∘ - τ) = 0. -/
+theorem compensated_linear (θτ τ s : Int) :
+    θτ + τ + (-θτ - τ) = 0 ∧ -s + τ + (s - τ) = 0 := by
+  refine ⟨?_, ?_⟩ <;> omega
+
+/-- Theorem 9.8: the two mean costs ϑΛ and (pi - ϑ)Λ₋ are equal exactly
+    when ϑ(Λ + Λ₋) = pi Λ₋, which defines ϑ_c. -/
+theorem branch_threshold (pi t L M : Int) :
+    t*L - (pi - t)*M = t*(L + M) - pi*M := by grind
+
 end PhaseShiftCost
 
 open PhaseShiftCost in
@@ -631,4 +665,9 @@ section
 #print axioms right_centre
 #print axioms right_mean
 #print axioms octave_right
+#print axioms kernel_sign
+#print axioms low_kernel_gap
+#print axioms r_over_x_square
+#print axioms compensated_linear
+#print axioms branch_threshold
 end

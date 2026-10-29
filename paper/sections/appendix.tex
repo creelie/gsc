@@ -97,10 +97,15 @@ onto $\R$, with $\dd x=\frac12(1+pq/t^2)\dd t$. Then
 $4x^2+(p+q)^2=(t^2+p^2)(t^2+q^2)/t^2$ and $x^2+pq=\frac14(t+pq/t)^2$, so
 \[
 \big((p_1^2+x^2)(q_1^2+x^2)\big)^{-1/2}\dd x
-=\frac{\dd t}{\sqrt{(t^2+p^2)(t^2+q^2)}},
+=\frac{2\,\dd t}{\sqrt{(t^2+p^2)(t^2+q^2)}},
 \]
 with $p_1=\frac{p+q}2$, $q_1=\sqrt{pq}$. Integrating over $t\in(0,\infty)$
-gives $I(p_1,q_1)=\frac12\int_\R((p^2+t^2)(q^2+t^2))^{-1/2}\dd t=I(p,q)$. The
+and using that the integrand is even in $t$,
+\begin{align*}
+2I(p_1,q_1)&=2\int_0^\infty\frac{\dd t}{\sqrt{(t^2+p^2)(t^2+q^2)}}\\
+&=\int_\R\frac{\dd t}{\sqrt{(t^2+p^2)(t^2+q^2)}}=2I(p,q).
+\end{align*}
+The
 iterates converge to $M(p,q)$, and $I(M,M)=\pi/(2M)$.
 \end{proof}
 
@@ -327,7 +332,14 @@ every entry of \cref{tab:allzeros}, the positivity of $\as_\theta$ on the band f
 three band ratios and three phases, the mean of $\as_\theta$ and the pointwise
 comparison with $\alpha_\star$ at $\theta=1$, the narrow-band ratios after
 \cref{cor:narrowzeros} and the nomes and the case of equality of
-\cref{cor:nome}; and the numbers of \cref{sec:audit,sec:waves}. It reports
+\cref{cor:nome}; for \cref{sec:pointwise}, the branch of $R$, both
+identities of \cref{lem:atoms} at nine points for three bands, the
+positivity of $k_t$, \eqref{eq:betarec} for a single resonance below and
+above the band, \cref{lem:leadprofile} in the plane and on the band, the
+integral of $r/x$, the means $\Lambda$ and $\Lambda_-$ of the two profiles,
+the Herglotz property, the linear coefficient and the mean of the
+compensated optimum of \cref{thm:affine}, and the octave values $A(m)$,
+$\Lambda_-$ and $\vartheta_c$; and the numbers of \cref{sec:audit,sec:waves}. It reports
 \checkscount\ checks passed and none failed.
 
 \emph{Lean.} The file \texttt{lean/PhaseShiftCost.lean} is checked by the
@@ -342,15 +354,19 @@ estimate; and the polynomial identities used in
 \cref{sec:test,sec:constant,sec:sumrule,sec:zeros,sec:allzeros} and in the
 appendices; for \cref{sec:allzeros} these are the identities behind
 \eqref{eq:Hright}, both forms of \eqref{eq:alpharight}, the symmetry
-$\omega\mapsto ab/\omega$, the value at $\sqrt{ab}$ and \eqref{eq:lambdaright}.
-Of the \leancount\ theorems, \leanfree\ depend on no axiom, one on
-\texttt{propext} only, one on \texttt{propext} and \texttt{Quot.sound}, and the others on Lean's three standard axioms
+$\omega\mapsto ab/\omega$, the value at $\sqrt{ab}$ and \eqref{eq:lambdaright},
+and for \cref{sec:pointwise} the signs of the kernels, the comparison of
+\cref{cor:compare}, the step of \cref{cor:pointwisecons}(iv), the vanishing
+linear coefficients of the compensated optima and the threshold
+$\vartheta_c$. Of the \leancount\ theorems, \leanfree\ depend on no axiom, two on
+\texttt{propext} only, two on \texttt{propext} and \texttt{Quot.sound}, and the others on Lean's three standard axioms
 (\texttt{propext}, \texttt{Classical.choice}, \texttt{Quot.sound}), through
 the tactics \texttt{grind} and \texttt{omega}.
 
 The analytic theorems are not formalised. The sum rule
 (\cref{thm:sumrule}), the identification of $\Lambda$ with elliptic integrals
-and with its series, the extremal system, and the results on zeros rest on
+and with its series, the extremal system, the reconstruction of
+\cref{thm:reconstruction}, and the results on zeros rest on
 boundary values of Cauchy integrals, the M.~Riesz theorem, Hardy spaces,
 conformal maps and extremal length, Landen's
 transformation and the summation of a geometric series, none of which is

@@ -88,7 +88,7 @@ the band loss is a fixed linear functional of the band phase plus a
 nonnegative price for everything the system does outside the band: a
 lossless resonance at $\omega_0\notin[a,b]$ with weight $\gamma$ in $\mu$ costs
 $\frac\pi2W(\omega_0)\gamma$,\footnote{The measure is even, so the resonance puts mass $\gamma$ at both $\pm\omega_0$, and $W(-\omega_0)=W(\omega_0)$ off the band; the two atoms give $\frac\pi4\cdot2W(\omega_0)\gamma$.} a pole at the origin costs
-$\frac\pi4W(0)\mu(\{0\})$, and absorption outside the band costs its
+$\frac\pi4W(0)\mu(\{0\})$, and attenuation outside the band costs its
 $W$-weighted total.
 
 \subsection{Constant phase lag}
@@ -239,6 +239,9 @@ with $\tau=0$ is at most $\max\alpha$. The
 second statement is \eqref{eq:main} with $\log\abs H=-\alpha$.
 \end{proof}
 
+The bound by the mean is not sharp for the maximum: \cref{thm:branches}
+replaces $\Lambda$ by the larger constant $A(m)$, which is attained.
+
 \begin{remark}[The lead extremal]\label{rem:leadmean}
 For the system $H_\star(-ab/z)$ of \cref{thm:lead}, whose phase is
 $-\abs\theta$ on the band, \cref{thm:sumrule} applied directly gives the
@@ -250,6 +253,6 @@ plain mean attenuation
 because its measure off $S$ is the atom $ab\,\tau_\star$ at $0$, of cost
 $\frac\pi4W(0)ab\tau_\star$, with $\tau_\star$ from \cref{thm:extremal} and the
 evaluation of \cref{sec:constant}. For an octave this is $0.2656\abs\theta$,
-slightly below $\Lambda=0.2735$. Whether it is the least plain mean among
-systems with constant phase lead is not known.
+slightly below $\Lambda=0.2735$. It is the least plain mean among systems
+with constant phase lead (\cref{cor:pointwisecons}(iii)).
 \end{remark}

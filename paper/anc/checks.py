@@ -280,4 +280,92 @@ for rb in [2, 10]:
     val = mp.quad(lambda ph: ltanh(ph)/mp.sqrt((xph(ph)+a)*(xph(ph)+b)), [0, mp.pi/2, mp.pi])/I0
     check("nome bound is an equality for H#_{pi/2} [b/a=%s]" % rb,
           abs(val + mp.pi*K(a/b)/K(mp.sqrt(1-(a/b)**2))) < 1e-12)
+
+# sec:pointwise, pointwise bounds without zeros
+def Rc(z, a, b):
+    z = mp.mpc(z)
+    return z*z*mp.sqrt(1-a*a/(z*z))*mp.sqrt(1-b*b/(z*z))
+
+def pw_setup(a, b):
+    k = mp.sqrt(1-a*a/(b*b))
+    t0 = 2*K(k)/(mp.pi*b)
+    m2 = b*b*E(k)/K(k)
+    rr = lambda x: mp.sqrt((x*x-a*a)*(b*b-x*x))
+    def A(x):
+        if x <= a or x >= b: return mp.mpf(0)
+        f = lambda ph: 1/(((a+b)/2-(b-a)/2*mp.cos(ph)+x)*mp.sqrt(((a+b)/2-(b-a)/2*mp.cos(ph)+a)*(b+(a+b)/2-(b-a)/2*mp.cos(ph))))
+        return 2*rr(x)/mp.pi*mp.quad(f, [0, mp.pi])
+    def hc(z):
+        z = mp.mpc(z)
+        Y = abs(z) + b
+        return t0*mp.quad(lambda s: (s*s-m2)/Rc(s, a, b), [0, mp.mpc(0, Y), mp.mpc(z.real, Y), z])
+    def cauchy(kf, z):
+        f = lambda ph: (lambda s: 2*z*kf(s)/(s*s-z*z)*(b-a)/2*mp.sin(ph))((a+b)/2-(b-a)/2*mp.cos(ph))
+        return mp.quad(f, [0, mp.pi])/mp.pi
+    return k, t0, m2, rr, A, hc, cauchy
+
+for (a, b) in [(1, 2), (1, mp.mpf('1.1')), (mp.mpf('0.3'), 5)]:
+    a, b = mp.mpf(a), mp.mpf(b)
+    k, t0, m2, rr, A, hc, cauchy = pw_setup(a, b)
+    tag = " [a=%s, b=%s]" % (mp.nstr(a, 3), mp.nstr(b, 3))
+    kap = (b-a)/(b+a)
+    Lam = (K(kap)-E(kap))/kap
+    Lm = (E(kap)-(1-kap**2)*K(kap))/kap
+    check("R(0) = -ab and R ~ z^2"+tag, abs(Rc(mp.mpc(0, 1e-30), a, b)+a*b) < 1e-20
+          and abs(Rc(mp.mpc(0, 1e6), a, b)/mp.mpc(0, 1e6)**2-1) < 1e-10)
+    check("R(x+i0) = i r(x) on the band"+tag,
+          abs(Rc(mp.mpc((a+b)/2, 1e-30), a, b) - 1j*rr((a+b)/2)) < 1e-15)
+    for z in [mp.mpc((a+b)/2, (b-a)/3), mp.mpc(a/2, a/4), mp.mpc(2*b, b)]:
+        k0 = lambda s: rr(s)/(a*b*s)
+        lhs = Rc(z, a, b)/(a*b*z)
+        rhs = z/(a*b) - 1/z + cauchy(k0, z)
+        check("lem:atoms identity for K_0"+tag, abs(lhs-rhs) < 1e-15)
+        for t in [a/2, (a+3*b)/2]:
+            Rt = Rc(mp.mpf(t)+mp.mpc(0, 1e-40), a, b).real
+            kt = lambda s: 2*s*rr(s)/(Rt*(t*t-s*s))
+            lhs = 2*z*Rc(z, a, b)/(Rt*(t*t-z*z))
+            rhs = -2*z/Rt + 2*z/(t*t-z*z) + cauchy(kt, z)
+            check("lem:atoms identity for K_t, t=%s" % mp.nstr(t, 3)+tag, abs(lhs-rhs) < 1e-15)
+    # kernels positive on the band
+    xs = [a+(b-a)*j/7 for j in range(1, 7)]
+    okk = True
+    for t in [a/3, a*mp.mpf('0.99'), b*mp.mpf('1.01'), 4*b]:
+        Rt = Rc(mp.mpf(t)+mp.mpc(0, 1e-40), a, b).real
+        okk = okk and all(2*x*rr(x)/(Rt*(t*t-x*x)) > 0 for x in xs)
+    check("k_t > 0 on the band for t off the band"+tag, okk)
+    # beta identity: (2/pi) int 2t/(r (t0^2-t^2)) = 2/R(t0)
+    for t in [a/2, 3*b]:
+        Rt = Rc(mp.mpf(t)+mp.mpc(0, 1e-40), a, b).real
+        val = 2/mp.pi*mp.quad(lambda ph: (lambda s: 2*s/((t*t-s*s)*mp.sqrt((s+a)*(b+s))))((a+b)/2-(b-a)/2*mp.cos(ph)), [0, mp.pi])
+        check("eq:betarec for one resonance, t=%s" % mp.nstr(t, 3)+tag, abs(val-2/Rt) < 1e-15)
+    # h_c on the band and the lead identity
+    for z in [mp.mpc((a+b)/2, (b-a)/5), mp.mpc(a/2, a/3), mp.mpc(3*b, b/2)]:
+        lhs = hc(-a*b/z); rhs = -hc(z) + t0*Rc(z, a, b)/z
+        check("lem:leadprofile h(-ab/z) = -h(z) + tau R/z"+tag, abs(lhs-rhs) < 1e-12)
+    for x in [a+(b-a)/5, (a+b)/2, b-(b-a)/7]:
+        check("A(ab/x) = tau r/x - A(x) > 0"+tag, abs(A(a*b/x) - (t0*rr(x)/x - A(x))) < 1e-15 and A(a*b/x) > 0)
+    check("int_a^b r/x = pi (b-a)^2/4"+tag, abs(mp.quad(lambda x: rr(x)/x, [a, b]) - mp.pi*(b-a)**2/4) < 1e-15)
+    check("mean of A(ab/x) is Lambda_-"+tag, abs(mp.quad(lambda x: A(a*b/x), [a, mp.sqrt(m2), b])/(b-a) - Lm) < 1e-12)
+    check("mean of A is Lambda"+tag, abs(mp.quad(A, [a, mp.sqrt(m2), b])/(b-a) - Lam) < 1e-12)
+    # affine optimum below the threshold: Herglotz, linear coefficient, mean
+    tau = -mp.mpf(3)/2*t0; C = -tau - t0
+    hopt = lambda z: hc(z) + tau*z + C*Rc(z, a, b)/z
+    pts = [mp.mpc(x, y) for x in [a/2, (a+b)/2, 2*b, -(a+b)/2] for y in [(b-a)/50, (b-a)/3, 2*b]]
+    check("thm:affine optimum has Im h >= 0 in C+"+tag, all(mp.im(hopt(z)) > 0 for z in pts))
+    y = mp.mpf(10)**6
+    check("thm:affine optimum has linear coefficient 0 at the threshold"+tag,
+          abs(hopt(mp.mpc(0, y))/mp.mpc(0, y)) < 1e-8)
+    check("cor:pointwisecons(iv) mean"+tag,
+          abs(mp.quad(lambda x: A(x) + C*rr(x)/x, [a, mp.sqrt(m2), b])/(b-a) - (Lam + mp.pi/4*(b-a)*C)) < 1e-12)
+
+a, b = mp.mpf(1), mp.mpf(2)
+k, t0, m2, rr, A, hc, cauchy = pw_setup(a, b)
+kap = mp.mpf(1)/3
+Lam = (K(kap)-E(kap))/kap; Lm = (E(kap)-(1-kap**2)*K(kap))/kap
+check("octave A(m) = 0.34824", abs(A(mp.sqrt(m2)) - mp.mpf('0.348236277699756')) < 1e-12)
+check("octave A(m)/Lambda = 1.2731", abs(A(mp.sqrt(m2))/Lam - mp.mpf('1.2731')) < 5e-5)
+check("octave Lambda_- = 0.26560", abs(Lm - mp.mpf('0.265596407637276')) < 1e-12)
+check("octave theta_c = 1.5477", abs(mp.pi*Lm/(Lam+Lm) - mp.mpf('1.5477')) < 5e-5)
+check("octave tau_circ a = 0.6864", abs(t0 - mp.mpf('0.6864')) < 5e-5)
+
 print("%d checks passed, %d failed" % (passed, failed))
