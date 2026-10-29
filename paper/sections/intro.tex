@@ -80,9 +80,15 @@ The last part of the paper adds a delay to the phase. Without zeros the least
 mean loss for the phase $-s+\tau\omega$ is found in closed form for every
 slope $\tau$ (\cref{thm:exactmean}), and it never falls below a fixed positive
 floor, however long the delay (\cref{prop:floor}). With zeros allowed, the
-optimal system exists and is unique for every phase, and there is a simple
-test for it (\cref{thm:convex}). Its loss falls exponentially with the delay:
-the exponent lies between $-\pi ab/(b-a)$ and $-a/e$ (\cref{thm:expdecay,cor:rate}).
+optimal system exists and is unique for every phase, there is a simple
+test for it (\cref{thm:convex}), and it is the limit of explicit passive
+polynomials, each the solution of a finite convex problem
+(\cref{thm:construction}). Its loss falls exponentially with the delay: the
+exponent lies between $-\pi ab/(b-a)$ and
+$-\frac{a+b}\pi\log\cot\frac{\pi(b-a)}{4(a+b)}$, which is $-1.2576$ on an
+octave (\cref{thm:sharperate,cor:rate}); a device with six taps and the
+delay $5$ loses less than $7\times10^{-4}$ nepers on an octave, less than an eighth of
+what any device without zeros must lose (\cref{prop:sixtap}).
 We also treat several channels (\cref{thm:trace,thm:noloewner}) and several
 bands (\cref{thm:multiband}).
 

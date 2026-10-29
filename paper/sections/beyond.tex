@@ -435,7 +435,8 @@ With a pair of zeros at $\pm1.3654+1.2608i$ instead, a linear program for
 the measure off the band, with the positivity of the attenuation imposed at
 $399$ points of the band, gives about $4.3\times10^{-4}$ nepers; without zeros
 the same program gives $0.00658$ in place of $0.0063903$, so it is accurate to
-a few per cent. These numbers come from computations only.
+a few per cent. These numbers come from computations only. \Cref{prop:sixtap} below proves a mean less than
+$7\times10^{-4}$ with six taps.
 \end{remark}
 
 \emph{The optimum exists.} The admissible systems are not a convex set, but
@@ -459,6 +460,13 @@ $J(H_\psi)=\inf_{\mathcal P_\psi}J$.
 \item[(ii)] An $H\in\mathcal P_\psi$ with $J(H)<\infty$ is $H_\psi$ if and only if
 \[
 \int_a^b\frac{\abs{G}}{\abs H}\dd\omega\le b-a\qquad\text{for every }G\in\mathcal P_\psi .
+\]
+\item[(iii)] Every $G\in\mathcal P_\psi$ satisfies
+$\int_a^b\abs{G-H_\psi}^2\dd\omega\le2\big(J(G)-J(H_\psi)\big)$.
+\item[(iv)] For $z\in\Cp$ let $P_z(t)=\Im z/(\pi\abs{t-z}^2)$,
+$\omega_z=\int_SP_z$ and $M_z=\max_SP_z$, with $S=[-b,-a]\cup[a,b]$. Then
+\[
+\abs{G(z)-H_\psi(z)}\le2^{1-\omega_z}\Big(\frac{4M_z}{\omega_z}\big(J(G)-J(H_\psi)\big)\Big)^{\omega_z/2}.
 \]
 \end{enumerate}
 \end{theorem}
@@ -498,6 +506,25 @@ $\abs{H_t}=\abs H(1+t(\rho-1))$, so
 The integrand is a difference quotient of a convex function of $t$, so it
 decreases as $t\downarrow0$, to $1-\rho$, and it is at most $2\log2$ at
 $t=\frac12$. By monotone convergence $\int(1-\rho)\ge0$.
+
+(iii) We may take $J(G)<\infty$. Put $\rho_0=e^{-i\psi}H_\psi$ and
+$\rho_1=e^{-i\psi}G$, which lie in $(0,1]$ almost everywhere. Since $-\log$ has
+second derivative at least $1$ on $(0,1]$,
+\begin{multline*}
+-\log\big((1-t)\rho_0+t\rho_1\big)\\
+\le-(1-t)\log\rho_0-t\log\rho_1-\tfrac12t(1-t)(\rho_1-\rho_0)^2 ,
+\end{multline*}
+and $\abs{\rho_1-\rho_0}=\abs{G-H_\psi}$. Integrating, and using
+$J((1-t)H_\psi+tG)\ge J(H_\psi)$, gives
+$\frac12(1-t)\int\abs{G-H_\psi}^2\le J(G)-J(H_\psi)$; let $t\to0$.
+
+(iv) Let $D=G-H_\psi\ne0$, so $\abs D\le2$. As $\log\abs D$ is subharmonic and
+bounded above, it lies below the Poisson integral of its boundary values;
+with Jensen's inequality for the probability density $P_z/\omega_z$ on $S$,
+\[
+\log\abs{D(z)}\le(1-\omega_z)\log2+\frac{\omega_z}2\log\Big(\frac1{\omega_z}\int_SP_z\abs D^2\Big).
+\]
+By the symmetry, $\int_S\abs D^2=2\int_a^b\abs D^2$, and (iii) gives the bound.
 \end{proof}
 
 For a constant phase the minimiser is the system of \cref{thm:allzeros}. The
@@ -507,8 +534,159 @@ $\alpha\ge\as_\theta$ almost everywhere for every nonconstant $H\in\mathcal
 P_\theta$. Hence $H_\theta=\Hs_\theta$ for $0<\theta<\pi$, and by
 \cref{thm:convex}(ii) every $G\in\mathcal P_\theta$ has
 $\int_a^b\abs G/\abs{\Hs_\theta}\le b-a$. For $\psi=\theta+\tau\omega$ with $\tau>0$
-we have not found $H_\psi$ in closed form. The rest of this subsection shows
-how small its loss is.
+we have not found $H_\psi$ in closed form, but it is the limit of explicit
+passive polynomials, each of them the solution of a finite convex problem.%
+\footnote{Parts (iii) and (iv) of \cref{thm:convex}, \cref{lem:toeplitz,lem:tail,lem:chebnorm},
+\cref{thm:construction,thm:regularity,thm:sharperate}, \cref{prop:sixtap,prop:commuting}
+and \cref{cor:allbands} were found with OpenAI's Codex, starting from
+\cref{thm:convex,thm:expdecay}; the proofs were checked step by step and every
+number recomputed (\cref{app:verification}).}
+
+Fix $\sigma>0$ and put $w(z)=(z-i\sigma)/(z+i\sigma)$, which maps $\Cp$ onto the
+unit disc $\mathbb D$. A function $f$ on $\mathbb D$ with $\abs f\le1$ gives the
+passive system $H=f\circ w$, and $H(-\bar z)=\overline{H(z)}$ exactly when the
+Taylor coefficients $c_k$ of $f$ are real. For $c=(c_0,\dots,c_N)$ let
+$T_N(c)$ be the lower triangular Toeplitz matrix with entries $c_{i-j}$ for
+$i\ge j$, $0\le i,j\le N$.
+
+\begin{lemma}\label{lem:toeplitz}
+If $\abs f\le1$ on $\mathbb D$, then $\|T_N(c)\|\le1$ and
+$\sum_{k\le N}c_k^2\le1$. Conversely, if $c\in\R^{N+1}$ and $\|T_N(c)\|\le1$,
+then $p_N(w)=\sum_{k=0}^N(1-\frac k{N+1})c_kw^k$ satisfies $\abs{p_N}\le1$ on
+$\mathbb D$.
+\end{lemma}
+
+\begin{proof}
+Multiplication by $f$ is a contraction of the Hardy space $H^2(\mathbb D)$, and
+$T_N(c)$ is its compression to the polynomials of degree at most $N$; its
+first column has squared norm $\sum_{k\le N}c_k^2$. For the converse let
+$\abs w=1$ and $u=(1,\bar w,\dots,\bar w^N)^{\mathsf T}$. The entry $c_k$ occurs
+$N+1-k$ times on the $k$-th subdiagonal, so $u^*T_N(c)u=(N+1)p_N(w)$, and
+$\abs{u^*T_Nu}\le\|T_N\|\,\|u\|^2=N+1$. The maximum principle gives the bound
+in $\mathbb D$.
+\end{proof}
+
+The condition $\|T_N(c)\|\le1$ is the linear matrix inequality
+$\left(\begin{smallmatrix}I&T_N\\T_N^{\mathsf T}&I\end{smallmatrix}\right)\succeq0$,
+so every feasible $c$ gives a system $p_N\circ w$ that is passive in all of
+$\Cp$, not only at sampled frequencies. The phase enters through moments.
+Let $\psi$ be $C^1$ on $[a,b]$, and for an interval $I=[u,v]\subset[a,b]$ put
+\begin{gather*}
+A_{I,k}=\int_u^ve^{-i\psi(x)}w(x)^k\dd x,\\
+C_I=2j(v)+\int_u^vj\,\abs{\psi'},\qquad j(x)=\frac{x^2+\sigma^2}{2\sigma}.
+\end{gather*}
+If $\abs f\le1$, then $\int_Ie^{-i\psi}H=\sum_kc_kA_{I,k}$, since the boundary
+values $\sum c_kw^k$ converge in $L^2$.
+
+\begin{lemma}\label{lem:tail}
+$\abs{A_{I,k}}\le C_I/k$ for $k\ge1$, so
+$(\sum_{k>N}\abs{A_{I,k}}^2)^{1/2}\le\delta_{N,I}=C_I/\sqrt N$, and for
+$\abs f\le1$,
+\[
+\Big|\int_Ie^{-i\psi}H-\sum_{k=0}^Nc_kA_{I,k}\Big|\le\delta_{N,I} .
+\]
+\end{lemma}
+
+\begin{proof}
+On $(0,\infty)$, $w(x)=e^{it}$ with $t=-2\arctan(\sigma/x)$ and $\dd x/\dd t=j(x)$.
+With $\beta(t)=j(x)e^{-i\psi(x)}$, integration by parts in
+$A_{I,k}=\int\beta e^{ikt}\dd t$ bounds $k\abs{A_{I,k}}$ by
+$j(u)+j(v)+\int_u^v(j'+j\abs{\psi'})=C_I$, as $j'>0$. Then
+$\sum_{k>N}k^{-2}\le1/N$, and Cauchy--Schwarz with $\sum c_k^2\le1$ bounds the
+tail of the series.
+\end{proof}
+
+For an affine phase $\theta+\tau\omega$,
+$C_I=(v^2+\sigma^2)/\sigma+\abs\tau\big((v^3-u^3)/(6\sigma)+\sigma(v-u)/2\big)$.
+Let $\mathcal D_n$ be the partition of $[a,b]$ into $2^n$ equal intervals, and
+let $N_n\to\infty$. The \emph{$n$-th problem} has the unknowns
+$c\in\R^{N_n+1}$ and $r_I\ge0$ for $I\in\mathcal D_n$; for a coarser dyadic
+interval $r_I$ is the sum over the intervals of $\mathcal D_n$ in it. It asks
+for
+\begin{gather*}
+\|T_{N_n}(c)\|\le1,\qquad0\le r_I\le\abs I\quad(I\in\mathcal D_n),\\
+\Big|\sum_{k\le N_n}c_kA_{I,k}-r_I\Big|\le\delta_{N_n,I}\quad(I\in\mathcal D_0\cup\dots\cup\mathcal D_n),
+\end{gather*}
+and minimises $V_n=\sum_{I\in\mathcal D_n}\abs I\,(-\log(r_I/\abs I))$. Its least
+value is $v_n$. The constraints are a matrix inequality and second-order
+cones, and the objective is convex.
+
+\begin{theorem}\label{thm:construction}
+Let $\psi$ be $C^1$ on $[a,b]$ and suppose that $J(G)<\infty$ for some
+$G\in\mathcal P_\psi$.
+\begin{enumerate}
+\item[(i)] Each $n$-th problem has a minimiser, and $0\le v_n\le J(H_\psi)$.
+\item[(ii)] $v_n\to J(H_\psi)$.
+\item[(iii)] If $(c^{(n)},r^{(n)})$ is feasible with $V_n\le v_n+\varepsilon_n$
+and $\varepsilon_n\to0$, then the passive systems
+\[
+H_n(z)=\sum_{k=0}^{N_n}\Big(1-\frac k{N_n+1}\Big)c^{(n)}_k\Big(\frac{z-i\sigma}{z+i\sigma}\Big)^k
+\]
+converge to $H_\psi$ locally uniformly in $\Cp$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(i) For $H\in\mathcal P_\psi$ with $J(H)<\infty$, its first $N_n+1$
+coefficients and $r_I=\int_I\abs H=\int_Ie^{-i\psi}H$ are feasible by
+\cref{lem:toeplitz,lem:tail}, and Jensen's inequality on each interval gives
+$V_n\le J(H)$. Taking $H=H_\psi$, $v_n\le J(H_\psi)$. The feasible set is compact
+and $V_n$ is lower semicontinuous, so a minimiser exists.
+
+(ii), (iii) The $H_n$ are passive by \cref{lem:toeplitz}. By Montel's theorem a
+subsequence converges locally uniformly to some $H$ with $\abs H\le1$, with
+coefficients $c_k$; then $c^{(n)}_k\to c_k$ for each $k$, and
+$\sum_kc_k^2\le1$. For a fixed dyadic interval $I$, $(A_{I,k})_k$ is square
+summable, so splitting the sums at a fixed $K$ gives
+$\sum_{k\le N_n}c^{(n)}_kA_{I,k}\to\sum_kc_kA_{I,k}=\int_Ie^{-i\psi}H$; as
+$\delta_{N_n,I}\to0$, $r^{(n)}_I\to\int_Ie^{-i\psi}H$, which therefore lies in
+$[0,\abs I]$. By the dyadic differentiation theorem $e^{-i\psi}H\ge0$ almost
+everywhere, and $H\in\mathcal P_\psi$. For a fixed level $q\le n$, convexity of
+$-\log$ gives $V_n\ge\Phi_q^{(n)}=\sum_{I\in\mathcal D_q}\abs I(-\log(r^{(n)}_I/\abs I))$,
+and in the limit
+\[
+\liminf_nV_n\ge\Phi_q(H)=\sum_{I\in\mathcal D_q}\abs I\Big(-\log\frac1{\abs I}\int_I\abs H\Big).
+\]
+By Jensen's inequality $\Phi_q(H)$ increases with $q$ and is at most $J(H)$;
+the averages of $\abs H$ converge to $\abs H$ almost everywhere, so Fatou's
+lemma gives $\Phi_q(H)\to J(H)$. Hence
+$J(H_\psi)\le J(H)\le\liminf V_n\le\liminf(v_n+\varepsilon_n)\le J(H_\psi)$. So
+$H=H_\psi$ by \cref{thm:convex}(i), the limit does not depend on the
+subsequence, and $v_n\to J(H_\psi)$.
+\end{proof}
+
+The finite problems carry the phase only through the moments, so the $H_n$
+do not have the phase $\psi$ exactly; it is attained in the limit.
+\Cref{thm:construction} gives neither a closed form for $H_\psi$ nor a rate
+for $v_n\to J(H_\psi)$. For an analytic phase the optimum has no zeros inside
+the band.
+
+\begin{theorem}\label{thm:regularity}
+Let $\psi$ be real analytic on $(a,b)$, and suppose that some
+$G\in\mathcal P_\psi$ with $J(G)<\infty$ is continuous and nonzero on $(a,b)$.
+Then $H_\psi$ extends analytically across $(a,b)$, has no zeros there, and
+its attenuation is real analytic on $(a,b)$.
+\end{theorem}
+
+\begin{proof}
+Near $x_0\in(a,b)$, $F=e^{-i\psi}H_\psi$ is bounded and analytic on the upper
+side, and its boundary values are real almost everywhere. Its imaginary part
+is a bounded harmonic function, hence the Poisson integral of its boundary
+values, which vanish on the interval; so it is continuous up to the
+interval with value $0$, and the Schwarz reflection principle continues $F$
+across it. On the interval $F\ge0$, and $F\not\equiv0$ because
+$J(H_\psi)<\infty$, so a zero at $x_0$ has even order $2k\ge2$ and
+$\abs{H_\psi(x)}\le C\abs{x-x_0}^{2k}$ nearby. As $\abs G\ge c>0$ near $x_0$,
+$\abs G/\abs{H_\psi}$ is not integrable, against \cref{thm:convex}(ii).
+\end{proof}
+
+For every $\psi\in C^1[a,b]$ such a $G$ exists: by \cref{thm:multiband}, with one
+band and $n=1$, there is a zero-free passive system with phase $\psi$,
+continuous and nonzero on $[a,b]$. So the hypotheses of
+\cref{thm:convex,thm:construction} hold for every such phase, and for an
+affine phase $H_{\theta+\tau\omega}$ is analytic and has no zeros inside the band,
+though it may have zeros in $\Cp$; whether it is continuous at $a$ and $b$ is
+not known. The rest of this subsection shows how small its loss is.
 
 There is still a positive floor. For $y>0$ let $P_y(x)=y/(\pi(x^2+y^2))$ and
 $\omega_y=\int_a^bP_y$.
@@ -640,21 +818,141 @@ $1.7\times10^{-3}$ nepers at $\tau=12$, $4.9\times10^{-5}$ at $\tau=20$ and
 $1.4\times10^{-7}$ at $\tau=30$, against the zero-free floor $0.0060483$ of
 \cref{prop:floor}.
 
+A polynomial kernel in $\sin dz$ in place of the sinc power gives a larger
+exponent. Approximating the sign by polynomials and entire functions is
+classical \cite{eremenkoyuditskii}, as are linear-phase filters with finitely
+many taps \cite{parksmcclellan}; we need only the explicit kernel below, whose
+passivity is checked directly. Put
+\begin{gather*}
+d=\frac\pi{a+b},\qquad s_0=\sin da,\qquad \gamma=\operatorname{artanh}s_0,\\
+C_{a,b}=\frac\gamma d=\frac{a+b}\pi\log\cot\frac{\pi(b-a)}{4(a+b)} .
+\end{gather*}
+As $\operatorname{artanh}(\sin t)=\int_0^t\sec u\dd u>t$ for $0<t<\pi/2$,
+$C_{a,b}>a$. With the Chebyshev polynomial $T_m$, $T_m(\cos t)=\cos mt$, let
+\begin{gather*}
+K_m(s)=T_m\Big(\frac{2s^2-1-s_0^2}{1-s_0^2}\Big)^2,\\
+\mathcal I_m=\int_0^1K_m,\qquad \Pi_m(s)=\frac1{\mathcal I_m}\int_0^sK_m .
+\end{gather*}
+$\Pi_m$ is an odd polynomial of degree $4m+1$, increasing on $[-1,1]$ from $-1$
+to $1$. For $s_0\le s\le1$ the argument of $T_m$ lies in $[-1,1]$, so
+$K_m(s)\le1$ and $0\le1-\Pi_m(s)\le\epsilon_m=(1-s_0)/\mathcal I_m$. On $[a,b]$,
+$\sin d\omega\in[s_0,1]$, so $U_m(\omega)=\Pi_m(\sin d\omega)$ satisfies
+$1-\epsilon_m\le U_m\le1$ and $\abs{U_m'}\le d/\mathcal I_m$ there.
+
+\begin{lemma}\label{lem:chebnorm}
+For $\tau\ge(4m+1)d$ the function
+$F_m(z)=e^{i\tau z}(\cos\theta+i\sin\theta\,\Pi_m(\sin dz))$ is passive, and
+$\log\mathcal I_m/m\to4\gamma$ as $m\to\infty$.
+\end{lemma}
+
+\begin{proof}
+Put $q=e^{idz}$ and $N=4m+1$. As $\Pi_m$ is odd with real coefficients,
+$q^N(\cos\theta+i\sin\theta\,\Pi_m((q-q^{-1})/(2i)))$ is a polynomial in $q$
+with real coefficients. On $\abs q=1$ its modulus is at most $1$, since
+$\abs{\Pi_m}\le1$ on $[-1,1]$, so it is at most $1$ for $\abs q\le1$, that is,
+in $\Cp$; and $e^{i(\tau-Nd)z}$ is a delay. For $0\le s<s_0$ put
+$\chi(s)=\operatorname{arcosh}((1+s_0^2-2s^2)/(1-s_0^2))$, decreasing, with
+$\chi(0)=2\gamma$ since $\cosh2\gamma=(1+s_0^2)/(1-s_0^2)$. There
+$K_m=\cosh^2(m\chi)$, so $K_m\le e^{4m\gamma}$ on $[0,1]$ and
+$\mathcal I_m\le e^{4m\gamma}$; and for $0<h<s_0$,
+$\mathcal I_m\ge\int_0^h\frac14e^{2m\chi}\ge\frac h4e^{2m\chi(h)}$. Let
+$m\to\infty$ and then $h\to0$.
+\end{proof}
+
+\begin{theorem}\label{thm:sharperate}
+Let $\theta\in\R$, $m\ge1$, $\tau\ge(4m+1)d$ and $\epsilon_m\le\frac14$. There
+is a passive system, regular on the band, with $\arg H\equiv\theta+\tau\omega$ on
+$[a,b]$ and
+\[
+\frac1{b-a}\int_a^b\alpha\le\frac1{\mathcal I_m}\Big(2D_{a,b}+\big(2+\tfrac\pi4(b-a)\tau_\circ\big)(1-s_0)\Big),
+\]
+where $D_{a,b}=\frac{b(b^2-a^2)}{4a}\big(\frac da+\frac{1-s_0}{a^2}\big)$. For
+$\theta=\pi/2$ the system $F_m$ itself has the phase, with mean at most
+$2\epsilon_m$.
+\end{theorem}
+
+\begin{proof}
+Let $S=\cos\theta+i\sin\theta\,U_m$, so that $F_m=e^{i\tau z}S$ is passive by
+\cref{lem:chebnorm}. On the band $\abs S\ge1-\epsilon_m$, so
+$-\log\abs S\le2\epsilon_m$, and, by the derivative bound in the proof of
+\cref{thm:expdecay}, $\arg S=\theta+\delta$ with $\abs\delta\le\epsilon_m$ and
+$\abs{\delta'}\le\abs{U_m'}\le d/\mathcal I_m$. The phase correction and the
+system are then built as in that proof: with $g=-\delta$ and $G=g/t$,
+$\abs{G'}\le\abs{\delta'}/a+\abs\delta/a^2\le(d/a+(1-s_0)/a^2)/\mathcal I_m$, so
+Glauert's integral gives $\abs{v_g}\le\eta=D_{a,b}/\mathcal I_m$, and
+$\abs{\beta_g}\le\tau_\circ\epsilon_m$. The mean of $e^{-\eta}F_me^{ih}$ is at most
+$2\eta+2\epsilon_m+\frac\pi4(b-a)\tau_\circ\epsilon_m$. For $\theta=\pi/2$,
+$F_m=ie^{i\tau z}U_m$, $U_m>0$ on the band, and $-\log U_m\le2\epsilon_m$.
+\end{proof}
+
+With $m=\lfloor(\tau/d-1)/4\rfloor$, \cref{lem:chebnorm} turns this bound into
+$e^{-(C_{a,b}+o(1))\tau}$. On the octave $d=\pi/3$, $s_0=\sqrt3/2$,
+$\gamma=\log(2+\sqrt3)$ and
+\[
+C_{1,2}=\frac3\pi\log(2+\sqrt3)=1.2576021548\ldots,
+\]
+against $1/e$ from \cref{thm:expdecay}. For the octave, $\Pi_1(s)$ is the
+polynomial $P$ below, since $8s^2-7=(2s^2-1-s_0^2)/(1-s_0^2)$; taking $d=1$ in
+place of $\pi/3$ lowers the delay $(4m+1)d$ to $5$, at the price of a band
+image $[\sin1,1]$ slightly larger than $[s_0,1]$.
+
+\begin{proposition}\label{prop:sixtap}
+On $[1,2]$, the passive system
+\begin{multline*}
+H(z)=\frac1{734}\big(-12-80e^{2iz}-435e^{4iz}\\
++435e^{6iz}+80e^{8iz}+12e^{10iz}\big)
+\end{multline*}
+has the argument $\pi/2+5\omega$ on the band, no zeros on the band, and
+\[
+\int_1^2\alpha<\frac7{10000} .
+\]
+\end{proposition}
+
+\begin{proof}
+Let $P(s)=(192s^5-560s^3+735s)/367$. From $\sin3x=3\sin x-4\sin^3x$ and
+$\sin5x=16\sin^5x-20\sin^3x+5\sin x$,
+$367P(\sin x)=435\sin x+80\sin3x+12\sin5x$, so $H=ie^{5iz}P(\sin z)$. Now
+$P(\pm1)=\pm1$ and $P'(s)=\frac{15}{367}(8s^2-7)^2\ge0$, so $\abs P\le1$ on
+$[-1,1]$, and $H$ is passive as in \cref{lem:chebnorm}, with $d=1$ and degree
+$5$. On $[1,2]$, $\sin x\ge\sin1$, as $\sin$ is concave there and
+$\sin2=\sin(\pi-2)>\sin1$, and $\sin1>1-\frac16+\frac1{120}-\frac1{5040}>\frac56$, so
+\[
+1\ge P(\sin x)>P(\tfrac56)=\frac{59225}{59454}=M,
+\]
+which gives the argument and the absence of zeros, and $-\log P\le(1-P)/M$.
+With $F(t)=t+\frac{176}{1101}t^3+\frac{192}{1835}t^5$ one has
+$\frac{\dd}{\dd x}\big(-F(\cos x)\big)=P(\sin x)$, so
+$\int_1^2P(\sin x)\dd x=F(\cos1)-F(\cos2)$. The partial sums
+$L=\sum_{k=0}^{11}(-1)^k/(2k)!$ and $U=\sum_{k=0}^{12}(-1)^k4^k/(2k)!$ of the
+alternating cosine series satisfy $L<\cos1$ and $\cos2<U$, and $F$ is
+increasing, so
+\[
+\int_1^2\alpha\le\frac{1-F(L)+F(U)}M=0.00069587\ldots<\frac7{10000},
+\]
+the last inequality between rational numbers.
+\end{proof}
+
+The mean of this $H$ is $0.00069359$ nepers, against $0.0063752$ for the
+one-zero system of \cref{prop:onezerodelay}, $\mathcal M_{\pi/2}(5)=0.0063903$
+without zeros, and the zero-free floor $0.0060483$ of \cref{prop:floor}. Its
+zeros in $\Cp$ are the points where $\sin z$ is a root of
+$192s^4-560s^2+735$, that is, $s^2=(35\pm14i\sqrt5)/24$.
+
 \begin{corollary}\label{cor:rate}
 Let $\theta\notin\pi\Z$, and let $E_\theta(\tau)=J(H_{\theta+\tau\omega})/(b-a)$
 be the least mean attenuation for the argument $\theta+\tau\omega$, with or
 without zeros. Then $E_\theta$ is nonincreasing in $\tau\ge0$, and
 \[
 -\frac{\pi ab}{b-a}\le\liminf_{\tau\to\infty}\frac{\log E_\theta(\tau)}\tau
-\le\limsup_{\tau\to\infty}\frac{\log E_\theta(\tau)}\tau\le-\frac ae .
+\le\limsup_{\tau\to\infty}\frac{\log E_\theta(\tau)}\tau\le-C_{a,b} .
 \]
 \end{corollary}
 
 \begin{proof}
 Multiplication by $e^{i\delta z}$, $\delta\ge0$, maps
 $\mathcal P_{\theta+\tau\omega}$ into $\mathcal P_{\theta+(\tau+\delta)\omega}$ and keeps
-$\abs H$ on $\R$, which gives the monotonicity; the system of
-\cref{thm:expdecay} gives the upper bound. For the lower bound take
+$\abs H$ on $\R$, which gives the monotonicity; \cref{thm:sharperate} with
+$m=\lfloor(\tau/d-1)/4\rfloor$ and \cref{lem:chebnorm} give the upper bound. For the lower bound take
 $y=\tau^{-1/2}$ in \cref{thm:poisson}. As $y\to0$,
 $\omega_y/y=\frac1\pi\int_a^b\dd x/(x^2+y^2)=\frac{b-a}{\pi ab}+O(y^2)$ and
 $\omega_y/P_y(a)\to a(b-a)/b$. With $\log(1/(1-\varepsilon))\ge\varepsilon$,
@@ -667,9 +965,11 @@ $\omega_y/P_y(a)\to a(b-a)/b$. With $\log(1/(1-\varepsilon))\ge\varepsilon$,
 
 So with zeros the least loss for a delay falls off exponentially in the
 delay, while without zeros it stays above $(\pi-\vartheta)m_\infty$ or
-$\vartheta\Lambda$. On the octave the exponent lies between $-2\pi$ and $-1/e$.
-The optimal system $H_{\theta+\tau\omega}$ itself, and the exact exponent, remain
-open.
+$\vartheta\Lambda$. On the octave the exponent lies between $-2\pi$ and
+$-1.2576$. The optimal system $H_{\theta+\tau\omega}$ is the limit of
+\cref{thm:construction}, but its closed form, and the exact exponent, remain
+open; the limit in \cref{thm:construction} is taken at fixed $\tau$ and says
+nothing about $\tau\to\infty$.
 
 \subsection{Several channels}\label{ssec:channels}
 
@@ -736,6 +1036,29 @@ $\Im F_{C_2}-\Im F_{C_1}=(r/x)(C_2-C_1)$, and $C_2-C_1$ has the eigenvalues
 $3/4$ and $-1/4$.
 \end{proof}
 
+When $\Theta$ and $T$ commute the indefinite case reduces to scalars. Let
+$\mathcal E(\theta,t)$ be the infimum of the mean of $\Im h$ over scalar
+generators $h$ with phase $\theta+\omega t$: by \cref{thm:trace} with $n=1$ for
+$\theta\ge0$, and $\mathcal M_{-\theta}(t)$ of \cref{ssec:exactmean} for $\theta<0$.
+
+\begin{proposition}\label{prop:commuting}
+If $\Theta T=T\Theta$, with joint eigenvalues $(\theta_j,t_j)$, the infimum of
+the mean of $\operatorname{tr}\Im F$ over generators with phase $\Theta+\omega T$
+is $\sum_j\mathcal E(\theta_j,t_j)$, and it is attained exactly when each
+$\mathcal E(\theta_j,t_j)$ is.
+\end{proposition}
+
+\begin{proof}
+In a joint orthonormal eigenbasis $u_j$, each $u_j^*Fu_j$ is a scalar
+generator with phase $\theta_j+\omega t_j$, and
+$\operatorname{tr}\Im F=\sum_ju_j^*(\Im F)u_j$; this gives the lower bound.
+Conversely, scalar generators $h_j$ with these phases give the generator
+$\sum_jh_ju_ju_j^*$, whose trace is $\sum_j\Im h_j$.
+\end{proof}
+
+For noncommuting $\Theta$ and $T$ with $\Theta$ indefinite the least trace is not
+known.
+
 \subsection{Several bands}\label{ssec:bands}
 
 Let $0<a_1<b_1<a_2<\dots<a_m<b_m$, choose $c_j\in(b_j,a_{j+1})$ in each gap,
@@ -799,5 +1122,26 @@ $c\ge c_*$; the coefficients of a Herglotz representation are unique.
 
 So every smooth phase on finitely many bands, scalar or matrix, can be
 carried by a passive system, at the price of resonances at $0$ and in the
-gaps. The theorem minimises only within the family $F_G+cQ_mI$; the least
-loss over all measures on several bands is not known.
+gaps. The theorem minimises only within the family $F_G+cQ_mI$. With zeros
+allowed, the weak problem on several bands is solved by the limit of
+\cref{thm:construction}.
+
+\begin{corollary}\label{cor:allbands}
+Let $B=\bigcup_j[a_j,b_j]$ and let $\psi$ be real and $C^1$ on each band.
+\Cref{thm:convex,thm:construction,thm:regularity} hold with $[a,b]$ replaced
+by $B$, $b-a$ by $\abs B$ and $\mathcal D_n$ by the dyadic partitions of the
+bands, and their hypotheses hold: there is exactly one $H_\psi$ of least
+loss in $\mathcal P_\psi$, it is the locally uniform limit of the passive
+polynomials $H_n$, and it has no zeros inside the bands if $\psi$ is real
+analytic there.
+\end{corollary}
+
+\begin{proof}
+The proofs use only the measure on the frequency set, so they apply to $B$
+unchanged. \Cref{thm:multiband} with $n=1$ gives a zero-free system with phase
+$\psi$, continuous and nonzero on $B$, so of finite loss.
+\end{proof}
+
+The least loss over zero-free systems on several bands, the behaviour of
+$H_\psi$ at the ends of the bands, and the matrix problem with zeros are not
+known.

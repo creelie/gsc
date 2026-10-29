@@ -702,6 +702,163 @@ def delay_checks():
     mp.mp.dps = dps0
 delay_checks()
 
+def construction_checks():
+    from fractions import Fraction as Fr
+    dps0 = mp.mp.dps
+    mp.mp.dps = 30
+    # thm:convex (iii), the strong convexity of -log on (0,1]
+    random.seed(7); okc = True
+    for _ in range(200):
+        r0, r1, t = [mp.mpf(random.uniform(1e-3, 1)) for _ in range(3)]
+        okc = okc and -mp.log((1-t)*r0+t*r1) <= -(1-t)*mp.log(r0)-t*mp.log(r1)-t*(1-t)*(r1-r0)**2/2+mp.mpf(10)**-25
+    check("thm:convex(iii) -log((1-t)r0+t r1) <= (1-t)(-log r0)+t(-log r1)-t(1-t)(r1-r0)^2/2 (random)", okc)
+    # lem:toeplitz
+    def toep(c):
+        N = len(c); return mp.matrix([[c[i-j] if i >= j else 0 for j in range(N)] for i in range(N)])
+    def taylor_blaschke(zs, N):
+        # coefficients of prod (w - z)/(1 - conj(z) w) with real symmetric zeros
+        co = [mp.mpf(1)]+[mp.mpf(0)]*N
+        for z in zs:
+            num = [-z, 1]; den = [mp.conj(z)**k for k in range(N+1)]   # 1/(1-conj z w)
+            f = [sum(num[i]*den[k-i] for i in range(2) if 0 <= k-i <= N) for k in range(N+1)]
+            co = [sum(co[i]*f[k-i] for i in range(k+1)) for k in range(N+1)]
+        return [mp.re(x) for x in co]
+    c = taylor_blaschke([mp.mpc('0.3', '0.5'), mp.mpc('0.3', '-0.5'), mp.mpf('-0.6')], 12)
+    c = [x*mp.mpf('0.9') for x in c]
+    nrm = max(mp.sqrt(abs(e)) for e in mp.eighe(toep(c).T*toep(c))[0])
+    check("lem:toeplitz ||T_N(c)|| <= 1 and sum c_k^2 <= 1 for 0.9 x a Blaschke product (N = 12)", nrm <= 1 and sum(x*x for x in c) <= 1)
+    N = len(c)-1; okf = True
+    for th in [0.3, 1.1, 2.5, -1.7]:
+        w = mp.expjpi(th/mp.pi); u = mp.matrix([mp.conj(w)**k for k in range(N+1)])
+        lhs = (u.H*toep(c)*u)[0]/(N+1); rhs = sum((1-mp.mpf(k)/(N+1))*c[k]*w**k for k in range(N+1))
+        okf = okf and abs(lhs-rhs) < 1e-25 and abs(rhs) <= 1
+    check("lem:toeplitz u* T_N u/(N+1) = p_N(w) on |w| = 1, and |p_N| <= 1", okf)
+    random.seed(11); okr = True
+    for _ in range(20):
+        cc = [mp.mpf(random.uniform(-1, 1)) for _ in range(8)]
+        nr = max(mp.sqrt(abs(e)) for e in mp.eighe(toep(cc).T*toep(cc))[0]); cc = [x/nr for x in cc]
+        okr = okr and max(abs(sum((1-mp.mpf(k)/8)*cc[k]*mp.expjpi(2*j/mp.mpf(97))**k for k in range(8))) for j in range(97)) <= 1+mp.mpf(10)**-20
+    check("lem:toeplitz random contractions give Fejer polynomials bounded by 1 on the circle", okr)
+    # lem:tail, |A_{I,k}| <= C_I/k for affine phases
+    mp.mp.dps = 20; okt = True
+    for (u, v, th, tau, sg) in [(1, 2, 1.0, 5, 1), (1, mp.mpf('1.5'), 0.4, 12, 2), (mp.mpf('1.5'), 2, 2.0, 0, mp.mpf('0.5'))]:
+        u, v, sg = mp.mpf(u), mp.mpf(v), mp.mpf(sg)
+        CI = (v*v+sg*sg)/sg+abs(tau)*((v**3-u**3)/(6*sg)+sg*(v-u)/2)
+        for k in [1, 3, 10, 40]:
+            A = mp.quad(lambda x: mp.expj(-(th+tau*x))*((x-1j*sg)/(x+1j*sg))**k, mp.linspace(u, v, 9))
+            okt = okt and abs(A) <= CI/k
+        jf = lambda x: (x*x+sg*sg)/(2*sg)
+        okt = okt and abs(CI-(2*jf(v)+mp.quad(lambda x: jf(x)*abs(tau), [u, v]))) < 1e-15
+    check("lem:tail |A_{I,k}| <= C_I/k, and the affine formula for C_I", okt)
+    check("lem:tail sum_{k>N} k^-2 <= 1/N (N = 1, 5, 50)", all(mp.nsum(lambda k: 1/k**2, [N+1, mp.inf]) <= mp.mpf(1)/N for N in [1, 5, 50]))
+    # thm:sharperate, the constants
+    mp.mp.dps = 30
+    def Cab(a, b):
+        d = mp.pi/(a+b); s0 = mp.sin(d*a); return mp.atanh(s0)/d, d, s0
+    okC = True
+    for (a, b) in [(1, 2), (1, mp.mpf('1.1')), (mp.mpf('0.3'), 5), (1, 10)]:
+        a, b = mp.mpf(a), mp.mpf(b); C, d, s0 = Cab(a, b)
+        okC = okC and abs(C-(a+b)/mp.pi*mp.log(mp.cot(mp.pi*(b-a)/(4*(a+b))))) < 1e-25 and a/mp.e < a < C < mp.pi*a*b/(b-a)
+    check("thm:sharperate C_{a,b} = gamma/d = (a+b)/pi log cot(pi(b-a)/(4(a+b))), a < C_{a,b} < pi ab/(b-a)", okC)
+    C12 = Cab(mp.mpf(1), mp.mpf(2))[0]
+    check("thm:sharperate C_{1,2} = (3/pi) log(2+sqrt3) = 1.2576021548", abs(C12-3/mp.pi*mp.log(2+mp.sqrt(3))) < 1e-25 and abs(C12-mp.mpf('1.2576021548')) < 1e-10)
+    check("thm:sharperate artanh(sin t) = int_0^t sec > t", all(abs(mp.atanh(mp.sin(t))-mp.quad(mp.sec, [0, t])) < 1e-20 and mp.atanh(mp.sin(t)) > t for t in [0.1, 0.7, 1.3, 1.5]))
+    # the kernels K_m, the normaliser I_m and Pi_m, as polynomials in s (high precision: their coefficients are large)
+    mp.mp.dps = 160
+    a, b = mp.mpf(1), mp.mpf(2); C, d, s0 = Cab(a, b); gam = mp.atanh(s0)
+    def kernel(m):
+        X = [(-1-s0**2)/(1-s0**2), 0, 2/(1-s0**2)]   # coefficients in s
+        Tp, Tc = [mp.mpf(1)], X[:]
+        mul = lambda p, q: [sum(p[i]*q[k-i] for i in range(len(p)) if 0 <= k-i < len(q)) for k in range(len(p)+len(q)-1)]
+        if m == 0: T = Tp
+        else:
+            for _ in range(m-1):
+                nx = mul([2*x for x in X], Tc); pad = Tp+[0]*(len(nx)-len(Tp))
+                Tp, Tc = Tc, [nx[i]-pad[i] for i in range(len(nx))]
+            T = Tc
+        Km = mul(T, T); Prim = [0]+[Km[k]/(k+1) for k in range(len(Km))]
+        Im = sum(Prim); return Km, Prim, Im
+    ev = lambda p, s: sum(p[k]*s**k for k in range(len(p)))
+    okk = True; logs = []
+    for m in [1, 2, 3, 5, 8]:
+        Km, Prim, Im = kernel(m); eps = (1-s0)/Im
+        Pi = lambda s: ev(Prim, s)/Im
+        okk = okk and len(Prim)-1 == 4*m+1 and abs(Pi(1)-1) < 1e-20 and abs(Pi(-1)+1) < 1e-20
+        okk = okk and all(ev(Km, s) <= 1+mp.mpf(10)**-20 and -1e-20 <= 1-Pi(s) <= eps+1e-20 for s in mp.linspace(s0, 1, 25))
+        okk = okk and Im <= mp.e**(4*m*gam)
+        okk = okk and all(abs(ev(Km, s)-mp.cosh(m*mp.acosh((1+s0**2-2*s*s)/(1-s0**2)))**2) < 1e-15*ev(Km, s) for s in [0, s0/3, s0/2])
+        logs.append(mp.log(Im)/m)
+    check("thm:sharperate K_m <= 1 and 0 <= 1-Pi_m <= eps_m on [s0, 1], Pi_m(+-1) = +-1, degree 4m+1", okk)
+    check("lem:chebnorm chi(0) = 2 gamma, I_m <= e^{4m gamma}, log I_m/m increases towards 4 gamma",
+          abs(mp.acosh((1+s0**2)/(1-s0**2))-2*gam) < 1e-25 and all(logs[i] < logs[i+1] < 4*gam for i in range(len(logs)-1)))
+    I80 = mp.quad(lambda s: mp.chebyt(80, (2*s*s-1-s0**2)/(1-s0**2))**2, [0, s0/4, s0/2, s0, 1])
+    check("lem:chebnorm log I_80/80 (by quadrature) is within 0.06 of 4 gamma", 0 < 4*gam-mp.log(I80)/80 < mp.mpf('0.06'))
+    # passivity of F_m: a polynomial in q = e^{idz} with real coefficients, bounded by 1 on the circle
+    okp = True
+    for m in [1, 2]:
+        Km, Prim, Im = kernel(m); N = 4*m+1; th = mp.mpf('0.9')
+        coef = [mp.mpc(0)]*(2*N+1)
+        for k, pk in enumerate(Prim):
+            if pk == 0: continue
+            for j in range(k+1):   # ((q - 1/q)/(2i))^k
+                cbin = mp.binomial(k, j)*(-1)**(k-j)/(2j)**k
+                coef[N+j-(k-j)] += 1j*mp.sin(th)*pk/Im*cbin
+        coef[N] += mp.cos(th)
+        okp = okp and max(abs(mp.im(x)) for x in coef) < 1e-20
+        okp = okp and max(abs(sum(coef[n]*mp.expjpi(2*j/mp.mpf(301))**n for n in range(2*N+1))) for j in range(301)) <= 1+mp.mpf(10)**-20
+        z = mp.mpc('1.3', '0.2'); qq = mp.exp(1j*d*z)
+        okp = okp and abs(sum(coef[n]*qq**n for n in range(2*N+1))-qq**N*(mp.cos(th)+1j*mp.sin(th)*ev(Prim, mp.sin(d*z))/Im)) < 1e-20
+    check("lem:chebnorm q^N(cos th + i sin th Pi_m) is a real polynomial in q of degree 2N, bounded by 1 on |q| = 1", okp)
+    # the mean bound of thm:sharperate at a right angle, and in general
+    mp.mp.dps = 20
+    t0 = ex_setup(a, b)[1]
+    okm = True
+    for m in [2, 3]:
+        Km, Prim, Im = kernel(m); eps = (1-s0)/Im
+        mean = mp.quad(lambda x: -mp.log(ev(Prim, mp.sin(d*x))/Im), [a, b])/(b-a)
+        Dab = b*(b*b-a*a)/(4*a)*(d/a+(1-s0)/a**2)
+        okm = okm and eps <= mp.mpf(1)/4 and mean <= 2*eps and 2*eps <= (2*Dab+(2+mp.pi/4*(b-a)*t0)*(1-s0))/Im
+        okm = okm and max(d*mp.cos(d*x)*ev(Km, mp.sin(d*x))/Im for x in mp.linspace(a, b, 41)) <= d/Im
+    check("thm:sharperate octave, m = 2, 3: eps_m <= 1/4, mean of -log U_m <= 2 eps_m <= the general bound, |U_m'| <= d/I_m", okm)
+    # prop:sixtap
+    mp.mp.dps = 30
+    P = lambda s: (192*s**5-560*s**3+735*s)/367
+    Hs = lambda z: (-12-80*mp.exp(2j*z)-435*mp.exp(4j*z)+435*mp.exp(6j*z)+80*mp.exp(8j*z)+12*mp.exp(10j*z))/734
+    pts = [mp.mpc('1.3', '0.4'), mp.mpc('-0.7', '2'), mp.mpc(3, '0.01')]
+    check("prop:sixtap the taps equal i e^{5iz} P(sin z), and 367 P(sin x) = 435 sin x + 80 sin 3x + 12 sin 5x",
+          all(abs(Hs(z)-1j*mp.exp(5j*z)*P(mp.sin(z))) < 1e-25 for z in pts)
+          and all(abs(367*P(mp.sin(x))-(435*mp.sin(x)+80*mp.sin(3*x)+12*mp.sin(5*x))) < 1e-25 for x in [mp.mpf('0.3'), mp.mpf('1.7'), mp.mpf('-2.2')]))
+    check("prop:sixtap P(+-1) = +-1, P' = 15(8s^2-7)^2/367, and P is Pi_1 for s0 = sqrt3/2",
+          P(1) == 1 and P(-1) == -1 and all(abs(mp.diff(P, s)-mp.mpf(15)/367*(8*s*s-7)**2) < 1e-20 for s in [mp.mpf('0.1'), mp.mpf('0.5'), mp.mpf('0.93')])
+          and all(abs(ev(kernel(1)[1], s)/kernel(1)[2]-P(s)) < 1e-25 for s in [mp.mpf('0.2'), mp.mpf('0.7'), 1]))
+    check("prop:sixtap |H| <= 1 on the real axis and in the upper half-plane (samples)",
+          max(abs(Hs(x)) for x in mp.linspace(0, mp.pi, 200)) <= 1+mp.mpf(10)**-25 and all(abs(Hs(z)) <= 1 for z in pts))
+    check("prop:sixtap sin 1 > 1 - 1/6 + 1/120 - 1/5040 > 5/6, sin 2 > sin 1, P(5/6) = 59225/59454",
+          mp.sin(1) > 1-mp.mpf(1)/6+mp.mpf(1)/120-mp.mpf(1)/5040 > mp.mpf(5)/6 and mp.sin(2) > mp.sin(1)
+          and Fr(192*5**5-560*5**3*36+735*5*6**4, 367*6**5) == Fr(59225, 59454))
+    check("prop:sixtap P(sin x) in (59225/59454, 1] and arg H = pi/2 + 5x on [1,2]",
+          all(mp.mpf(59225)/59454 < P(mp.sin(x)) <= 1 and abs(Hs(x)/abs(Hs(x))-mp.expj(mp.pi/2+5*x)) < 1e-25 for x in mp.linspace(1, 2, 51)))
+    Ff = lambda t: t+mp.mpf(176)/1101*t**3+mp.mpf(192)/1835*t**5
+    check("prop:sixtap d/dx(-F(cos x)) = P(sin x), int_1^2 P(sin x) = F(cos 1) - F(cos 2)",
+          all(abs(-mp.diff(lambda y: Ff(mp.cos(y)), x)-P(mp.sin(x))) < 1e-20 for x in [mp.mpf('0.4'), mp.mpf('1.2'), mp.mpf('1.9')])
+          and abs(mp.quad(lambda x: P(mp.sin(x)), [1, 2])-(Ff(mp.cos(1))-Ff(mp.cos(2)))) < 1e-25)
+    fact = lambda n: 1 if n == 0 else n*fact(n-1)
+    L = sum(Fr((-1)**k, fact(2*k)) for k in range(12)); U = sum(Fr((-1)**k*4**k, fact(2*k)) for k in range(13))
+    Fq = lambda t: t+Fr(176, 1101)*t**3+Fr(192, 1835)*t**5
+    cert = (1-Fq(L)+Fq(U))/Fr(59225, 59454)
+    check("prop:sixtap L < cos 1, cos 2 < U, and (1-F(L)+F(U))/M = 0.00069587... < 7/10000 exactly",
+          mp.mpf(L.numerator)/L.denominator < mp.cos(1) and mp.cos(2) < mp.mpf(U.numerator)/U.denominator
+          and cert < Fr(7, 10000) and abs(mp.mpf(cert.numerator)/cert.denominator-mp.mpf('0.0006958765626')) < 1e-12)
+    loss = mp.quad(lambda x: -mp.log(abs(Hs(x))), [1, 2])
+    check("prop:sixtap mean loss 0.00069359 nepers, below the floor 0.0060483 by more than a factor eight",
+          abs(loss-mp.mpf('0.00069359')) < 5e-9 and 8*loss < mp.mpf('0.0060483') and loss < mp.mpf(cert.numerator)/cert.denominator)
+    roots = mp.polyroots([192, 0, -560, 0, 735])
+    check("prop:sixtap the nonzero roots of P satisfy s^2 = (35 +- 14 i sqrt5)/24, and H vanishes at a point of C_+ above them",
+          all(min(abs(r*r-(35+sg*14j*mp.sqrt(5))/24) for sg in [1, -1]) < 1e-20 for r in roots)
+          and any(mp.im(mp.asin(r)) > 0 and abs(Hs(mp.asin(r))) < 1e-20 for r in roots))
+    mp.mp.dps = dps0
+construction_checks()
+
 # ssec:channels
 A0m = mp.matrix([[1, 0], [0, -1]]); C1m = mp.matrix([[1, 0], [0, 0]]); C2m = mp.matrix([[5, 2], [2, 1]])/4
 check("thm:noloewner det C2 = det(C2-A0) = 1/16", abs(mp.det(C2m)-mp.mpf(1)/16) < 1e-18 and abs(mp.det(C2m-A0m)-mp.mpf(1)/16) < 1e-18)

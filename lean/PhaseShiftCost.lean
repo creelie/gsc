@@ -20,7 +20,9 @@ What is checked here, and what is not.
     linear coefficients of the pointwise bounds without zeros), and the
     finite steps of Section 12 (the constants of the delay example, the
     identity of Lemma 12.3, the moment of Proposition 12.5, the constants of
-    Theorem 12.11 and the matrices of Theorem 12.14).
+    Theorem 12.15 and the matrices of Theorem 12.21), and the polynomial
+    identities and the exact rational bound of the six-tap system of
+    Proposition 12.18.
 
   * Not checked: the analytic theorems themselves (the sum rule, the
     identification of Lambda with an elliptic integral and with its power
@@ -625,10 +627,10 @@ theorem square_identity (f l ρ ε : Int) :
 theorem floor_moment (a b : Int) :
     (b*b - a*a)*(b*b - a*a) = ((a + b)*(a + b))*((b - a)*(b - a)) := by grind
 
-/-- Theorem 12.11: 2√m ≤ 3(m - 1) for every m ≥ 4, in the squared form 4m ≤ 9(m - 1)². -/
+/-- Theorem 12.15: 2√m ≤ 3(m - 1) for every m ≥ 4, in the squared form 4m ≤ 9(m - 1)². -/
 theorem kernel_order (n : Nat) : 4*(n + 4) ≤ 9*((n + 3)*(n + 3)) := by grind
 
-/-- Theorem 12.11: with s = m^{-1/2}, ∫_{|v| ≤ s} (1 - m v²) dv = 2(s - m s³/3) = 4s/3,
+/-- Theorem 12.15: with s = m^{-1/2}, ∫_{|v| ≤ s} (1 - m v²) dv = 2(s - m s³/3) = 4s/3,
     here times 3; and 4√6/3 > 3 because 16·6 > 81. -/
 theorem kernel_mass (m s : Int) (h : m*(s*s) = 1) :
     6*s - 2*(m*(s*s*s)) = 4*s ∧ 81 < 16*6 := by
@@ -638,18 +640,18 @@ theorem kernel_mass (m s : Int) (h : m*(s*s) = 1) :
       _ = s := by rw [h]; grind
   omega
 
-/-- Theorem 12.11: the slope of arg(cos θ + i sin θ T) is at most (1/2)(1 - ε)⁻² ≤ 8/9
+/-- Theorem 12.15: the slope of arg(cos θ + i sin θ T) is at most (1/2)(1 - ε)⁻² ≤ 8/9
     for ε ≤ 1/4; and |G'| ≤ (m - 1)ε/a² + ε/a² = mε/a². -/
 theorem phase_slope (m : Int) : 1*16*9 = 8*2*9 ∧ (m - 1) + 1 = m := by
   refine ⟨by decide, by omega⟩
 
-/-- Theorem 12.11: x r(x) ≤ b(b² - a²)/2, because
+/-- Theorem 12.15: x r(x) ≤ b(b² - a²)/2, because
     (b² - a²)² - 4(x² - a²)(b² - x²) = (2x² - a² - b²)². -/
 theorem peak_r (a b x : Int) :
     (b*b - a*a)*(b*b - a*a) - 4*((x*x - a*a)*(b*b - x*x))
       = (2*(x*x) - a*a - b*b)*(2*(x*x) - a*a - b*b) := by grind
 
-/-- Theorem 12.11: the bound on v_g, (B/2)(mε/a²)/(2a) = B m ε/(4a³) with
+/-- Theorem 12.15: the bound on v_g, (B/2)(mε/a²)/(2a) = B m ε/(4a³) with
     B = b(b² - a²), cleared of denominators; and with m = aτ/e,
     2·B m ε/(4a³) = B τ ε/(2e a²). -/
 theorem eta_assembly (B a m T ε e : Int) :
@@ -657,15 +659,90 @@ theorem eta_assembly (B a m T ε e : Int) :
     2*(B*(a*T)*ε)*(2*e*(a*a)) = (B*T*ε)*(4*(a*a*a))*e := by
   refine ⟨by grind, by grind⟩
 
-/-- Corollary 12.12: on the octave π a b/(b - a) = 2π. -/
+/-- Corollary 12.19: on the octave π a b/(b - a) = 2π. -/
 theorem octave_rate : 1*2 = 2*(2 - 1) := by decide
 
-/-- Theorem 12.14: the matrices of the counterexample, scaled by 4:
+/-- Theorem 12.21: the matrices of the counterexample, scaled by 4:
     det [[5,2],[2,1]] = det [[1,2],[2,5]] = 1 and det [[1,2],[2,1]] = -3, with trace 2,
     so C₂ - C₁ has the eigenvalues -1/4 and 3/4. -/
 theorem noloewner_dets :
     5*1 - 2*2 = (1 : Int) ∧ 1*5 - 2*2 = (1 : Int) ∧ 1*1 - 2*2 = (-3 : Int) ∧
     (-1 : Int) + 3 = 1 + 1 ∧ (-1 : Int)*3 = -3 := by decide
+
+/-! ## Section 12, the six-tap system of Proposition 12.18
+
+`P(s) = (192 s⁵ - 560 s³ + 735 s)/367`, `H(z) = i e^{5iz} P(sin z)`.  The rational
+bound of the mean loss uses exact fractions `num/den`, the partial sums
+`L = Σ_{k ≤ 11} (-1)^k/(2k)!` and `U = Σ_{k ≤ 12} (-1)^k 4^k/(2k)!` of the cosine
+series at 1 and 2, the primitive `F(t) = t + (176/1101) t³ + (192/1835) t⁵`
+and `M = P(5/6) = 59225/59454`. -/
+
+namespace SixTap
+
+def fact : Nat → Nat
+  | 0 => 1
+  | n+1 => (n+1) * fact n
+
+/-- An exact fraction `num/den` (not reduced). -/
+structure Fr where
+  num : Int
+  den : Nat
+
+def Fr.add (a b : Fr) : Fr := ⟨a.num*b.den + b.num*a.den, a.den*b.den⟩
+def Fr.sub (a b : Fr) : Fr := ⟨a.num*b.den - b.num*a.den, a.den*b.den⟩
+def Fr.mul (a b : Fr) : Fr := ⟨a.num*b.num, a.den*b.den⟩
+def Fr.pow (a : Fr) : Nat → Fr
+  | 0 => ⟨1, 1⟩
+  | n+1 => a.mul (a.pow n)
+
+/-- `Σ_{k ≤ n} (-1)^k x^{2k}/(2k)!`. -/
+def cosinePartial (x n : Nat) : Fr :=
+  (List.range (n+1)).foldl (fun acc k =>
+    acc.add ⟨(if k % 2 = 0 then (1 : Int) else -1) * (x^(2*k)), fact (2*k)⟩) ⟨0, 1⟩
+
+/-- `F(t) = t + (176/1101) t³ + (192/1835) t⁵`. -/
+def primitive (c : Fr) : Fr :=
+  (c.add ((Fr.mk 176 1101).mul (c.pow 3))).add ((Fr.mk 192 1835).mul (c.pow 5))
+
+/-- `(1 - F(L) + F(U))/M`. -/
+def certificate : Fr :=
+  (((Fr.mk 1 1).sub (primitive (cosinePartial 1 11))).add
+    (primitive (cosinePartial 2 12))).mul ⟨59454, 59225⟩
+
+/-- Proposition 12.18: `367 P'(s) = 960 s⁴ - 1680 s² + 735 = 15 (8 s² - 7)²`. -/
+theorem sixtap_derivative (s : Rat) :
+    960*s^4 - 1680*s^2 + 735 = 15*(8*s^2 - 7)^2 := by grind
+
+/-- Proposition 12.18: `367 P(sin x) = 435 sin x + 80 sin 3x + 12 sin 5x`, with
+    `sin 3x = 3s - 4s³` and `sin 5x = 16s⁵ - 20s³ + 5s`. -/
+theorem sixtap_harmonics (s : Rat) :
+    192*s^5 - 560*s^3 + 735*s =
+    435*s + 80*(3*s - 4*s^3) + 12*(16*s^5 - 20*s^3 + 5*s) := by grind
+
+/-- Proposition 12.18: `P(1) = 1` and `P(-1) = -1`. -/
+theorem sixtap_normalisation :
+    (192 - 560 + 735 : Int) = 367 ∧ (-192 + 560 - 735 : Int) = -367 := by decide
+
+/-- Proposition 12.18: `P(5/6) = 59225/59454`. -/
+theorem sixtap_amplitude :
+    (192*5^5 - 560*5^3*6^2 + 735*5*6^4 : Int)*59454 = 59225*(367*6^5) := by decide
+
+/-- Proposition 12.18: `0 < M < 1`. -/
+theorem sixtap_amplitude_bounds : (0 : Int) < 59225 ∧ (59225 : Int) < 59454 := by decide
+
+set_option maxRecDepth 200000 in
+/-- Proposition 12.18: `(1 - F(L) + F(U))/M < 7/10000`, exactly. -/
+theorem sixtap_certificate :
+    certificate.num*10000 < 7*(certificate.den : Int) := by decide
+
+set_option maxRecDepth 200000 in
+/-- Proposition 12.18: the denominator of the certificate is positive. -/
+theorem sixtap_certificate_den : 0 < certificate.den := by decide
+
+/-- Proposition 12.18: the taps of `H` are antisymmetric, so `H(0) = 0`. -/
+theorem sixtap_taps : (-12 - 80 - 435 + 435 + 80 + 12 : Int) = 0 := by decide
+
+end SixTap
 
 end PhaseShiftCost
 
@@ -758,4 +835,12 @@ section
 #print axioms eta_assembly
 #print axioms octave_rate
 #print axioms noloewner_dets
+#print axioms SixTap.sixtap_derivative
+#print axioms SixTap.sixtap_harmonics
+#print axioms SixTap.sixtap_normalisation
+#print axioms SixTap.sixtap_amplitude
+#print axioms SixTap.sixtap_amplitude_bounds
+#print axioms SixTap.sixtap_certificate
+#print axioms SixTap.sixtap_certificate_den
+#print axioms SixTap.sixtap_taps
 end

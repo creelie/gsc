@@ -340,7 +340,10 @@ integral of $r/x$, the means $\Lambda$ and $\Lambda_-$ of the two profiles,
 the Herglotz property, the linear coefficient and the mean of the
 compensated optimum of \cref{thm:affine}, and the octave values $A(m)$,
 $\Lambda_-$ and $\vartheta_c$; the closed forms, the floor and the
-decay bounds of \cref{sec:beyond}; and the numbers of \cref{sec:audit,sec:waves}. It reports
+decay bounds of \cref{sec:beyond}, with the Toeplitz and moment lemmas of the
+construction, the constant $C_{a,b}$ and the kernels of
+\cref{thm:sharperate}, and the taps and the rational bound of
+\cref{prop:sixtap}; and the numbers of \cref{sec:audit,sec:waves}. It reports
 \checkscount\ checks passed and none failed.
 
 \emph{Lean.} The file \texttt{lean/PhaseShiftCost.lean} is checked by the
@@ -360,8 +363,10 @@ and for \cref{sec:pointwise} the signs of the kernels, the comparison of
 \cref{cor:compare}, the step of \cref{cor:pointwisecons}(iv), the vanishing
 linear coefficients of the compensated optima and the threshold
 $\vartheta_c$, and for \cref{sec:beyond} the identities and constants of
-\cref{prop:floor,thm:expdecay,cor:rate} and the determinants of
-\cref{thm:noloewner}. Of the \leancount\ theorems, \leanfree\ depend on no axiom, two on
+\cref{prop:floor,thm:expdecay,cor:rate}, the determinants of
+\cref{thm:noloewner}, and the polynomial identities and the rational bound
+$\int_1^2\alpha<7/10000$ of \cref{prop:sixtap}, computed exactly from the
+partial sums of the cosine series. Of the \leancount\ theorems, \leanfree\ depend on no axiom, two on
 \texttt{propext} only, three on \texttt{propext} and \texttt{Quot.sound}, and the others on Lean's three standard axioms
 (\texttt{propext}, \texttt{Classical.choice}, \texttt{Quot.sound}), through
 the tactics \texttt{grind} and \texttt{omega}.
