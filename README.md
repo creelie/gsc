@@ -52,6 +52,14 @@ depend on no axiom and the rest on the standard axioms of Lean
 Hardy spaces, the conformal map and extremal length used for systems with
 zeros, and the elliptic-integral identities) is not formalised.
 
+## Archive
+
+| Release | Tag | Zenodo DOI |
+| --- | --- | --- |
+| 1.0.0 | `v1.0.0` | [10.5281/zenodo.23761044](https://doi.org/10.5281/zenodo.23761044) |
+
+Concept DOI of all versions: [10.5281/zenodo.23761043](https://doi.org/10.5281/zenodo.23761043).
+
 ## Contact
 
 GitHub-related contact: egspl@proton.me (GitHub: creelie). Corresponding
