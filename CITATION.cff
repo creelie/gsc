@@ -3,7 +3,7 @@ message: "If you use this archive, please cite it as below."
 title: "Least Loss of Passive Phase Shifters"
 version: 1.2.0
 date-released: 2026-10-29
-doi: 10.5281/zenodo.23761043
+doi: 10.5281/zenodo.23768958
 license: MIT
 repository-code: "https://github.com/creelie/gsc"
 authors:
