@@ -1,9 +1,9 @@
 cff-version: 1.2.0
 message: "If you use this archive, please cite it as below."
-title: "The Energy Cost of a Phase Shift"
-version: 1.1.0
+title: "Least Loss of Passive Phase Shifters"
+version: 1.2.0
 date-released: 2026-10-29
-doi: 10.5281/zenodo.23764158
+doi: 10.5281/zenodo.23761043
 license: MIT
 repository-code: "https://github.com/creelie/gsc"
 authors:
@@ -16,3 +16,7 @@ authors:
     given-names: Sanjeevan
     orcid: "https://orcid.org/0000-0002-6148-1421"
     affiliation: "Formerly, Birla Institute of Technology (BIT) Mesra, India"
+  - family-names: Bhattacharya
+    given-names: Ushashi
+    orcid: "https://orcid.org/0009-0002-2254-3914"
+    affiliation: "Dortmund, Germany; National Taiwan University, Taipei, Taiwan"

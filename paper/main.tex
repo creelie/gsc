@@ -61,17 +61,17 @@
 \renewcommand{\Re}{\operatorname{Re}}
 \renewcommand{\Im}{\operatorname{Im}}
 
-\newcommand{\checkscount}{244}
-\newcommand{\leancount}{75}
-\newcommand{\leanfree}{30}
-\newcommand{\releaseTag}{v1.1.0}
+\newcommand{\checkscount}{421}
+\newcommand{\leancount}{87}
+\newcommand{\leanfree}{34}
+\newcommand{\releaseTag}{v1.2.0}
 \newcommand{\zenodoCodeID}{10.5281/zenodo.23764158}
 \newcommand{\Hs}{H^{\sharp}}
-\newcommand{\as}{\alpha^{\sharp}}
+\newcommand{\as}{{\alpha^{\sharp}}}
 
 \begin{document}
 
-\title{The Energy Cost of a Phase Shift}
+\title{Least Loss of Passive Phase Shifters}
 
 \author{Deep Bhattacharjee$^{*}$\,\orcidlink{0000-0003-0466-750X}}
 \email{d.bhattacharjee@erl-forschung.de}
@@ -87,19 +87,22 @@
 \email{sanjeevan9905@gmail.com}
 \affiliation{Formerly, Birla Institute of Technology (BIT) Mesra, India}
 
+\author{Ushashi Bhattacharya\,\orcidlink{0009-0002-2254-3914}}
+\affiliation{Dortmund, Germany}
+\affiliation{National Taiwan University, Taipei, Taiwan}
+
 \date{29 October 2026}
 
 \begin{abstract}
-\itshape
-We prove that a passive causal system without zeros in the upper half-plane
-cannot shift every frequency of a band $[a,b]$ by the same phase $\theta>0$
-without loss: its mean attenuation over the band is at least
-$\theta\,(K(\kappa)-E(\kappa))/\kappa$ nepers, $\kappa=(b-a)/(b+a)$, and an
-explicit system attains this with the least attenuation at every frequency of
-the band at once. With zeros allowed, one explicit system with a
-single zero is optimal in the same pointwise sense. For a right angle it is algebraic, its mean attenuation is
-$\frac\pi2(\sqrt b-\sqrt a)/(\sqrt b+\sqrt a)$ nepers, and no passive system with this phase
-passes more than the fraction $a/b$ of the power at $\omega=\sqrt{ab}$.
+A passive device that shifts the phase of every frequency in a band
+$[a,b]$ by the same angle $\theta$ must lose energy. We find the least loss.
+Without zeros the mean loss is at least $\theta\,(K(\kappa)-E(\kappa))/\kappa$
+nepers, $\kappa=(b-a)/(b+a)$, and one explicit device has the least loss at
+every frequency at once. With zeros a device with one zero does the same;
+for a right angle its mean loss is $\frac\pi2(\sqrt b-\sqrt a)/(\sqrt b+\sqrt a)$.
+If a delay $\tau$ is added, the best device with zeros exists and is unique,
+and its loss falls exponentially in $\tau$, at a rate between $a/e$ and
+$\pi ab/(b-a)$. Without zeros the loss stays above a fixed floor.
 \end{abstract}
 
 \maketitle
@@ -123,6 +126,7 @@ Primary 30E20; Secondary 78A40, 94C05, 30H10, 33E05.
 \input{sections/pointwise}
 \input{sections/zeros}
 \input{sections/allzeros}
+\input{sections/beyond}
 \input{sections/waves}
 \input{sections/discussion}
 \appendix

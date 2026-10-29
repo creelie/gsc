@@ -1,4 +1,4 @@
-"""Numerical cross-checks for the paper 'The Energy Cost of a Phase Shift'.
+"""Numerical cross-checks for the paper 'Least Loss of Passive Phase Shifters'.
 
 Every statement of the paper is proved analytically; this script only
 re-evaluates the identities and constants at sample bands.  mpmath's
@@ -367,5 +367,387 @@ check("octave A(m)/Lambda = 1.2731", abs(A(mp.sqrt(m2))/Lam - mp.mpf('1.2731')) 
 check("octave Lambda_- = 0.26560", abs(Lm - mp.mpf('0.265596407637276')) < 1e-12)
 check("octave theta_c = 1.5477", abs(mp.pi*Lm/(Lam+Lm) - mp.mpf('1.5477')) < 5e-5)
 check("octave tau_circ a = 0.6864", abs(t0 - mp.mpf('0.6864')) < 5e-5)
+
+
+import random
+# ssec:closedform, the optimum in closed form
+mp.mp.dps = 20
+def ell_setup(th, a, b):
+    k = mp.sqrt(1-a*a/(b*b)); u = th*K(k)/mp.pi
+    eta = b*mp.ellipfun('cn', u, k**2)/mp.ellipfun('sn', u, k**2)
+    Q = mp.sqrt((eta**2+a*a)*(eta**2+b*b)); n = (b*b-a*a)/(b*b+eta**2)
+    c = mp.ellippi(n, k**2)/((b*b+eta**2)*K(k))
+    def al(x):
+        psi = mp.asin(mp.sqrt((b*b-x*x)/(b*b-a*a)))
+        return 2*eta*Q/b*(c*mp.ellipf(psi, k**2) - mp.ellippi(n, psi, k**2)/(b*b+eta**2))
+    return k, eta, Q, c, al
+for (a, b) in [(mp.mpf(1), mp.mpf(2)), (mp.mpf(1), mp.mpf(5))]:
+    tag = " [b/a=%s]" % mp.nstr(b/a, 2)
+    r = lambda t: mp.sqrt((t*t-a*a)*(b*b-t*t))
+    for th in [mp.mpf('0.5'), mp.pi/2, mp.mpf('2.5')]:
+        k, eta, Q, c, al = ell_setup(th, a, b)
+        t2 = tag + " theta=%s" % mp.nstr(th, 3)
+        e1 = etastar(th, a, b)
+        check("thm:etaexplicit eta* = b cn/sn"+t2, abs(e1-eta) < 1e-9*eta)
+        xs = [a+(b-a)*mp.mpf(j)/5 for j in (1, 2, 4)]
+        check("thm:ellipticprofile alpha# equals v_g"+t2, max(abs(al(x)-vg(x, th, eta, a, b)) for x in xs) < 1e-10)
+        Pint = lambda x: 2*x*r(x)*mp.quad(lambda u: 1/((x*x+u*u)*mp.sqrt((u*u+a*a)*(u*u+b*b))), [0, eta])
+        k0 = mp.sqrt(1-a*a/(b*b)); t0 = 2*K(k0)/(mp.pi*b)
+        Aq = lambda x: r(x)/x*2/mp.pi*mp.quad(lambda t: x/((x+t)*r(t)), [a, b])
+        check("eq:asharpP alpha# = 2xr int - (pi-theta) A"+t2, max(abs(al(x)-(Pint(x)-(mp.pi-th)*Aq(x))) for x in xs) < 1e-10)
+        e, L, Lz = Lall(th, a, b)
+        check("eq:ellipticmean pi eta (Qc-1)/(b-a) = Lambda_all"+t2, abs(mp.pi*eta*(Q*c-1)/(b-a) - L) < 1e-10)
+        xp = mp.sqrt(1/c-eta**2)
+        check("peak x_theta: derivative vanishes, a < x < b"+t2, a < xp < b and abs(mp.diff(al, xp)) < 1e-8)
+        x = (a+2*b)/3
+        check("eq:alphaellipticprime"+t2, abs(mp.diff(al, x) - 2*eta*Q/r(x)*(1/(x*x+eta**2)-c)) < 1e-10)
+        # transfer function: compare with -B e^{i h} at a point near 0, via the log derivative integral
+        z = mp.mpc(a/3, a/5); ph = mp.asin(z/a)
+        Hel = mp.exp(2j*Q/(b*eta)*(mp.ellippi(-a*a/eta**2, ph, (a/b)**2) - eta**2*c*mp.ellipf(ph, (a/b)**2)))
+        Rz = lambda w: -mp.sqrt(a*a-w*w)*mp.sqrt(b*b-w*w)
+        Hint = mp.exp(mp.quad(lambda w: 2j*eta*Q/Rz(w*z)*(c-1/((w*z)**2+eta**2))*z, [0, 1]))
+        check("eq:transferelliptic"+t2, abs(Hel-Hint) < 1e-12)
+    k, eta, Q, c, al = ell_setup(mp.pi/2, a, b)
+    check("closed form at pi/2: eta = sqrt(ab), c = 1/(2ab)"+tag, abs(eta-mp.sqrt(a*b)) < 1e-15 and abs(c-1/(2*a*b)) < 1e-15)
+a, b = mp.mpf(1), mp.mpf(2)
+for th, mean in [(mp.mpf('0.5'), '0.13090'), (mp.mpf(1), '0.22860'), (mp.pi/2, '0.26951'), (mp.mpf(2), '0.24357'), (mp.mpf('2.5'), '0.15941')]:
+    k, eta, Q, c, al = ell_setup(th, a, b)
+    check("tab:allzeros mean %s from the closed form" % mean, abs(mp.pi*eta*(Q*c-1) - mp.mpf(mean)) < 5e-6)
+# lem:zeroatom
+r = lambda t: mp.sqrt((t*t-a*a)*(b*b-t*t))
+Rf = lambda z: z*z*mp.sqrt(1-a*a/(z*z))*mp.sqrt(1-b*b/(z*z))
+for u in [mp.mpf('0.3'), mp.mpf(2)]:
+    Qu = mp.sqrt((u*u+a*a)*(u*u+b*b))
+    phi = lambda z: z/(z*z+u*u)*(1+Rf(z)/Qu)
+    cau = lambda z: 2*z*Rf(z)/mp.pi*mp.quad(lambda t: t/(t*t+u*u)/(r(t)*(z*z-t*t)), [a, b])
+    zz = [mp.mpc(3, 1), mp.mpc(mp.mpf('0.5'), 2), mp.mpc(-1, mp.mpf('0.4'))]
+    check("lem:zeroatom h_{j_u} formula [u=%s]" % u, max(abs(phi(z)-cau(z)) for z in zz) < 1e-10)
+    check("lem:zeroatom beta = 1/Q_u [u=%s]" % u, abs(2/mp.pi*mp.quad(lambda t: t/((t*t+u*u)*r(t)), [a, b]) - 1/Qu) < 1e-10)
+    check("R(iu) = -Q_u [u=%s]" % u, abs(Rf(mp.mpc(0, u))+Qu) < 1e-14)
+
+# sec:beyond, a lead with a delay
+mp.mp.dps = 20
+def ex_setup(a, b):
+    r = lambda t: mp.sqrt((t*t-a*a)*(b*b-t*t))
+    k = mp.sqrt(1-a*a/(b*b)); t0 = 2*K(k)/(mp.pi*b)
+    kap = (b-a)/(b+a); Lam = (K(kap)-E(kap))/kap; Lm = (E(kap)-(1-kap**2)*K(kap))/kap
+    tq = lambda ph: (a+b)/2-(b-a)/2*mp.cos(ph)
+    def q(y): return 2/mp.pi*mp.quad(lambda ph: mp.sqrt(y)/(mp.sqrt(y)+tq(ph))/mp.sqrt((tq(ph)+a)*(tq(ph)+b)), [0, mp.pi])
+    def dq(y): return 2/mp.pi*mp.quad(lambda ph: tq(ph)/(2*mp.sqrt(y)*(mp.sqrt(y)+tq(ph))**2)/mp.sqrt((tq(ph)+a)*(tq(ph)+b)), [0, mp.pi])
+    def d2q(y):
+        x = mp.sqrt(y)
+        return -2/mp.pi*mp.quad(lambda ph: tq(ph)*(3*x+tq(ph))/(4*x**3*(x+tq(ph))**3)/mp.sqrt((tq(ph)+a)*(tq(ph)+b)), [0, mp.pi])
+    f, l = (a+b)/2, (b-a)/2; G0 = mp.pi*l*l
+    Dl = lambda v: mp.sqrt((v-a*a)*(v-b*b))
+    xv = lambda v: (v-Dl(v)+a*b)/(a+b)
+    Gp = lambda v: mp.pi/2*(v-(a*a+b*b)/2-Dl(v))
+    Gm = lambda u: mp.pi/2*((a*a+b*b)/2-u-mp.sqrt((a*a-u)*(b*b-u)))
+    return r, t0, Lam, Lm, q, dq, d2q, f, l, G0, xv, Gp, Gm
+def ex_solve(s, tau, a, b, S):
+    r, t0, Lam, Lm, q, dq, d2q, f, l, G0, xv, Gp, Gm = S
+    Phi = lambda v: t0-q(xv(v)**2)+dq(xv(v)**2)*(v-xv(v)**2)
+    lo, hi = b*b*(1+mp.mpf('1e-12')), b*b*mp.mpf(10)**6
+    for _ in range(200):
+        mid = (lo+hi)/2
+        if s*Phi(mid) < tau: lo = mid
+        else: hi = mid
+    v = (lo+hi)/2; xs = xv(v); ys = xs**2
+    D = s*dq(ys)*(v-ys)**2/v; C = s*(q(ys)-dq(ys)*ys*(v-ys)/v)
+    return v, xs, ys, C, D, -s*Lam+(C*G0+D*Gp(v))/(b-a)
+for (a, b) in [(mp.mpf(1), mp.mpf(2)), (mp.mpf(1), mp.mpf(4))]:
+    tag = " [b/a=%s]" % mp.nstr(b/a, 2)
+    S = ex_setup(a, b); r, t0, Lam, Lm, q, dq, d2q, f, l, G0, xv, Gp, Gm = S
+    xs3 = [a+(b-a)*mp.mpf(j)/6 for j in (1, 3, 5)]
+    pw = pw_setup(a, b); A = pw[4]; hc = pw[5]
+    check("lem:q q(x^2) = x A(x)/r(x)"+tag, max(abs(q(x*x)-x*A(x)/r(x)) for x in xs3) < 1e-12)
+    check("lem:q q(y) -> tau_circ, q' > 0, q'' < 0"+tag, abs(q(mp.mpf(10)**16)-t0) < 1e-7
+          and all(dq(y) > 0 and d2q(y) < 0 for y in [a*a/2, a*b, b*b, 3*b*b]))
+    check("lem:q q' and q'' agree with numerical derivatives"+tag,
+          abs(dq(a*b)-mp.diff(q, a*b)) < 1e-12 and abs(d2q(a*b)-mp.diff(q, a*b, 2)) < 1e-9)
+    s = mp.mpf(1)
+    tc = s*(t0-q(b*b))
+    check("tau_c = (2s/pi) int t/((b+t) r) > 0"+tag, abs(tc - 2*s/mp.pi*mp.quad(lambda t: t/((b+t)*r(t)), [a, b])) < 1e-10 and tc > 0)
+    check("Gamma_- and Gamma_+ closed forms"+tag,
+          abs(Gm(a*a/3) - mp.quad(lambda x: x*r(x)/(x*x-a*a/3), [a, b])) < 1e-14
+          and abs(Gp(3*b*b) - mp.quad(lambda x: x*r(x)/(3*b*b-x*x), [a, b])) < 1e-14 and abs(Gm(0)-G0) < 1e-20)
+    check("M_s(0) = s Lambda_-"+tag, abs(-s*Lam+mp.pi/4*(b-a)*s*t0 - s*Lm) < 1e-14)
+    # (i): below the threshold the origin-only optimum is Herglotz and attains the bound
+    Rcz = lambda z: Rc(z, a, b)
+    for tau in [-s*t0/2, tc/2, tc]:
+        ho = lambda z: -s*hc(z)+tau*z+(s*t0-tau)*Rcz(z)/z
+        pts = [mp.mpc(x, y) for x in [a/2, (a+b)/2, 2*b, -(a+b)/2] for y in [(b-a)/50, (b-a)/3, 2*b]]
+        check("thm:exactmean(i) optimum Herglotz, band density = bound [tau=%s]" % mp.nstr(tau, 4) + tag,
+              all(mp.im(ho(z)) > -1e-15 for z in pts) and
+              max(abs(mp.im(ho(mp.mpc(x, mp.mpf('1e-12'))))-r(x)/x*(s*t0-tau-s*q(x*x))) for x in xs3) < 1e-9)
+    for tau in [2*tc, mp.mpf(3)]:
+        v, xs, ys, C, D, M = ex_solve(s, tau, a, b, S)
+        t2 = tag + " tau=%s" % mp.nstr(tau, 4)
+        al = lambda x: r(x)/x*(C+D*x*x/(v-x*x)-s*q(x*x))
+        grid = [a+(b-a)*mp.mpf(j)/40 for j in range(1, 40)]
+        check("thm:exactmean(ii) C, D > 0, f < x* < b"+t2, C > 0 and D > 0 and f < xs < b)
+        check("thm:exactmean(ii) band density >= 0, zero at x*"+t2, min(al(x) for x in grid) >= 0 and abs(al(xs)) < 1e-12)
+        check("thm:exactmean(ii) linear coefficient 0"+t2, abs(tau-s*t0+C-D) < 1e-12)
+        ho = lambda z: -s*hc(z)+tau*z+Rcz(z)*(C/z+D*z/(v-z*z))
+        pts = [mp.mpc(x, y) for x in [a/2, (a+b)/2, 2*b, mp.sqrt(v), -(a+b)/2] for y in [(b-a)/50, (b-a)/3, 2*b]]
+        check("thm:exactmean(ii) optimum is Herglotz"+t2, all(mp.im(ho(z)) > 0 for z in pts))
+        check("eq:exactmean equals the integral of the profile"+t2, abs(mp.quad(al, [a, xs, b])/(b-a) - M) < 1e-12)
+        l1 = mp.pi*(xs-a)*(b-xs); l2 = mp.pi*(xs-f)**2
+        check("dual form of the mean"+t2, abs((b-a)*M - (-s*(b-a)*Lam+l1*s*q(ys)+l2*(s*t0-tau))) < 1e-12)
+        check("lem:meandual lambda1+lambda2 = Gamma0, low and high slacks"+t2,
+              abs(l1+l2-G0) < 1e-15
+              and min(Gm(a*a*mp.mpf(j)/30)-l1*ys/(ys-a*a*mp.mpf(j)/30)-l2 for j in range(1, 30)) > 0
+              and min(Gp(b*b*(1+mp.mpf(j)**2/20))+l2-l1*ys/(b*b*(1+mp.mpf(j)**2/20)-ys) for j in range(1, 60)) > -1e-15
+              and abs(Gp(v)+l2-l1*ys/(v-ys)) < 1e-12)
+        # random admissible measures: masses at 0, below and above the band
+        random.seed(7)
+        qg = {x: q(x*x) for x in grid}
+        cnt = 0; worst = mp.inf
+        for trial in range(300):
+            c0 = 3*mp.mpf(random.random())
+            lows = [(a*mp.mpf(random.random()), mp.mpf(random.random())) for _ in range(random.randint(0, 2))]
+            highs = [(b*(1+6*mp.mpf(random.random())), 6*mp.mpf(random.random())) for _ in range(random.randint(0, 3))]
+            Mf = lambda y: c0+sum(m*y/(y-t*t) for t, m in lows)+sum(m*y/(t*t-y) for t, m in highs)
+            beta = tau-s*t0+c0+sum(m for t, m in lows)-sum(m for t, m in highs)
+            if beta < 0 or any(Mf(x*x) < s*qg[x] for x in grid): continue
+            cost = (-s*(b-a)*Lam+c0*G0+sum(m*Gm(t*t) for t, m in lows)+sum(m*Gp(t*t) for t, m in highs))/(b-a)
+            cnt += 1; worst = min(worst, cost-M)
+        check("random admissible measures cost at least the optimum (%d)" % cnt + t2, cnt > 20 and worst > 0)
+# the square identity, also continued to negative w
+a, b = mp.mpf(1), mp.mpf(3); f, l = 2, 1
+for xs in [mp.mpf('2.2'), mp.mpf('2.8')]:
+    ys = xs*xs; l1 = mp.pi*(xs-a)*(b-xs); l2 = mp.pi*(xs-f)**2; ep = xs-f
+    for w in [mp.mpf(10), mp.mpf(40), mp.mpf(-1), mp.mpf(-7)]:
+        sq = mp.sqrt((a*a-w)*(b*b-w)) if w < 0 else mp.sqrt((w-a*a)*(w-b*b))
+        xw = (w+sq+a*b)/(a+b) if w < 0 else (w-sq+a*b)/(a+b)
+        rh = xw-f
+        Gw = -mp.pi/2*((a*a+b*b)/2-w-sq) if w < 0 else mp.pi/2*(w-(a*a+b*b)/2-sq)
+        ok = abs(w-(f*f+l*l+f*(rh+l*l/rh))) < 1e-15 and abs(Gw-mp.pi*f*rh) < 1e-15
+        ok = ok and abs((w-ys)*(Gw+l2-l1*ys/(w-ys)) - mp.pi*f*(f+l*l/rh)*(rh-ep)**2) < 1e-13
+        if w < 0: ok = ok and -l*l/f < rh < 0
+        check("eq:square at x*=%s, w=%s" % (xs, w), ok)
+# cor:delaybranches monotonicity in s
+a, b = mp.mpf(1), mp.mpf(2); S = ex_setup(a, b)
+Ms = [ex_solve(s, mp.mpf(5), a, b, S)[5] for s in [mp.mpf('1.2'), mp.pi/2, mp.mpf(2)]]
+check("cor:delaybranches M_s(5) increases with s", Ms[0] < Ms[1] < Ms[2])
+
+# ssec:delay, the counterexample on [1,2]
+r, t0, Lam, Lm, q, dq, d2q, f, l, G0, xv, Gp, Gm = S
+s = mp.pi/2; T0 = 16
+pw = pw_setup(a, b); hc = pw[5]
+check("tau_circ <= 1 and >= 1/2 on [1,2]", mp.mpf(1)/2 <= t0 <= 1)
+grid = [1+mp.mpf(j)/20 for j in range(0, 21)]
+check("q' <= tau/8, -q'' <= tau/8 on [1,4]", all(dq(x*x) <= t0/8 and -d2q(x*x) <= t0/8 for x in grid))
+check("q' >= 1/128, -q'' >= 1/1024 on [1,4]", all(dq(x*x) >= mp.mpf(1)/128 and -d2q(x*x) >= mp.mpf(1)/1024 for x in grid))
+check("q - y q' >= 3/32 on [9/4,4], q(4) >= tau/2", all(q(x*x)-x*x*dq(x*x) >= mp.mpf(3)/32 for x in grid if x >= 1.5) and q(4) >= t0/2)
+for y0 in [mp.mpf('1.3'), mp.mpf('2.5'), mp.mpf('3.7')]:
+    d = dq(y0)*(T0-y0)**2/T0; c = q(y0)-dq(y0)*y0*(T0-y0)/T0
+    al = lambda x: s*r(x)/x*(c+d*x*x/(T0-x*x)-q(x*x))
+    hy = lambda z: -s*hc(z)+5*z+s*Rc(z, a, b)*(c/z+d*z/(T0-z*z))
+    pts = [mp.mpc(x, yy) for x in [mp.mpf('0.5'), mp.mpf('1.5'), 4, 7, -2] for yy in [mp.mpf('0.02'), mp.mpf('0.4'), 3]]
+    check("thm:delay witness y0=%s: c, d > 0, Herglotz, alpha(sqrt y0) = 0, alpha >= 0" % y0,
+          c > 0 and d > 0 and all(mp.im(hy(z)) > 0 for z in pts) and abs(al(mp.sqrt(y0))) < 1e-14
+          and min(al(x) for x in grid) >= -1e-20 and 5-s*t0+s*(c-d) > 0)
+y0 = mp.mpf(5)/2
+d = dq(y0)*(T0-y0)**2/T0; c = q(y0)-dq(y0)*y0*(T0-y0)/T0
+al = lambda x: s*r(x)/x*(c+d*x*x/(T0-x*x)-q(x*x))
+M52 = mp.quad(al, [1, mp.sqrt(y0), 2])
+check("mean of H_{5/2} = 0.0084888 and the exact formula", abs(M52-mp.mpf('0.0084888')) < 5e-8
+      and abs(M52 - s*(-Lam+mp.pi*c/4+mp.pi*d/2*(16-mp.mpf(5)/2-mp.sqrt(15*12)))) < 1e-14)
+check("0 <= f0 <= (7/96)(y-y0)^2 on [1,4]", all(0 <= c+d*x**2/(T0-x**2)-q(x**2) <= mp.mpf(7)/96*(x*x-y0)**2+1e-25 for x in grid))
+check("eq:delaybound 21 pi^2/1024 < (pi/2)(3-2sqrt2)", M52 <= 21*mp.pi**2/1024 < mp.pi/2*(3-2*mp.sqrt(2)))
+check("Lambda_all(pi/2) on [1,2] = 0.26951", abs(mp.pi/2*(3-2*mp.sqrt(2)) - mp.mpf('0.26951')) < 5e-6)
+v, xs, ys, C, D, M = ex_solve(s, mp.mpf(5), a, b, S)
+check("M_{pi/2}(5) parameters sqrt v, x*, C, D",
+      abs(mp.sqrt(v)-mp.mpf('8.870977')) < 5e-7 and abs(xs-mp.mpf('1.504922')) < 5e-7
+      and abs(C-mp.mpf('0.426778')) < 5e-7 and abs(D-mp.mpf('4.348520')) < 5e-7)
+check("M_{pi/2}(5) = 0.00639032, ratio about 42", abs(M-mp.mpf('0.00639032')) < 5e-9 and abs(mp.pi/2*(3-2*mp.sqrt(2))/M-42) < 0.5)
+check("zero-free branch: M <= 21pi^2/1024 < pi^2/24 <= (pi/2)Lambda", M < 21*mp.pi**2/1024 < mp.pi**2/24 <= mp.pi/2*Lam)
+check("tau_c on the octave, s=1, is 0.2852", abs(t0-q(4) - mp.mpf('0.2852')) < 5e-5)
+
+# ssec:delayzeros, one zero
+Qu = lambda u: mp.sqrt((1+u*u)*(4+u*u))
+def onezero(eps):
+    P = lambda y: 2*mp.quad(lambda u: y/((y+u*u)*Qu(u)), [0, eps])
+    dP = lambda y: 2*mp.quad(lambda u: u*u/((y+u*u)**2*Qu(u)), [0, eps])
+    qe = lambda y: s*q(y)-P(y); dqe = lambda y: s*dq(y)-dP(y)
+    be = 5-s*t0+2*mp.quad(lambda u: 1/Qu(u), [0, eps])
+    lo, hi = 4*(1+mp.mpf('1e-12')), mp.mpf(10)**6
+    for _ in range(200):
+        mid = (lo+hi)/2
+        if dqe(xv(mid)**2)*(mid-xv(mid)**2)-qe(xv(mid)**2) < be: lo = mid
+        else: hi = mid
+    v1 = (lo+hi)/2; y1 = xv(v1)**2
+    D1 = dqe(y1)*(v1-y1)**2/v1; C1 = qe(y1)-dqe(y1)*y1*(v1-y1)/v1
+    M1 = -s*Lam+2*mp.quad(lambda u: Gm(-u*u)/Qu(u), [0, eps])+C1*G0+D1*Gp(v1)
+    al1 = lambda x: r(x)/x*(C1+D1*x*x/(v1-x*x)-qe(x*x))
+    return M1, C1, D1, v1, y1, al1, be, qe, dqe, P, dP
+eps = mp.mpf(1)/10
+M1, C1, D1, v1, y1, al1, be, qe, dqe, P, dP = onezero(eps)
+check("prop:onezerodelay P' <= eps^3/3, -P'' <= 2eps^3/3, P <= eps on [1,4]",
+      all(0 <= dP(x*x) <= eps**3/3 and P(x*x) <= eps for x in grid)
+      and all(-mp.diff(P, x*x, 2) <= 2*eps**3/3 for x in grid[::5]))
+check("prop:onezerodelay C, D > 0, beta > 0, x* in (3/2,2)", C1 > 0 and D1 > 0 and be > 0 and 1.5 < mp.sqrt(y1) < 2)
+check("prop:onezerodelay band density >= 0", min(al1(x) for x in grid[1:-1]) >= 0)
+check("prop:onezerodelay linear coefficient 0", abs(be+C1-D1) < 1e-12)
+check("prop:onezerodelay mean = 0.0063752 < M_{pi/2}(5)", abs(M1-mp.mpf('0.0063752')) < 5e-8 and M1 < M)
+check("one-zero mean formula equals the integral of the profile",
+      abs(M1 - mp.quad(al1, [1, mp.sqrt(y1), 2])) < 1e-12)
+xs1 = mp.sqrt(y1); l1 = mp.pi*(xs1-1)*(2-xs1); l2 = mp.pi*(xs1-f)**2
+Lj = lambda u: (Gm(-u*u)-l1*y1/(y1+u*u)-l2)/Qu(u)
+check("L(j_u) < 0 for u in (0, eps]", all(Lj(eps*mp.mpf(j)/10) < 0 for j in range(1, 11)))
+check("arg(-B_eps) = pi - p_eps on the band", abs(mp.arg(-(mp.mpf('1.3')-1j*eps)/(mp.mpf('1.3')+1j*eps)) - (mp.pi-2*mp.atan(eps/mp.mpf('1.3')))) < 1e-15)
+# rem:onezerofamily
+lo, hi = mp.mpf('0.3'), mp.mpf('0.6')
+for _ in range(40):
+    mid = (lo+hi)/2
+    if onezero(mid)[1] > 0: lo = mid
+    else: hi = mid
+e0 = (lo+hi)/2; M0 = onezero(e0)[0]
+check("rem:onezerofamily eps0 = 0.47247, mean 0.0051493", abs(e0-mp.mpf('0.47247')) < 5e-5 and abs(M0-mp.mpf('0.0051493')) < 5e-7)
+check("rem:onezerofamily mean decreases in eps", onezero(mp.mpf('0.2'))[0] < M1 and onezero(mp.mpf('0.4'))[0] < onezero(mp.mpf('0.2'))[0])
+# thm:poisson
+best = mp.mpf(0)
+for j in range(1, 60):
+    y = mp.mpf(j)/100
+    om = (mp.atan(2/y)-mp.atan(1/y))/mp.pi
+    ep = (mp.exp(-5*y)/2**(1-om))**(1/om)
+    best = max(best, om/(y/(mp.pi*(1+y*y)))*(-mp.log(1-ep)))
+check("thm:poisson floor for the example is positive", 1e-22 < best < 1e-18)
+
+def delay_checks():
+    dps0 = mp.mp.dps
+    # prop:floor, the zero-free floor
+    mp.mp.dps = 20
+    for (a, b) in [(mp.mpf(1), mp.mpf(2)), (mp.mpf(1), mp.mpf(4))]:
+        tag = " [b/a=%s]" % mp.nstr(b/a, 2)
+        S = ex_setup(a, b); r, t0, Lam, Lm, q, dq, d2q, f, l, G0, xv, Gp, Gm = S
+        check("prop:floor int x r = f^2 Gamma_0"+tag, abs(mp.quad(lambda x: x*r(x), [a, b]) - f*f*G0) < 1e-15)
+        minf = mp.quad(lambda x: r(x)/x*(q(f*f)-q(x*x)), [a, f, b])/(b-a)
+        check("prop:floor m_inf > 0 and (b-a) m_inf = Gamma_0 q(f^2) - (b-a) Lambda"+tag,
+              minf > 0 and abs((b-a)*minf - (G0*q(f*f)-(b-a)*Lam)) < 1e-12)
+        check("prop:floor Gamma_-(u) >= Gamma_0 f^2/(f^2-u), Gamma_+(w) >= Gamma_0 f^2/(w-f^2)"+tag,
+              all(Gm(u) >= G0*f*f/(f*f-u)-1e-18 for u in [0, a*a/3, a*a*mp.mpf('0.99')])
+              and all(Gp(w) >= G0*f*f/(w-f*f)-1e-18 for w in [b*b*mp.mpf('1.01'), 3*b*b, 100*b*b]))
+    a, b = mp.mpf(1), mp.mpf(2)
+    S = ex_setup(a, b); r, t0, Lam, Lm, q, dq, d2q, f, l, G0, xv, Gp, Gm = S
+    s = mp.pi/2
+    minf = mp.quad(lambda x: r(x)/x*(q(f*f)-q(x*x)), [a, f, b])/(b-a)
+    check("prop:floor (pi/2) m_inf = 0.0060483 on the octave", abs(s*minf - mp.mpf('0.0060483')) < 5e-8)
+    Ms = [ex_solve(s, mp.mpf(t), a, b, S)[5] for t in [5, 10, 50, 10**4]]
+    check("prop:floor M_{pi/2}(tau) decreases to (pi/2) m_inf (tau = 5, 10, 50, 1e4)",
+          all(Ms[i] > Ms[i+1] for i in range(3)) and all(M >= s*minf for M in Ms) and Ms[3]-s*minf < 1e-6)
+    check("prop:floor M_{pi/2}(5) is less than six per cent above the floor", Ms[0]/(s*minf) < mp.mpf('1.06'))
+
+    # thm:expdecay, the constants
+    check("thm:expdecay e^{3-12/e} < 1/4", mp.exp(3-12/mp.e) < mp.mpf(1)/4)
+    check("thm:expdecay 2 sqrt m <= 3(m-1) for m >= 4", all(2*mp.sqrt(m) <= 3*(m-1) for m in range(4, 400, 2)))
+    Imf = lambda m: 2*mp.quadosc(lambda u: (mp.sin(u)/u)**m if u != 0 else mp.mpf(1), [0, mp.inf], period=mp.pi)
+    check("thm:expdecay I_m >= 4 sqrt6/(3 sqrt m) > 3/sqrt m (m = 4, ..., 30)",
+          all(Imf(m) >= 4*mp.sqrt(6)/(3*mp.sqrt(m)) > 3/mp.sqrt(m) for m in range(4, 31, 2)))
+    check("thm:expdecay (1-v^2)^m >= 1 - m v^2 and sin u/u >= 1 - u^2/6",
+          all((1-v*v)**m >= 1-m*v*v for m in [4, 10, 50] for v in [mp.mpf(j)/20 for j in range(21)])
+          and all(mp.sin(u)/u >= 1-u*u/6 for u in [mp.mpf(j)/10 for j in range(1, 25)]))
+    check("thm:expdecay |sin w / w| <= e^{|Im w|}",
+          all(abs(mp.sin(w)/w) <= mp.exp(abs(mp.im(w))) for w in [mp.mpc(x, y) for x in [0.3, 2, 7] for y in [-3, -0.5, 0.2, 4]]))
+    check("thm:expdecay (1/2)(1-eps)^{-2} <= 8/9 at eps = 1/4", mp.mpf(1)/2/(mp.mpf(3)/4)**2 <= mp.mpf(8)/9)
+    for (a, b) in [(mp.mpf(1), mp.mpf(2)), (mp.mpf(1), mp.mpf(4))]:
+        tag = " [b/a=%s]" % mp.nstr(b/a, 2)
+        r = lambda t: mp.sqrt((t*t-a*a)*(b*b-t*t))
+        check("thm:expdecay int t/r = pi/2 and x r(x) <= b(b^2-a^2)/2"+tag,
+              abs(mp.quad(lambda t: t/r(t), [a, b]) - mp.pi/2) < 1e-10
+              and all(x*r(x) <= b*(b*b-a*a)/2 for x in [a+(b-a)*mp.mpf(j)/40 for j in range(41)]))
+        for tau in [12, 20, 40]:
+            tau = mp.mpf(tau)/a
+            m = 2*int(mp.floor(a*tau/(2*mp.e))); kap = tau/m
+            eps = 2*(kap*a)**(1-m)/((m-1)*Imf(m))
+            check("thm:expdecay eps <= e^{3-a tau/e}, m in [4, a tau/e], kappa a >= e [a tau=%s]%s" % (mp.nstr(a*tau, 3), tag),
+                  eps <= mp.exp(3-a*tau/mp.e) and 4 <= m <= a*tau/mp.e and kap*a >= mp.e)
+    # the right-angle example on the octave
+    mp.mp.dps = 15
+    a, b = mp.mpf(1), mp.mpf(2)
+    k = mp.sqrt(1-a*a/(b*b)); t0 = 2*K(k)/(mp.pi*b)
+    def expo_mean(tau):
+        m = 2*int(mp.floor(a*tau/(2*mp.e))); kap = tau/m; Im = Imf(m)
+        tail = lambda x: 2/Im*mp.quadosc(lambda u: (mp.sin(u)/u)**m, [kap*x, mp.inf], period=mp.pi)
+        xs = [a+(b-a)*mp.mpf(j)/20 for j in range(21)]
+        vals = [-mp.log(1-tail(x)) for x in xs]
+        h = (b-a)/20
+        mean = h/3*(vals[0]+vals[-1]+4*sum(vals[1:-1:2])+2*sum(vals[2:-1:2]))/(b-a)
+        bound = mp.exp(3-a*tau/mp.e)*(2+mp.pi/4*(b-a)*t0+b*(b*b-a*a)*tau/(2*mp.e*a*a))
+        return mean, bound
+    for tau, val in [(12, '1.7e-3'), (20, '4.9e-5'), (30, '1.4e-7')]:
+        mean, bound = expo_mean(mp.mpf(tau))
+        check("thm:expdecay theta = pi/2 on the octave: mean %s at tau = %d, below the bound" % (val, tau),
+              abs(mean/mp.mpf(val)-1) < 0.04 and mean <= bound)
+    mp.mp.dps = 20
+
+    # cor:rate
+    for (a, b) in [(mp.mpf(1), mp.mpf(2)), (mp.mpf(1), mp.mpf(4))]:
+        tag = " [b/a=%s]" % mp.nstr(b/a, 2)
+        y = mp.mpf('1e-4')
+        om = (mp.atan(b/y)-mp.atan(a/y))/mp.pi
+        check("cor:rate omega_y/y -> (b-a)/(pi a b), omega_y/P_y(a) -> a(b-a)/b"+tag,
+              abs(om/y-(b-a)/(mp.pi*a*b)) < 1e-6 and abs(om/(y/(mp.pi*(a*a+y*y)))-a*(b-a)/b) < 1e-6)
+    check("cor:rate on the octave pi ab/(b-a) = 2 pi", abs(mp.pi*2/(2-1)-2*mp.pi) < 1e-30)
+
+    # rem:onezerofamily, the linear program
+    import os, sys
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import zero_lp
+    import numpy as np
+    check("rem:onezerofamily LP: 0.00658 without zeros, 4.3e-4 with the pair",
+          abs(zero_lp.solve(np.pi/2, 5.0, [], kshift=-1)-0.00658) < 5e-6
+          and abs(zero_lp.solve(np.pi/2, 5.0, [1.3654+1.2608j], kshift=-1)-4.3e-4) < 5e-6)
+
+    mp.mp.dps = dps0
+delay_checks()
+
+# ssec:channels
+A0m = mp.matrix([[1, 0], [0, -1]]); C1m = mp.matrix([[1, 0], [0, 0]]); C2m = mp.matrix([[5, 2], [2, 1]])/4
+check("thm:noloewner det C2 = det(C2-A0) = 1/16", abs(mp.det(C2m)-mp.mpf(1)/16) < 1e-18 and abs(mp.det(C2m-A0m)-mp.mpf(1)/16) < 1e-18)
+ev = sorted(mp.eig(C2m-C1m)[0], key=lambda z: mp.re(z))
+check("thm:noloewner eigenvalues of C2-C1 are -1/4 and 3/4", abs(ev[0]+mp.mpf(1)/4) < 1e-18 and abs(ev[1]-mp.mpf(3)/4) < 1e-18)
+random.seed(11)
+def herm(n):
+    M = mp.matrix(n, n)
+    for i in range(n):
+        for j in range(i, n):
+            x = mp.mpf(random.random()-0.5); yv = mp.mpf(random.random()-0.5) if i != j else 0
+            M[i, j] = mp.mpc(x, yv); M[j, i] = mp.mpc(x, -yv)
+    return M
+def posp(M):
+    E, Q = mp.eighe(M)
+    return Q*mp.diag([max(e, 0) for e in E])*Q.H
+pw = pw_setup(a, b); A = pw[4]
+okt = True
+for trial in range(6):
+    n = 3; X = herm(n); Th = X*X.H; T = herm(n)*4
+    B = t0*Th+T; Cp = posp(-B)
+    Fo = lambda z: pw[5](z)*Th+z*T+Cp*Rc(z, a, b)/z
+    for z in [mp.mpc(1.5, 0.3), mp.mpc(0.4, 2), mp.mpc(3, 0.1)]:
+        F = Fo(z); ImF = (F-F.H)/(2j)
+        okt = okt and min(mp.re(e) for e in mp.eighe(ImF)[0]) > -1e-15
+    x = mp.mpf('1.4'); F = Fo(mp.mpc(x, mp.mpf('1e-14'))); ImF = (F-F.H)/(2j)
+    trb = A(x)*sum(Th[i, i] for i in range(n))+r(x)/x*sum(Cp[i, i] for i in range(n))
+    okt = okt and abs(sum(ImF[i, i] for i in range(n))-trb) < 1e-9
+    # every orthonormal basis gives a trace bound at most the eigenbasis one
+    Ub = mp.eighe(herm(n))[1]
+    alt = A(x)*sum(Th[i, i] for i in range(n))+r(x)/x*sum(max(0, -mp.re((Ub[:, j].H*B*Ub[:, j])[0])) for j in range(n))
+    okt = okt and mp.re(alt) <= mp.re(trb)+1e-15
+check("thm:trace optimum is a generator and attains the trace bound (random)", okt)
+
+# ssec:bands, two bands
+bands = [(mp.mpf(1), mp.mpf(2)), (mp.mpf(3), mp.mpf(4))]; cg = mp.mpf('2.5')
+def Rm(z):
+    z = mp.mpc(z); out = mp.mpc(1)
+    for (aa, bb) in bands: out *= z*z*mp.sqrt(1-aa*aa/(z*z))*mp.sqrt(1-bb*bb/(z*z))
+    return out
+Dm = lambda z: Rm(z)/(z*z-cg*cg); Qm = lambda z: Dm(z)/z
+pts = [mp.mpc(x, y) for x in [-5, mp.mpf('-2.2'), mp.mpf('0.3'), mp.mpf('1.5'), mp.mpf('2.5'), mp.mpf('3.5'), 6] for y in [mp.mpf('0.01'), mp.mpf('0.3'), 2, 10]]
+check("lem:multicomp Q_m Herglotz on two bands", min(mp.im(Qm(z)) for z in pts) > 0)
+check("lem:multicomp D_m = i rho, rho > 0, on both bands", all(abs(mp.re(Dm(mp.mpc(x, mp.mpf('1e-15'))))) < 1e-10 and mp.im(Dm(mp.mpc(x, mp.mpf('1e-15')))) > 0 for x in [mp.mpf('1.5'), mp.mpf('3.5')]))
+check("lem:multicomp nu_0 = a1 b1 a2 b2 / c^2", abs(-Dm(mp.mpc(0, mp.mpf('1e-18'))) - 24/cg**2) < 1e-12)
+hh = mp.mpf('1e-8')
+check("lem:multicomp gap residue negative, linear coefficient 1", mp.re(Qm(cg+hh))*hh < 0 and abs(Qm(mp.mpc(0, 10**6))/mp.mpc(0, 10**6)-1) < 1e-10)
 
 print("%d checks passed, %d failed" % (passed, failed))

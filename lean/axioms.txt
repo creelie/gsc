@@ -73,3 +73,15 @@
 'PhaseShiftCost.r_over_x_square' depends on axioms: [propext, Classical.choice, Quot.sound]
 'PhaseShiftCost.compensated_linear' depends on axioms: [propext, Quot.sound]
 'PhaseShiftCost.branch_threshold' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PhaseShiftCost.delay_linear' does not depend on any axioms
+'PhaseShiftCost.delay_bound' does not depend on any axioms
+'PhaseShiftCost.chord_sum' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PhaseShiftCost.square_identity' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PhaseShiftCost.floor_moment' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PhaseShiftCost.kernel_order' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PhaseShiftCost.kernel_mass' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PhaseShiftCost.phase_slope' depends on axioms: [propext, Quot.sound]
+'PhaseShiftCost.peak_r' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PhaseShiftCost.eta_assembly' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PhaseShiftCost.octave_rate' does not depend on any axioms
+'PhaseShiftCost.noloewner_dets' does not depend on any axioms
