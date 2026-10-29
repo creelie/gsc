@@ -339,7 +339,8 @@ above the band, \cref{lem:leadprofile} in the plane and on the band, the
 integral of $r/x$, the means $\Lambda$ and $\Lambda_-$ of the two profiles,
 the Herglotz property, the linear coefficient and the mean of the
 compensated optimum of \cref{thm:affine}, and the octave values $A(m)$,
-$\Lambda_-$ and $\vartheta_c$; and the numbers of \cref{sec:audit,sec:waves}. It reports
+$\Lambda_-$ and $\vartheta_c$; the closed forms, the floor and the
+decay bounds of \cref{sec:beyond}; and the numbers of \cref{sec:audit,sec:waves}. It reports
 \checkscount\ checks passed and none failed.
 
 \emph{Lean.} The file \texttt{lean/PhaseShiftCost.lean} is checked by the
@@ -358,8 +359,10 @@ $\omega\mapsto ab/\omega$, the value at $\sqrt{ab}$ and \eqref{eq:lambdaright},
 and for \cref{sec:pointwise} the signs of the kernels, the comparison of
 \cref{cor:compare}, the step of \cref{cor:pointwisecons}(iv), the vanishing
 linear coefficients of the compensated optima and the threshold
-$\vartheta_c$. Of the \leancount\ theorems, \leanfree\ depend on no axiom, two on
-\texttt{propext} only, two on \texttt{propext} and \texttt{Quot.sound}, and the others on Lean's three standard axioms
+$\vartheta_c$, and for \cref{sec:beyond} the identities and constants of
+\cref{prop:floor,thm:expdecay,cor:rate} and the determinants of
+\cref{thm:noloewner}. Of the \leancount\ theorems, \leanfree\ depend on no axiom, two on
+\texttt{propext} only, three on \texttt{propext} and \texttt{Quot.sound}, and the others on Lean's three standard axioms
 (\texttt{propext}, \texttt{Classical.choice}, \texttt{Quot.sound}), through
 the tactics \texttt{grind} and \texttt{omega}.
 

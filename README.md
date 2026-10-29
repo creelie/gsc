@@ -1,6 +1,7 @@
-# The Energy Cost of a Phase Shift
+# Least Loss of Passive Phase Shifters
 
-Deep Bhattacharjee (corresponding author) and Sanjeevan Singha Roy.
+Deep Bhattacharjee (corresponding author), Sanjeevan Singha Roy and Ushashi
+Bhattacharya.
 
 The paper proves that a passive causal system without zeros in the upper
 half-plane cannot shift every frequency of a band [a, b] by the same phase
@@ -11,43 +12,48 @@ half-plane cannot shift every frequency of a band [a, b] by the same phase
 with K, E the complete elliptic integrals, and an explicit system attains the
 bound. Delays are free and lossless resonances raise the bound. For a phase
 θ + τω on the band the same explicit system, or its inversion ω ↦ ab/ω for a
-lead, has the least attenuation at every frequency of the band at once: every
-unit of spectral measure off the band raises the attenuation at every point
-of the band. This gives the sharp worst-frequency loss (1.273 θΛ for an
-octave) and the sharp plain mean for a lead, θ(E − κ'²K)/κ. With zeros
-in the upper half-plane allowed, one explicit system with a single zero has
-the least attenuation at every frequency of the band at once; for a right
+lead, has the least attenuation at every frequency of the band at once. With
+zeros in the upper half-plane allowed, one explicit system with a single zero
+has the least attenuation at every frequency of the band at once; for a right
 angle it is algebraic, its mean attenuation is (π/2)(√b − √a)/(√b + √a)
-nepers, and no passive system with this phase passes more than the fraction a/b of the power at
-the geometric centre √(ab) (at least 3.01 dB of loss over an octave). The paper also checks
-the formulas of the earlier paper by S. N. Thakur and D. Bhattacharjee,
-"Phase shift and infinitesimal wave energy loss equations" (J. Phys. Chem.
-Biophys. 13 (2023) 365), and corrects them.
+nepers, and no passive system with this phase passes more than the fraction
+a/b of the power at the geometric centre √(ab) (at least 3.01 dB of loss over
+an octave). The paper also checks the formulas of the earlier paper by
+S. N. Thakur and D. Bhattacharjee, "Phase shift and infinitesimal wave energy
+loss equations" (J. Phys. Chem. Biophys. 13 (2023) 365), and corrects them.
 
-Release 1.1.0 adds Section 9 (the pointwise bounds without zeros; the positive
-reconstruction behind it was found with OpenAI's ChatGPT) and corrects three
-points of 1.0.0: a missing factor 2 in the proof of the Gauss lemma, the
-values of zε and zμ on the imaginary axis, and the reading of the energy
-bound, which concerns the transmitted channel (the power may be absorbed,
-reflected or routed to other ports).
+Release 1.2.0 has a new title, adds Ushashi Bhattacharya as third author and
+adds Section 12, on a phase θ + τω with a delay τ > 0, with several channels
+and with several bands. Proved there: without zeros the least mean loss in
+closed form for every slope, and a positive floor below which it never falls;
+with zeros, the optimal system exists and is unique for every phase, with a
+test for optimality; its loss falls exponentially with the delay, and the
+exponent lies between −πab/(b − a) and −a/e; a trace bound for several
+channels and the absence of a least attenuation in the Loewner order; a
+compensation criterion for several bands. Not known: the optimal system with
+zeros and a delay and its exact exponent, nonaffine phases without zeros where
+the velocity changes sign, the least trace for an indefinite weight, the sharp
+multiband constant, joint bounds with reflection, and a formal proof of the
+analysis.
 
 ## Layout
 
-- `EnergyCostOfAPhaseShift.pdf`: the compiled paper (REVTeX, two columns, 34 pages).
+- `LeastLossOfPassivePhaseShifters.pdf`: the compiled paper (REVTeX, two columns, 41 pages).
 - `paper/`: the LaTeX source (`main.tex`, `sections/`, `figures/`).
 - `paper/anc/checks.py`: high-precision re-evaluation of every identity and
-  numerical value of the paper (needs `mpmath`; 244 checks, about six minutes).
+  numerical value of the paper (needs `mpmath`, and `scipy` for
+  `paper/anc/zero_lp.py`; 421 checks).
 - `paper/anc/make_figures.py`, `paper/anc/make_schematics.py`,
   `paper/anc/make_figures_zeros.py`,
-  `paper/anc/make_figures_pointwise.py`: the figures (needs `numpy`, `scipy`,
+  `paper/anc/make_figures_pointwise.py`, `paper/anc/make_figures_beyond.py`: the figures (needs `numpy`, `scipy`,
   `matplotlib`, `mpmath`).
 - `lean/PhaseShiftCost.lean`: a Lean 4 certificate of the finite and
-  algebraic parts (75 theorems, no `sorry`, core library only); the axiom
+  algebraic parts (87 theorems, no `sorry`, core library only); the axiom
   report is `lean/axioms.txt`.
 
 ## Running the checks
 
-    cd paper && python3 anc/checks.py        # 244 checks passed, 0 failed
+    cd paper && python3 anc/checks.py        # 421 checks passed, 0 failed
     cd lean && lean PhaseShiftCost.lean      # Lean 4.34.0, a few seconds
     cd paper && pdflatex -jobname=output main.tex   # three passes
 
@@ -59,10 +65,12 @@ the coefficients of the series of the constant and their monotonicity for
 every n, enclosures of the constant to nine decimals for six band ratios,
 and the polynomial identities used in the proofs, among them those behind the
 closed form of the optimal system at a right angle and the signs and
-comparisons of the pointwise bounds without zeros. Of its 75 theorems, 30
+comparisons of the pointwise bounds without zeros, and the constants of
+Section 12. Of its 87 theorems, 34
 depend on no axiom and the rest on the standard axioms of Lean
 (`propext`, `Classical.choice`, `Quot.sound`). The analytic part of the paper
-(the sum rule, the reconstruction of Section 9, boundary values of Cauchy integrals, the M. Riesz theorem,
+(the sum rule, the reconstruction of Section 9, the convexity and decay
+arguments of Section 12, boundary values of Cauchy integrals, the M. Riesz theorem,
 Hardy spaces, the conformal map and extremal length used for systems with
 zeros, and the elliptic-integral identities) is not formalised.
 

@@ -608,11 +608,12 @@ special case of (ii) with $\tau=0$.
 \end{proof}
 
 Part (i) answers, for systems with zeros allowed, the worst-frequency
-question of the zero-free case (\cref{sec:discussion}, problem (3)). Part
-(ii) leaves open the case of a delay, $\arg H=\theta+\tau\omega$ with $\tau>0$:
-the system $e^{i\tau z}\Hs_\theta$ shows that the bound $\as_\theta$ can still be
-attained, but we do not know whether a delay together with zeros can do
-better.
+question of the zero-free case. Part
+(ii) does not extend to a delay, $\arg H=\theta+\tau\omega$ with $\tau>0$: the
+system $e^{i\tau z}\Hs_\theta$ still has the loss $\as_\theta$, but it is not
+optimal: for $\theta=\pi/2$, $\tau=5$ on $[1,2]$ the least mean loss of a
+zero-free system is about forty times smaller (\cref{thm:delay,thm:exactmean}),
+and with zeros the least loss falls exponentially in $\tau$ (\cref{cor:rate}).
 
 \begin{corollary}\label{cor:narrowzeros}
 Fix $0<\theta<\pi$, and let $f=(a+b)/2$, $\Delta f=b-a$. As $\Delta f/f\to0$,
@@ -656,8 +657,8 @@ $\sin\theta/\theta=1-\theta^2/6+\dots$. For the $1^\circ$ shift at $5$\,MHz of
 \cref{sec:waves}, the least mean attenuation with zeros allowed is
 $1.37588\times10^{-3}$\,Np, against $1.37595\times10^{-3}$\,Np without zeros.
 
-For general $\theta$ the profile $\as_\theta$ is not elementary, but a closed-form
-bound with the right shape survives, for the equilibrium weight of the band
+For general $\theta$ the profile $\as_\theta$ is elliptic, not elementary
+(\cref{ssec:closedform}), and a simple bound with the right shape survives, for the equilibrium weight of the band
 \[
 w_0(\omega)=\frac1{I_0\,r(\omega)},\qquad I_0=\int_a^b\frac{\dd t}{r(t)}=\frac{K(k)}b ,
 \]
@@ -709,3 +710,159 @@ the last integral is $K(a/b)/b$.\footnote{Substitute $t=a\sin\phi$: then $\sqrt{
 $a\cos\phi\cdot b\sqrt{1-(a/b)^2\sin^2\phi}$ and $\dd t=a\cos\phi\dd\phi$.
 Similarly $I_0=K(k)/b$ by $t^2=b^2-(b^2-a^2)\sin^2\phi$.} Adding up gives \eqref{eq:nome}.
 \end{proof}
+
+\subsection{The optimum in closed form}\label{ssec:closedform}
+
+The profile $\as_\theta$ is elliptic for every $\theta$.\footnote{The explicit
+zero \eqref{eq:etaexplicit} and the elliptic profile of
+\cref{thm:ellipticprofile} were found with OpenAI's ChatGPT. The derivation
+through \cref{lem:zeroatom} is ours.} Write $\operatorname{sn}$,
+$\operatorname{cn}$ and $\operatorname{am}$ for the Jacobi functions of
+modulus $k$, $k^2=1-a^2/b^2$ \cite[Ch.~22]{dlmf}, $F(\psi,k)$ for the
+incomplete integral of the first kind, and
+\[
+\Pi(n;\psi,k)=\int_0^\psi\frac{\dd v}{(1-n\sin^2v)\sqrt{1-k^2\sin^2v}},
+\]
+with $\Pi(n,k)=\Pi(n;\pi/2,k)$. For $u\ge0$ put
+$Q_u=\sqrt{(u^2+a^2)(u^2+b^2)}$, so that $R(iu)=-Q_u$ by \cref{lem:R} and
+continuity from $R(0)=-ab$.
+
+\begin{lemma}\label{lem:zeroatom}
+For $u>0$ let $j_u(t)=t/(t^2+u^2)$. Then
+\[
+h_{j_u}(z)=\frac z{z^2+u^2}\Big(1+\frac{R(z)}{Q_u}\Big),\qquad
+\beta_{j_u}=\frac1{Q_u},
+\]
+and $v_{j_u}(x)=x\,r(x)/((x^2+u^2)Q_u)$ on the band.
+\end{lemma}
+
+\begin{proof}
+Call the right side $\phi_u$. It is odd, real on $\R\setminus S$, analytic
+off $S$, since its apparent poles at $\pm iu$ cancel ($1+R(\pm iu)/Q_u=0$),
+continuous up to $S$, and $\phi_u(z)=z/Q_u+O(z^{-1})$. On the band
+$\Re\phi_u(x+i0)=j_u(x)$, because $R(x+i0)=ir(x)$. By the substitution
+$\sigma=t^2$ and the integral displayed in the proof of \cref{cor:nome},
+$\beta_{j_u}=\frac1\pi\int_{a^2}^{b^2}\dd\sigma/((\sigma+u^2)
+\sqrt{(\sigma-a^2)(b^2-\sigma)})=1/Q_u$. So $\phi_u-h_{j_u}$ has real part
+$0$ on the band and is $O(z^{-1})$ at infinity, and the argument of the proof
+of \cref{prop:profile}(iv) gives $\phi_u=h_{j_u}$.
+\end{proof}
+
+Since $\arctan(t/\eta)=\frac\pi2-\int_0^\eta j_u(t)\dd u$, the phase of
+\cref{thm:allzeros} is $g_\sharp=\theta-\pi+2\int_0^{\eta_\star}j_u\dd u$, and
+by linearity
+\begin{equation}\label{eq:hsharpexplicit}
+h_{g_\sharp}=(\theta-\pi)h_\circ+2\arctan\frac{\eta_\star}z
++2zR(z)\int_0^{\eta_\star}\frac{\dd u}{(z^2+u^2)Q_u},
+\end{equation}
+with $h_\circ$ and $A$ as in \cref{sec:pointwise}. In particular
+\begin{equation}\label{eq:asharpP}
+\as_\theta(x)=2x\,r(x)\int_0^{\eta_\star}\frac{\dd u}{(x^2+u^2)Q_u}-(\pi-\theta)A(x).
+\end{equation}
+A zero of $H$ at $iu$ thus acts on the band as a measure at the negative
+squared frequency $-u^2$; this is the mechanism behind \cref{sec:beyond}.
+
+\begin{theorem}\label{thm:etaexplicit}
+Let $0<\theta<\pi$. The root of \eqref{eq:etastar} is
+\begin{equation}\label{eq:etaexplicit}
+\eta_\star=b\,\frac{\operatorname{cn}(u_\theta,k)}{\operatorname{sn}(u_\theta,k)},\qquad
+u_\theta=\frac{\theta K(k)}\pi .
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+By \eqref{eq:hsharpexplicit}, $\beta_{g_\sharp}=(\theta-\pi)\tau_\circ
++2\int_0^{\eta_\star}\dd u/Q_u$, and \eqref{eq:etastar} says
+$\beta_{g_\sharp}=0$. The substitution $u=b\cot\phi$ gives
+$\dd u/Q_u=-\dd\phi/(b\sqrt{1-k^2\sin^2\phi})$, since
+$u^2+a^2=b^2(1-k^2\sin^2\phi)/\sin^2\phi$, so
+\[
+\int_\eta^\infty\frac{\dd u}{Q_u}=\frac1bF\Big(\arctan\frac b\eta,k\Big),
+\qquad \int_0^\infty\frac{\dd u}{Q_u}=\frac{K(k)}b .
+\]
+With $\tau_\circ=2K(k)/(\pi b)$ the equation becomes
+\[
+F\big(\arctan(b/\eta_\star),k\big)=\theta K(k)/\pi,
+\]
+that is, $\arctan(b/\eta_\star)=\operatorname{am}(u_\theta,k)$.
+\end{proof}
+
+At $\theta=\pi/2$, $\operatorname{cn}/\operatorname{sn}$ at $K/2$ is
+$\sqrt{k'}=\sqrt{a/b}$, and $\eta_\star=\sqrt{ab}$ as in \cref{thm:rightangle}.
+Put $\eta=\eta_\star$ and
+\begin{equation}\label{eq:ellipticparam}
+Q=Q_\eta,\qquad n=\frac{b^2-a^2}{b^2+\eta^2},\qquad
+c_\theta=\frac{\Pi(n,k)}{(b^2+\eta^2)K(k)} .
+\end{equation}
+
+\begin{theorem}\label{thm:ellipticprofile}
+Let $0<\theta<\pi$. On the band,
+\begin{gather}
+\as_\theta(x)=\frac{2\eta Q}b\Big(c_\theta F(\psi,k)-\frac{\Pi(n;\psi,k)}{b^2+\eta^2}\Big),
+\label{eq:alphaelliptic}\\
+\sin^2\psi=\frac{b^2-x^2}{b^2-a^2},\qquad 0\le\psi\le\frac\pi2,\notag\\
+\frac{\dd\as_\theta}{\dd x}=\frac{2\eta Q}{r(x)}\Big(\frac1{x^2+\eta^2}-c_\theta\Big).
+\label{eq:alphaellipticprime}
+\end{gather}
+The profile has a single maximum, at $x_\theta=\sqrt{1/c_\theta-\eta^2}$, and
+\begin{equation}\label{eq:ellipticmean}
+\Lambda_{\mathrm{all}}(\theta)=\frac{\pi\eta}{b-a}\,(Qc_\theta-1).
+\end{equation}
+Near $z=0$, with $z=a\sin\phi$ and $\phi(0)=0$,
+\begin{equation}\label{eq:transferelliptic}
+\Hs_\theta(z)=\exp\Big[\frac{2iQ}{b\eta}\Big(\Pi\Big(-\frac{a^2}{\eta^2};\phi,\frac ab\Big)
+-\eta^2c_\theta F\Big(\phi,\frac ab\Big)\Big)\Big].
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Let $h=h_{g_\sharp}$ and $\Psi(z)=R(z)\big(h'(z)+2\eta/(z^2+\eta^2)\big)$. The
+function $g_\sharp$ extends analytically to the strip $\abs{\Im z}<\eta$, and
+$h-g_\sharp$ has real part $0$ on the band, so by Schwarz reflection $h$
+continues analytically across $(a,b)$ and $h'(x+i0)=g_\sharp'(x)+i\as'(x)$
+with $g_\sharp'=-2\eta/(x^2+\eta^2)$. Hence $\Psi(x+i0)=-r(x)\as'(x)$ is real,
+and by the symmetry $h(\bar z)=\overline{h(z)}$ it equals $\Psi(x-i0)$; so
+$\Psi$ has no jump across the band, nor, being even, across $(-b,-a)$. Near
+the ends of $S$, \eqref{eq:hsharpexplicit} gives
+\[
+\Psi=(\theta-\pi)\tau_\circ(z^2-m^2)+2R^2I+2zRR'I+2zR^2I',
+\]
+with $I(z)=\int_0^\eta\dd u/((z^2+u^2)Q_u)$, which is analytic near
+$\pm a,\pm b$, and $RR'=z(2z^2-a^2-b^2)$; so $\Psi$ is bounded there and the
+ends are removable. Since $h$ is analytic off $S$, the only other
+singularities of $\Psi$ are at $\pm i\eta$, from the term $2\eta R/(z^2+\eta^2)$,
+and since $R(\pm i\eta)=-Q$, the function $\Psi+2\eta Q/(z^2+\eta^2)$ is
+entire. At infinity $h=O(z^{-1})$, because $\beta_{g_\sharp}=0$, so
+$h'=O(z^{-2})$ and $\Psi$ is bounded. Hence $\Psi=d-2\eta Q/(z^2+\eta^2)$ for a constant $d$, and
+\[
+h'(z)=-\frac{2\eta}{z^2+\eta^2}+\frac{d-2\eta Q/(z^2+\eta^2)}{R(z)} .
+\]
+On the band, $\as'=-\Psi/r$ gives \eqref{eq:alphaellipticprime} with $d=2\eta
+Qc$ for some $c$. Since $\as$ vanishes at $a$ and $b$ (\cref{thm:allzeros}),
+$\int_a^b\as'=0$ and $c=\int_a^b\dd t/((t^2+\eta^2)r)\big/\int_a^b\dd t/r$.
+The substitution $t=b\sqrt{1-k^2\sin^2v}$, for which $\dd t/r=-\dd v/t$ and
+$t^2+\eta^2=(b^2+\eta^2)(1-n\sin^2v)$, gives $c=c_\theta$, and integrating
+\eqref{eq:alphaellipticprime} from $x$ to $b$ gives \eqref{eq:alphaelliptic}.
+As $c_\theta$ is a strict average of $(t^2+\eta^2)^{-1}$ over the band,
+$\as'$ changes sign once, at $x_\theta$. At infinity
+$h'=2\eta(Qc_\theta-1)z^{-2}+O(z^{-4})$, so $h=-2\eta(Qc_\theta-1)/z+O(z^{-3})$,
+while by \eqref{eq:foster} with no measure off $S$,
+$h=-\frac2\pi\int_a^b\as/z+O(z^{-3})$; this gives \eqref{eq:ellipticmean}.
+Finally $\Hs_\theta=-B_\eta e^{ih}$, $B_\eta'/B_\eta=2i\eta/(z^2+\eta^2)$, so
+\[
+\frac{(\Hs_\theta)'}{\Hs_\theta}=\frac{2i\eta Q}{R(z)}\Big(c_\theta-\frac1{z^2+\eta^2}\Big),
+\]
+and $\Hs_\theta(0)=1$. Near $0$ put $z=a\sin\phi$; then
+$R=-ab\cos\phi\sqrt{1-(a/b)^2\sin^2\phi}$ and
+$z^2+\eta^2=\eta^2(1+(a/\eta)^2\sin^2\phi)$, and integrating gives
+\eqref{eq:transferelliptic}.
+\end{proof}
+
+The formula \eqref{eq:transferelliptic} holds near the origin and is
+continued analytically along paths in $\C\setminus S$; the residue $1$ of
+the logarithmic derivative at $i\eta$ makes the continuation single-valued
+with a simple zero there. At $\theta=\pi/2$, \cref{thm:ellipticprofile}
+reduces to \cref{thm:rightangle}: $c_{\pi/2}=1/(2ab)$, $x_\theta=\sqrt{ab}$
+and $\Lambda_{\mathrm{all}}(\pi/2)=\frac\pi2(\sqrt b-\sqrt a)/(\sqrt b+\sqrt a)$.
+The values of \cref{tab:allzeros} follow from \eqref{eq:etaexplicit},
+\eqref{eq:ellipticmean} and $x_\theta$ without any root finding.

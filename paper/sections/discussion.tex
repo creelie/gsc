@@ -2,79 +2,53 @@
 
 \subsection{What has been shown}
 
-A passive system can delay a band of frequencies for free, but it cannot
-shift the phase of the whole band by a constant without losing transmitted
-power. The least mean attenuation is $\theta\Lambda$, with $\Lambda=(K(\kappa)-E(\kappa))/\kappa$
-an explicit function of the band ratio, and the bound is attained. The proof
-is a single sum rule, \eqref{eq:sumrule}, built from the test function $W$,
-and every other statement of the paper is a consequence of it or of the
-explicit extremal system: the lead bound, the worst-frequency and
-geometric-mean bounds, the bound for anomalous dispersion in a medium, and
-the stability under perturbations of the phase.
+A passive system can delay a band for free, but it cannot shift the phase of
+the whole band by a constant without loss. The least mean attenuation is
+$\theta\Lambda$, with $\Lambda=(K(\kappa)-E(\kappa))/\kappa$, and it is attained.
+The proof is one sum rule, \eqref{eq:sumrule}, built from the test function
+$W$; the lead bound, the worst-frequency and geometric-mean bounds, the bound
+for anomalous dispersion and the stability under perturbations of the phase
+follow from it or from the extremal system.
 
-For an affine phase there is more: every zero-free system is the extremal
-function $h_g$ plus terms that each raise the attenuation at every point of
-the band (\cref{thm:reconstruction}), so the extremal system, or its
-inversion for a lead, has the least attenuation at every frequency of the
-band at once. This gives the sharp worst frequency and the sharp plain mean
-for a lead (\cref{cor:pointwisecons}).
+For an affine phase every zero-free system is the extremal function plus
+terms that each raise the attenuation at every point of the band
+(\cref{thm:reconstruction}), so one system is optimal at every frequency at
+once. With zeros the sum rule is lost, but after the change of variables of
+\cref{lem:transform} a comparison argument gives the same kind of pointwise
+optimum, attained by a system with one zero, whose profile is elliptic
+(\cref{thm:ellipticprofile}). At a right angle the system is algebraic and
+$\abs{H(\sqrt{ab})}^2\le a/b$.
 
-With zeros allowed the sum rule is no longer available, and the problem
-changes character. After the change of variables of \cref{lem:transform}
-the zeros disappear, the phase condition becomes a curve, and a comparison
-argument gives a bound at every frequency, attained by one system with a
-single zero. At a right angle that system is algebraic, and the bound
-reads $\abs{H(\sqrt{ab})}^2\le a/b$.
-
-The ingredients are classical: the Herglotz representation, Kramers--Kronig
-relations, a Cauchy integral, an elliptic integral reduced by Landen's
-transformation, Hardy spaces and a conformal map with a free parameter. What
-is new, as far as we can tell, is the pair of sharp bounds, the
-identification of the price of a constant phase with a single number
-$\Lambda$ for zero-free systems, and the pointwise optimality of a single
-system, with zeros allowed and, for an affine phase, without them.
+With a delay the picture changes. Without zeros the least mean loss is
+known exactly for every slope and stays above a positive floor. With zeros
+the optimum exists, is unique and is characterised by the inequality of
+\cref{thm:convex}(ii), and its loss decays exponentially with the delay.
 
 \subsection{Open problems}
 
 \begin{enumerate}
-\item[(1)] \emph{Delay together with zeros.} \Cref{thm:allzeros} solves
-\cref{prob:zeros}, and \cref{cor:allweights}(ii) extends it to a phase
-$\theta-\tau\omega$ with $\tau\ge0$. For $\arg H\equiv\theta+\tau\omega$ with
-$\tau>0$ the system $e^{i\tau z}\Hs_\theta$ still has the loss $\as_\theta$; is it
-optimal, or can a delay combined with zeros do better? The change of
-variables of \cref{lem:transform} needs a constant phase.
-\item[(2)] \emph{General phase without zeros.} \Cref{thm:reconstruction}
-holds for every continuously differentiable phase $g$, and
-\cref{cor:compare} is sharp whenever $h_g+\max\{0,-\beta_g\}R/z$ is a
-Herglotz function. When $v_g$ changes sign the cheapest measure off the
-band is not known; for a lead with positive slope, $-s+\tau\omega$ with
-$\tau>0$, this is already the case.
-\item[(3)] \emph{Several channels.} For a matrix Herglotz function $F$ with
-the symmetry of \eqref{eq:Hh}, \cref{thm:reconstruction} applied to every
-form $u^*Fu$ bounds $\Im F$ on the band from below in the Loewner order. The
-least compensation for a matrix phase $\Theta+\omega T$ whose coefficients
-do not commute is not known.
-\item[(4)] \emph{Several bands.} For a phase that is constant on each of
-several disjoint bands, the test function is built from a hyperelliptic
-square root, and the constant becomes a period of a hyperelliptic
-differential. We expect the sum rule to carry over with the same proof.
-\item[(5)] \emph{Reflection and matching.} For reflection coefficients,
-the Fano bound \cite{fano} and the present bound constrain different parts
-of the same function. A joint bound on the modulus and the argument of a
-reflection coefficient on a band would combine the two.
-\item[(6)] \emph{The optimal system in closed form.} For $\theta\ne\pi/2$,
-$\Hs_\theta$ comes from a conformal map onto the slit domain $D_T$ of
-\cref{prop:exist}. The Joukowski map $G\mapsto\frac12(G+1/G)$ straightens the
-semicircle of its boundary but bends the slit unless $\cos\theta=0$, which is
-why the right angle is elementary. Is there a closed form for other
-$\theta$, for instance through the Schwarz equation of the circular
-quadrilateral?
-\item[(7)] \emph{Formalisation.} The finite arithmetic of the paper is
-checked in Lean (\cref{app:verification}). The analytic part, the sum rule
-and the evaluation of $\Lambda$, would require a formalisation of boundary
-values of Cauchy integrals, of the M.~Riesz theorem and of the complete
-elliptic integrals with Landen's transformation, and the results on zeros
-would need Hardy spaces, the M\"obius change of variables, extremal length
-and the Carath\'eodory extension of conformal maps. We have not done this,
-and the analytic theorems of the paper are not machine-checked.
+\item[(1)] \emph{The optimum for a delay with zeros.} For
+$\arg H\equiv\theta+\tau\omega$ with $\tau>0$, find $H_{\theta+\tau\omega}$ of
+\cref{thm:convex}, or at least the exact exponent in \cref{cor:rate}; we only
+know that it lies between $-\pi ab/(b-a)$ and $-a/e$. The change of variables
+of \cref{lem:transform} needs a constant phase.
+\item[(2)] \emph{General phase without zeros.} \Cref{cor:compare} is sharp
+whenever $h_g+\max\{0,-\beta_g\}R/z$ is a Herglotz function. For an affine
+phase \cref{thm:exactmean} finds the cheapest measure off the band in every
+case; for a phase that is not affine and for which $v_g$ changes sign it is
+not known.
+\item[(3)] \emph{Several channels.} \Cref{thm:trace} is sharp for
+$\Theta\succeq0$. For indefinite $\Theta$ the least trace is not known, and by
+\cref{thm:noloewner} there is in general no least attenuation in the
+Loewner order.
+\item[(4)] \emph{Several bands.} \Cref{thm:multiband} decides when a given
+compensation works. The sharp constant, a period of a hyperelliptic
+differential in place of $\Lambda$, has not been computed.
+\item[(5)] \emph{Reflection and matching.} The Fano bound \cite{fano} and the
+present bound constrain different parts of a reflection coefficient. A
+joint bound on its modulus and argument over a band would combine them.
+\item[(6)] \emph{Formalisation.} The finite arithmetic is checked in Lean
+(\cref{app:verification}). The analytic part, which needs boundary values of
+Cauchy integrals, Hardy spaces and the complete elliptic integrals, is not
+machine-checked.
 \end{enumerate}

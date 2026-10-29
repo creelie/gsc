@@ -2,8 +2,8 @@
 PhaseShiftCost.lean
 
 A machine check, by the kernel of Lean 4 (core library only, no Mathlib),
-of the finite and algebraic parts of "The Energy Cost of a Phase Shift"
-by D. Bhattacharjee and S. Singha Roy.
+of the finite and algebraic parts of "Least Loss of Passive Phase Shifters"
+by D. Bhattacharjee, S. Singha Roy and U. Bhattacharya.
 
 What is checked here, and what is not.
 
@@ -17,12 +17,16 @@ What is checked here, and what is not.
     of the band, the plain mean of the lead extremal, the threshold of the
     one-zero corollary, the constants pi^2/720 and pi/24, the closed form
     of the optimum at a right angle, and the signs, comparisons and
-    linear coefficients of the pointwise bounds without zeros).
+    linear coefficients of the pointwise bounds without zeros), and the
+    finite steps of Section 12 (the constants of the delay example, the
+    identity of Lemma 12.3, the moment of Proposition 12.5, the constants of
+    Theorem 12.11 and the matrices of Theorem 12.14).
 
   * Not checked: the analytic theorems themselves (the sum rule, the
     identification of Lambda with an elliptic integral and with its power
     series, the extremal system, the one-zero proposition, the
-    reconstruction of Section 9).  These rest on
+    reconstruction of Section 9, and the existence, floor and decay
+    results of Section 12).  These rest on
     Cauchy integrals, the M. Riesz theorem and complete elliptic integrals,
     which are not formalised here.  Where a theorem below is the finite or
     algebraic step of an analytic argument, its comment names that step.
@@ -591,6 +595,78 @@ theorem compensated_linear (θτ τ s : Int) :
 theorem branch_threshold (pi t L M : Int) :
     t*L - (pi - t)*M = t*(L + M) - pi*M := by grind
 
+/-! ## Section 12. Delay, several channels and several bands -/
+
+/-- Theorem 12.6 (the linear coefficient): with π < 22/7, τ∘ ≤ 1 and
+    d ≤ 225/128, 5 - (π/2)(1 + 225/128) > 0, since (22/7)(353/256) < 5;
+    and 225/128 = (1/8)·15²/16. -/
+theorem delay_linear : 22*353 < 5*7*256 ∧ 225*8*16 = 128*(15*15) := by decide
+
+/-- Theorem 12.6 (the bound): (7/96)(y - 5/2)² ≤ 21/128 on [1, 4];
+    21π/512 < 33/256 < 1/7 < 3 - 2√2 by π < 22/7 and √2 < 10/7;
+    and 21π²/1024 < π²/24. -/
+theorem delay_bound :
+    7*9*128 = 21*96*4 ∧ 21*22*256 = 33*7*512 ∧ 33*7 < 256 ∧ 2*49 < 100 ∧ 21*24 < 1024 := by
+  decide
+
+/-- Lemma 12.3: λ₁ + λ₂ = Γ₀, from 4(x - a)(b - x) + (2x - a - b)² = (b - a)². -/
+theorem chord_sum (a b x : Int) :
+    4*((x - a)*(b - x)) + (2*x - a - b)*(2*x - a - b) = (b - a)*(b - a) := by grind
+
+/-- Lemma 12.3, identity (12.9), multiplied by ρ: with w ρ = (f² + ℓ²)ρ + f(ρ² + ℓ²),
+    y* = (f + ε)², Γ₊ = π f ρ, λ₁ = π(ℓ² - ε²), λ₂ = π ε², divided by π. -/
+theorem square_identity (f l ρ ε : Int) :
+    (((f*f + l*l)*ρ + f*(ρ*ρ + l*l)) - (f + ε)*(f + ε)*ρ)*(f*ρ + ε*ε)
+      - ρ*(l*l - ε*ε)*((f + ε)*(f + ε))
+    = f*(f*ρ + l*l)*((ρ - ε)*(ρ - ε)) := by grind
+
+/-- Proposition 12.5: ∫ x r = (π/16)(b² - a²)² equals f²Γ₀ = ((a+b)/2)²·π((b-a)/2)²,
+    because (b² - a²)² = (a + b)²(b - a)². -/
+theorem floor_moment (a b : Int) :
+    (b*b - a*a)*(b*b - a*a) = ((a + b)*(a + b))*((b - a)*(b - a)) := by grind
+
+/-- Theorem 12.11: 2√m ≤ 3(m - 1) for every m ≥ 4, in the squared form 4m ≤ 9(m - 1)². -/
+theorem kernel_order (n : Nat) : 4*(n + 4) ≤ 9*((n + 3)*(n + 3)) := by grind
+
+/-- Theorem 12.11: with s = m^{-1/2}, ∫_{|v| ≤ s} (1 - m v²) dv = 2(s - m s³/3) = 4s/3,
+    here times 3; and 4√6/3 > 3 because 16·6 > 81. -/
+theorem kernel_mass (m s : Int) (h : m*(s*s) = 1) :
+    6*s - 2*(m*(s*s*s)) = 4*s ∧ 81 < 16*6 := by
+  refine ⟨?_, by decide⟩
+  have : m*(s*s*s) = s := by
+    calc m*(s*s*s) = (m*(s*s))*s := by grind
+      _ = s := by rw [h]; grind
+  omega
+
+/-- Theorem 12.11: the slope of arg(cos θ + i sin θ T) is at most (1/2)(1 - ε)⁻² ≤ 8/9
+    for ε ≤ 1/4; and |G'| ≤ (m - 1)ε/a² + ε/a² = mε/a². -/
+theorem phase_slope (m : Int) : 1*16*9 = 8*2*9 ∧ (m - 1) + 1 = m := by
+  refine ⟨by decide, by omega⟩
+
+/-- Theorem 12.11: x r(x) ≤ b(b² - a²)/2, because
+    (b² - a²)² - 4(x² - a²)(b² - x²) = (2x² - a² - b²)². -/
+theorem peak_r (a b x : Int) :
+    (b*b - a*a)*(b*b - a*a) - 4*((x*x - a*a)*(b*b - x*x))
+      = (2*(x*x) - a*a - b*b)*(2*(x*x) - a*a - b*b) := by grind
+
+/-- Theorem 12.11: the bound on v_g, (B/2)(mε/a²)/(2a) = B m ε/(4a³) with
+    B = b(b² - a²), cleared of denominators; and with m = aτ/e,
+    2·B m ε/(4a³) = B τ ε/(2e a²). -/
+theorem eta_assembly (B a m T ε e : Int) :
+    B*(m*ε)*(4*(a*a*a)) = (B*(m*ε))*(2*(a*a)*(2*a)) ∧
+    2*(B*(a*T)*ε)*(2*e*(a*a)) = (B*T*ε)*(4*(a*a*a))*e := by
+  refine ⟨by grind, by grind⟩
+
+/-- Corollary 12.12: on the octave π a b/(b - a) = 2π. -/
+theorem octave_rate : 1*2 = 2*(2 - 1) := by decide
+
+/-- Theorem 12.14: the matrices of the counterexample, scaled by 4:
+    det [[5,2],[2,1]] = det [[1,2],[2,5]] = 1 and det [[1,2],[2,1]] = -3, with trace 2,
+    so C₂ - C₁ has the eigenvalues -1/4 and 3/4. -/
+theorem noloewner_dets :
+    5*1 - 2*2 = (1 : Int) ∧ 1*5 - 2*2 = (1 : Int) ∧ 1*1 - 2*2 = (-3 : Int) ∧
+    (-1 : Int) + 3 = 1 + 1 ∧ (-1 : Int)*3 = -3 := by decide
+
 end PhaseShiftCost
 
 open PhaseShiftCost in
@@ -670,4 +746,16 @@ section
 #print axioms r_over_x_square
 #print axioms compensated_linear
 #print axioms branch_threshold
+#print axioms delay_linear
+#print axioms delay_bound
+#print axioms chord_sum
+#print axioms square_identity
+#print axioms floor_moment
+#print axioms kernel_order
+#print axioms kernel_mass
+#print axioms phase_slope
+#print axioms peak_r
+#print axioms eta_assembly
+#print axioms octave_rate
+#print axioms noloewner_dets
 end

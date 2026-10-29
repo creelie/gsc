@@ -1,4 +1,4 @@
-"""Figures for 'The Energy Cost of a Phase Shift' (matplotlib, PNG).
+"""Figures for 'Least Loss of Passive Phase Shifters' (matplotlib, PNG).
 
 Run from the paper directory: python3 anc/make_figures.py
 """
