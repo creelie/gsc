@@ -479,6 +479,84 @@ theorem half_angle (b η t c : Int) (h1 : η = b*c) (h2 : t*c = 1) :
   subst h1
   grind
 
+/-! ### The least loss with zeros (Section 8): the right angle -/
+
+/-- `thm:rightangle`: R² + ((a+b)z)² = (z²+ab)² for R² = (z²-a²)(z²-b²), so the
+    optimal system has modulus one off the band. -/
+theorem right_modulus (a b z : Int) :
+    (z*z - a*a)*(z*z - b*b) + (a + b)*(a + b)*(z*z) = (z*z + a*b)*(z*z + a*b) := by grind
+
+/-- Q(z) = (z+a)(z+b) = z² + ab + (a+b)z. -/
+theorem right_Q (a b z : Int) : (z + a)*(z + b) = z*z + a*b + (a + b)*z := by grind
+
+/-- The two factorisations of R²: Q(z)(z-a)(z-b) = (z²-a²)(z²-b²). -/
+theorem right_R_square (a b z : Int) :
+    (z + a)*(z + b)*((z - a)*(z - b)) = (z*z - a*a)*(z*z - b*b) := by grind
+
+/-- The real part of the cross-multiplication in the proof of `thm:rightangle`:
+    R² + (a+b)zQ = (z²+ab)Q when R² = Q(z-a)(z-b). -/
+theorem right_cross (a b z : Int) :
+    (z + a)*(z + b)*((z - a)*(z - b)) + (a + b)*z*((z + a)*(z + b)) =
+      (z*z + a*b)*((z + a)*(z + b)) := by grind
+
+/-- On the band: ((a+b)ω)² - r² = (ω²+ab)² with r² = (ω²-a²)(b²-ω²). -/
+theorem band_modulus (a b w : Int) :
+    ((a + b)*w)*((a + b)*w) - (w*w - a*a)*(b*b - w*w) = (w*w + a*b)*(w*w + a*b) := by grind
+
+/-- (a+b)ω - (ω²+ab) = (ω-a)(b-ω) and (a+b)ω + (ω²+ab) = (ω+a)(ω+b), whose
+    product is r². -/
+theorem band_factors (a b w : Int) :
+    (a + b)*w - (w*w + a*b) = (w - a)*(b - w) ∧
+    (a + b)*w + (w*w + a*b) = (w + a)*(w + b) ∧
+    (w - a)*(b - w)*((w + a)*(w + b)) = (w*w - a*a)*(b*b - w*w) := by
+  refine ⟨?_, ?_, ?_⟩ <;> grind
+
+/-- The second form of (8.4): if r² = PQ then (P+r)²Q = (Q+r)²P, that is
+    (P+r)/(Q+r) = √(P/Q). -/
+theorem tanh_form (P Q r : Int) (h : r*r = P*Q) :
+    (P + r)*(P + r)*Q = (Q + r)*(Q + r)*P := by
+  have e : (P + r)*(P + r)*Q - (Q + r)*(Q + r)*P = (P - Q)*(P*Q - r*r) := by grind
+  have : (P + r)*(P + r)*Q - (Q + r)*(Q + r)*P = 0 := by rw [e, h]; grind
+  grind
+
+/-- The footnote to the first form of (8.4): with c = (a+b)ω, m = ω²+ab and
+    c² - m² = r², (Q+r)m = (Q-r)(c+r) for Q = m + c. -/
+theorem first_form (c m r : Int) (h : c*c - m*m = r*r) :
+    (m + c + r)*m = (m + c - r)*(c + r) := by
+  have e : (m + c - r)*(c + r) - (m + c + r)*m = (c*c - m*m) - r*r := by grind
+  grind
+
+/-- c² - m² = r²: (a+b)²ω² - (ω²+ab)² = (ω²-a²)(b²-ω²). -/
+theorem first_form_hyp (a b w : Int) :
+    ((a + b)*w)*((a + b)*w) - (w*w + a*b)*(w*w + a*b) = (w*w - a*a)*(b*b - w*w) := by grind
+
+/-- The symmetry ω ↦ ab/ω (multiplied out by ω²): P and Q both acquire the
+    factor ab, so P/Q and α♯ are invariant. -/
+theorem right_symmetry (a b w : Int) :
+    (a*b - a*w)*(b*w - a*b) = a*b*((w - a)*(b - w)) ∧
+    (a*b + a*w)*(b*w + a*b) = a*b*((w + a)*(w + b)) := by
+  refine ⟨?_, ?_⟩ <;> grind
+
+/-- At the geometric centre ω² = ab: r = ω(b-a), and e^{2α} = b/a. -/
+theorem right_centre (a b w : Int) (h : w*w = a*b) :
+    (w*w - a*a)*(b*b - w*w) = (w*(b - a))*(w*(b - a)) ∧
+    ((a + b)*w + w*(b - a))*((a + b)*w + w*(b - a))*a = (w*w + a*b)*(w*w + a*b)*b := by
+  constructor
+  · have e : (w*(b - a))*(w*(b - a)) = (w*w)*((b - a)*(b - a)) := by grind
+    rw [e, h]; grind
+  · have hw : w*w = a*b := h
+    have e1 : ((a + b)*w + w*(b - a)) = 2*b*w := by grind
+    rw [e1, hw]
+    have e2 : 2*b*w*(2*b*w)*a = 4*(b*b)*a*(w*w) := by grind
+    rw [e2, hw]; grind
+
+/-- `eq:lambdaright`: (π/2)(√b-√a)²/(b-a) = (π/2)(√b-√a)/(√b+√a), from
+    (q-p)²(q+p) = (q-p)(q²-p²). -/
+theorem right_mean (p q : Int) : (q - p)*(q - p)*(q + p) = (q - p)*(q*q - p*p) := by grind
+
+/-- For an octave: (√2-1)² = 3-2√2 in ℤ[√2], (x+y√2)² = (x²+2y²) + 2xy√2. -/
+theorem octave_right : (-1)*(-1) + 2*(1*1) = (3 : Int) ∧ 2*(-1)*1 = (-2 : Int) := by decide
+
 end PhaseShiftCost
 
 open PhaseShiftCost in
@@ -540,4 +618,17 @@ section
 #print axioms threshold_identity
 #print axioms delta_coefficient
 #print axioms half_angle
+#print axioms right_modulus
+#print axioms right_Q
+#print axioms right_R_square
+#print axioms right_cross
+#print axioms band_modulus
+#print axioms band_factors
+#print axioms tanh_form
+#print axioms first_form
+#print axioms first_form_hyp
+#print axioms right_symmetry
+#print axioms right_centre
+#print axioms right_mean
+#print axioms octave_right
 end

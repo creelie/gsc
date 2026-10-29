@@ -92,11 +92,52 @@ inequality holds for the mean of $\alpha$ weighted by $ab/\omega^2$
 modulo $2\pi$ loses at least $\dist(\theta,\pi\Z)\,\Lambda$ nepers
 (\cref{cor:worst}).
 
-\emph{Zeros matter.} For $0<\theta<a\pi/(a+b)$ a single zero on the
-imaginary axis already lowers the attainable mean attenuation strictly
-below the least value among all zero-free systems with the same argument
-(\cref{prop:onezero,cor:zerosbeat}). What the optimal loss
-is for systems with zeros is open (\cref{prob:zeros}).
+\emph{Zeros help, by an amount we determine exactly.} For
+$0<\theta<a\pi/(a+b)$ a single zero on the imaginary axis already lowers the
+attainable mean attenuation strictly below the least value among all
+zero-free systems with the same argument (\cref{prop:onezero,cor:zerosbeat}).
+The least loss over all passive systems, with any zeros, is the subject of
+our second theorem.
+
+\subsection{Systems with zeros}
+
+Once zeros are allowed, $\log H$ is no longer defined and the sum rule
+does not apply. We pass instead to $\zeta=\log F$, where
+$F=e^{-i\theta}(H-e^{i\theta})/(H-e^{-i\theta})$ maps the values of $H$ into the
+upper half-plane. Zeros of $H$ become ordinary values of $\zeta$, the phase
+condition becomes the condition that $\zeta$ lies on a fixed curve over the
+band, and a comparison argument in Hardy spaces gives a bound at every
+frequency (\cref{thm:allzeros}).
+
+\begin{quote}
+\emph{Let $0<\theta<\pi$. There is a passive system $\Hs_\theta$, with one zero,
+on the imaginary axis, and lossless off the band, such that every passive
+system $H$ that is continuous and nonzero near the band and has
+$\arg H\equiv\theta$ modulo $2\pi$ there satisfies
+\[
+\alpha(\omega)\ \ge\ \as_\theta(\omega)\qquad(a\le\omega\le b),
+\]
+where $\as_\theta$ is the attenuation of $\Hs_\theta$, with equality on a set of
+positive measure only for $H=\Hs_\theta$.}
+\end{quote}
+
+The optimal system is $-B_{\eta_\star}e^{ih}$, a single Blaschke factor times a
+zero-free system, where the zero $i\eta_\star$ is fixed by the condition that
+the zero-free factor has no delay at high frequency. The minimal mean is
+$\theta\Lambda$ minus an explicit integral, it is positive, and this answers
+\cref{prob:zeros}. For a right angle the optimal system is algebraic
+(\cref{thm:rightangle}),
+\[
+\Hs_{\pi/2}(z)=-\frac{z^2+ab}{R(z)+i(a+b)z},
+\]
+its mean attenuation is $\frac\pi2(\sqrt b-\sqrt a)/(\sqrt b+\sqrt a)$, and its
+attenuation peaks at the geometric centre with the value $\frac12\log(b/a)$.
+So no passive system whose phase is a right angle at every frequency of an
+octave transmits more than half of the power at $\omega=\sqrt{ab}$: the loss
+there is at least $3.01$\,dB, and for a decade at least $10$\,dB. For a
+narrow band the least mean loss with zeros is
+$\frac\pi8\sin\theta\,\Delta f/f$, against $\frac\pi8\theta\,\Delta f/f$ without
+(\cref{cor:narrowzeros}); small phase shifts gain almost nothing from zeros.
 
 \subsection{How the theorem is proved}
 
@@ -163,7 +204,8 @@ a constant factor, a delay, and a phase that changes in time.
 \cref{sec:test} constructs the test function. The sum rule and the main
 theorem are in \cref{sec:sumrule}, the evaluation of the constant in
 \cref{sec:constant}, the extremal systems in \cref{sec:extremal}, and the
-effect of zeros in \cref{sec:zeros}. \Cref{sec:waves} applies the results to
+effect of a single zero in \cref{sec:zeros}; \cref{sec:allzeros} finds the
+least loss over all passive systems. \Cref{sec:waves} applies the results to
 waves in passive media and returns to the 5\,MHz example.
 \Cref{sec:discussion} lists open problems. \Cref{fig:roadmap} shows how
 the results depend on each other. \Cref{app:elliptic} derives, from the

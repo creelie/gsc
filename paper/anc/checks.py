@@ -176,4 +176,108 @@ check("hf = 3.313e-27 J, deposit >= 9.10e-30 J", abs(h*f - mp.mpf('3.313e-27')) 
       and abs(loss*h*f - mp.mpf('9.10e-30')) < 5e-33)
 check("ratio to hf/360 is 0.989, against (pi^2/2)(Delta f/f)",
       abs(loss*360 - mp.mpf('0.989')) < 5e-4 and abs(mp.pi**2/2*mp.mpf('0.2') - 0.987) < 2e-3)
+# sec:allzeros, the least loss with zeros allowed
+mp.mp.dps = 20
+def zsetup(a, b):
+    r = lambda t: mp.sqrt((t*t-a*a)*(b*b-t*t))
+    I0 = mp.quad(lambda t: 1/r(t), [a, b])
+    avg = lambda fn: mp.quad(lambda t: fn(t)/r(t), [a, b])/I0
+    kp = (b-a)/(b+a)
+    p = lambda t: (a*a+b*b-2*t*t)/r(t)
+    return r, avg, (K(kp)-E(kp))/kp, p
+def etastar(th, a, b):
+    r, avg, Lz, p = zsetup(a, b)
+    lo, hi = mp.mpf('1e-8')*a, mp.mpf('1e8')*b
+    for _ in range(160):
+        mid = mp.sqrt(lo*hi)
+        if 2*avg(lambda t: mp.atan(t/mid)) > th: lo = mid
+        else: hi = mid
+    return mp.sqrt(lo*hi)
+def Lall(th, a, b):
+    r, avg, Lz, p = zsetup(a, b); e = etastar(th, a, b)
+    return e, th*Lz - mp.quad(lambda t: mp.atan(t/e)*p(t), [a, b])/(b-a), Lz
+def vg(x, th, eta, a, b):
+    r = lambda t: mp.sqrt((t*t-a*a)*(b*b-t*t))
+    G = lambda t: (th-2*mp.atan(t/eta))/t
+    if x <= a or x >= b: return mp.mpf(0)
+    def fn(t):
+        d = r(t)*(x*x-t*t)
+        return (G(t)-G(x))/d*t if d != 0 else mp.mpf(0)
+    return 2*x*r(x)/mp.pi*mp.quad(fn, [a, x, b])
+def aright(x, a, b):
+    return mp.log(((a+b)*x + mp.sqrt((x*x-a*a)*(b*b-x*x)))/(x*x+a*b))
+for rb in [2, 3, 10]:
+    a, b = mp.mpf(1), mp.mpf(rb)
+    tag = " [b/a=%s]" % rb
+    r, avg, Lz, p = zsetup(a, b)
+    check("eta* = sqrt(ab) at a right angle"+tag, abs(2*avg(lambda t: mp.atan(t/mp.sqrt(a*b))) - mp.pi/2) < 1e-12)
+    xs = [a+(b-a)*mp.mpf(j)/7 for j in (1, 3, 6)]
+    check("v_g at pi/2 equals both closed forms of alpha#"+tag,
+          all(abs(vg(x, mp.pi/2, mp.sqrt(a*b), a, b) - aright(x, a, b)) < 1e-9 and
+              abs(aright(x, a, b) - 2*mp.atanh(mp.sqrt((x-a)*(b-x)/((x+a)*(x+b))))) < 1e-15 for x in xs))
+    tot = mp.quad(lambda u: aright(a+(b-a)*mp.sin(u)**2, a, b)*2*(b-a)*mp.sin(u)*mp.cos(u), [0, mp.pi/2])
+    check("int alpha# = (pi/2)(sqrt b - sqrt a)^2"+tag, abs(tot - mp.pi/2*(mp.sqrt(b)-mp.sqrt(a))**2) < 1e-12)
+    check("Lambda_all(pi/2) = theta Lambda - delta(sqrt(ab))"+tag,
+          abs(Lall(mp.pi/2, a, b)[1] - mp.pi/2*(mp.sqrt(b)-mp.sqrt(a))/(mp.sqrt(b)+mp.sqrt(a))) < 1e-10)
+    w0 = mp.sqrt(a*b)
+    check("alpha#(sqrt(ab)) = log(b/a)/2, symmetric under w -> ab/w"+tag,
+          abs(aright(w0, a, b) - mp.log(b/a)/2) < 1e-15 and abs(aright(xs[0], a, b) - aright(a*b/xs[0], a, b)) < 1e-15
+          and all(aright(x, a, b) < aright(w0, a, b) for x in xs if x != w0))
+check("octave mean (pi/2)(3-2 sqrt2) = 0.26951, 62.7% of 0.42966",
+      abs(mp.pi/2*(3-2*mp.sqrt(2)) - mp.mpf('0.26951')) < 5e-6 and abs((3-2*mp.sqrt(2))/mp.mpf('0.27353')/1 - mp.mpf('0.6272')) < 5e-4)
+check("10 log10(2) = 3.0103 dB", abs(10*mp.log10(2) - mp.mpf('3.0103')) < 5e-5)
+# tab:allzeros
+a, b = mp.mpf(1), mp.mpf(2)
+for th, c1, c2, c3, c4, c0 in [('0.5', '0.72576', '0.13090', '0.9571', '0.16677', '0.13443'),
+                               ('1', '0.71853', '0.22860', '0.8357', '0.29204', '0.25394'),
+                               ('pi/2', '0.70711', '0.26951', '0.6272', '0.34657', '0.34659'),
+                               ('2', '0.69843', '0.24357', '0.4452', '0.31540', '0.35977'),
+                               ('2.5', '0.69050', '0.15941', '0.2331', '0.20805', '0.27677')]:
+    t = mp.pi/2 if th == 'pi/2' else mp.mpf(th)
+    e, L, Lz = Lall(t, a, b)
+    xm = mp.findroot(lambda x: mp.diff(lambda y: vg(y, t, e, a, b), x), mp.mpf('1.42'))
+    ok = (abs(e/(b/mp.tan(t/2)) - mp.mpf(c1)) < 6e-6 and abs(L - mp.mpf(c2)) < 6e-6
+          and abs(L/(t*Lz) - mp.mpf(c3)) < 6e-5 and abs(vg(xm, t, e, a, b) - mp.mpf(c4)) < 6e-6
+          and e < b/mp.tan(t/2) and L < mp.mpf(c0))
+    check("tab:allzeros row theta=%s (and below the one-zero value %s)" % (th, c0), ok)
+check("worst frequency at theta=1: 0.29204 = 1.068 theta Lambda", abs(mp.mpf('0.29204')/mp.mpf('0.27353') - mp.mpf('1.068')) < 5e-4)
+# the optimal profile is a mean: mean of v_g = theta Lambda - delta(eta*), and v_g > 0 on the band
+for rb in [2, 10, 30]:
+    a, b = mp.mpf(1), mp.mpf(rb)
+    for th in [mp.mpf('0.3'), mp.mpf(1), mp.mpf('2.9')]:
+        e = etastar(th, a, b)
+        xs = [a+(b-a)*mp.mpf(j)/12 for j in range(1, 12)]
+        check("alpha# > 0 on the band [b/a=%s, theta=%s]" % (rb, mp.nstr(th, 2)),
+              all(vg(x, th, e, a, b) > 0 for x in xs))
+a, b = mp.mpf(1), mp.mpf(2)
+e, L, Lz = Lall(mp.mpf(1), a, b)
+mean_vg = mp.quad(lambda ph: vg((a+b)/2-(b-a)/2*mp.cos(ph), 1, e, a, b)*(b-a)/2*mp.sin(ph), [0, mp.pi/2, mp.pi])/(b-a)
+check("octave theta=1: mean of alpha# = theta Lambda - delta(eta*)", abs(mean_vg - L) < 1e-8)
+check("octave theta=1: zero-free extremal alpha* >= alpha# pointwise",
+      all(astar(x) > vg(x, 1, e, a, b) for x in [a+(b-a)*mp.mpf(j)/10 for j in range(1, 10)]))
+# cor:narrowzeros
+for rb, ref in [(mp.mpf('1.2'), '1.0021'), (mp.mpf('1.05'), '1.000149')]:
+    a, b = mp.mpf(1), rb
+    eps = 2*(b-a)/(a+b)
+    val = mp.pi/2*(mp.sqrt(b)-1)/(mp.sqrt(b)+1)/(mp.pi/8*eps)
+    check("narrow band ratio %s at b/a=%s" % (ref, mp.nstr(rb, 3)), abs(val - mp.mpf(ref)) < 6*10**(-len(ref)+2))
+a, b = mp.mpf('4.5'), mp.mpf('5.5')
+e, L, Lz = Lall(mp.pi/180, a, b)
+check("5 MHz, 1 degree: Lambda_all = 1.37588e-3 < theta Lambda = 1.37595e-3",
+      abs(L - mp.mpf('1.37588e-3')) < 5e-9 and abs(mp.pi/180*Lz - mp.mpf('1.37595e-3')) < 5e-9)
+# cor:nome
+for rb, ref in [(2, '0.085796'), (10, '0.26220')]:
+    bb = mp.mpf(rb)
+    q = mp.exp(-mp.pi*K(1/bb)/K(mp.sqrt(1-1/bb**2)))
+    check("nome q(b/a=%s) = %s" % (rb, ref), abs(q - mp.mpf(ref)) < 6e-6)
+for rb in [2, 10]:
+    a, b = mp.mpf(1), mp.mpf(rb)
+    I0 = K(mp.sqrt(1-(a/b)**2))/b
+    xph = lambda ph: (a+b)/2-(b-a)/2*mp.cos(ph)
+    def ltanh(ph):
+        X = xph(ph)
+        return (mp.log((b-a)*mp.sin(ph/2)**2) + mp.log((b-a)*mp.cos(ph/2)**2) - mp.log((X+a)*(X+b)))/2
+    val = mp.quad(lambda ph: ltanh(ph)/mp.sqrt((xph(ph)+a)*(xph(ph)+b)), [0, mp.pi/2, mp.pi])/I0
+    check("nome bound is an equality for H#_{pi/2} [b/a=%s]" % rb,
+          abs(val + mp.pi*K(a/b)/K(mp.sqrt(1-(a/b)**2))) < 1e-12)
 print("%d checks passed, %d failed" % (passed, failed))

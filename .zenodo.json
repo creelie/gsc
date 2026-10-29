@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "upload_type": "publication",
   "publication_type": "preprint",
-  "description": "LaTeX source, numerical checks (120) and a Lean 4 certificate (57 theorems) of the finite and algebraic parts of the paper The Energy Cost of a Phase Shift. The paper proves that a passive causal system without zeros in the upper half-plane cannot shift every frequency of a band [a,b] by the same phase theta > 0 without loss: its mean attenuation over the band is at least theta (K(kappa) - E(kappa))/kappa nepers, kappa = (b-a)/(b+a), and an explicit system attains this.",
+  "description": "LaTeX source, numerical checks (161) and a Lean 4 certificate (70 theorems) of the finite and algebraic parts of the paper The Energy Cost of a Phase Shift. The paper proves that a passive causal system without zeros in the upper half-plane cannot shift every frequency of a band [a,b] by the same phase theta > 0 without loss: its mean attenuation over the band is at least theta (K(kappa) - E(kappa))/kappa nepers, kappa = (b-a)/(b+a), and an explicit system attains this. With zeros allowed, one explicit system with a single zero has the least attenuation at every frequency of the band at once; for a right angle its mean attenuation is (pi/2)(sqrt b - sqrt a)/(sqrt b + sqrt a) nepers.",
   "creators": [
     {"name": "Bhattacharjee, Deep", "orcid": "0000-0003-0466-750X",
      "affiliation": "Formerly, Electro-Gravitational Space Propulsion Laboratory (EGSPL), Bhubaneswar, India; Formerly, University of Calcutta (Heramba Chandra College), Kolkata, India"},

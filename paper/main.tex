@@ -61,10 +61,12 @@
 \renewcommand{\Re}{\operatorname{Re}}
 \renewcommand{\Im}{\operatorname{Im}}
 
-\newcommand{\checkscount}{120}
-\newcommand{\leancount}{57}
-\newcommand{\leanfree}{29}
+\newcommand{\checkscount}{161}
+\newcommand{\leancount}{70}
+\newcommand{\leanfree}{30}
 \newcommand{\releaseTag}{v1.0.0}
+\newcommand{\Hs}{H^{\sharp}}
+\newcommand{\as}{\alpha^{\sharp}}
 
 \begin{document}
 
@@ -92,8 +94,11 @@ We prove that a passive causal system without zeros in the upper half-plane
 cannot shift every frequency of a band $[a,b]$ by the same phase $\theta>0$
 without loss: its mean attenuation over the band is at least
 $\theta\,(K(\kappa)-E(\kappa))/\kappa$ nepers, $\kappa=(b-a)/(b+a)$, and an
-explicit system attains this. Delays are free, lossless resonances raise the
-bound, and zeros can lower it.
+explicit system attains this. With zeros allowed, one explicit system with a
+single zero has the least attenuation at every frequency of the band at
+once. For a right angle it is algebraic, its mean attenuation is
+$\frac\pi2(\sqrt b-\sqrt a)/(\sqrt b+\sqrt a)$ nepers, and no passive system with this phase
+passes more than the fraction $a/b$ of the power at $\omega=\sqrt{ab}$.
 \end{abstract}
 
 \maketitle
@@ -115,6 +120,7 @@ Primary 30E20; Secondary 78A40, 94C05, 30H10, 33E05.
 \input{sections/constant}
 \input{sections/extremal}
 \input{sections/zeros}
+\input{sections/allzeros}
 \input{sections/waves}
 \input{sections/discussion}
 \appendix

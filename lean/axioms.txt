@@ -55,3 +55,16 @@
 'PhaseShiftCost.threshold_identity' depends on axioms: [propext, Classical.choice, Quot.sound]
 'PhaseShiftCost.delta_coefficient' does not depend on any axioms
 'PhaseShiftCost.half_angle' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PhaseShiftCost.right_modulus' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PhaseShiftCost.right_Q' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PhaseShiftCost.right_R_square' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PhaseShiftCost.right_cross' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PhaseShiftCost.band_modulus' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PhaseShiftCost.band_factors' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PhaseShiftCost.tanh_form' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PhaseShiftCost.first_form' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PhaseShiftCost.first_form_hyp' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PhaseShiftCost.right_symmetry' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PhaseShiftCost.right_centre' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PhaseShiftCost.right_mean' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PhaseShiftCost.octave_right' does not depend on any axioms
