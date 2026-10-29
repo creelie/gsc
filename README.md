@@ -38,7 +38,7 @@ analysis.
 
 ## Layout
 
-- `LeastLossOfPassivePhaseShifters.pdf`: the compiled paper (REVTeX, two columns, 41 pages).
+- `LeastLossOfPassivePhaseShifters.pdf`: the compiled paper (REVTeX, two columns, 40 pages).
 - `paper/`: the LaTeX source (`main.tex`, `sections/`, `figures/`).
 - `paper/anc/checks.py`: high-precision re-evaluation of every identity and
   numerical value of the paper (needs `mpmath`, and `scipy` for
