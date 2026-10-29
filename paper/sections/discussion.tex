@@ -22,28 +22,39 @@ $\abs{H(\sqrt{ab})}^2\le a/b$.
 With a delay the picture changes. Without zeros the least mean loss is
 known exactly for every slope and stays above a positive floor. With zeros
 the optimum exists, is unique and is characterised by the inequality of
-\cref{thm:convex}(ii), and its loss decays exponentially with the delay.
+\cref{thm:convex}(ii); it is the limit of finite convex problems over
+Toeplitz contractions (\cref{thm:construction}), has no zeros inside the band
+(\cref{thm:regularity}), and its loss decays exponentially with the delay,
+at a rate at least $\frac{a+b}\pi\log\cot\frac{\pi(b-a)}{4(a+b)}$
+(\cref{thm:sharperate}).
 
 \subsection{Open problems}
 
 \begin{enumerate}
 \item[(1)] \emph{The optimum for a delay with zeros.} For
 $\arg H\equiv\theta+\tau\omega$ with $\tau>0$, find $H_{\theta+\tau\omega}$ of
-\cref{thm:convex}, or at least the exact exponent in \cref{cor:rate}; we only
-know that it lies between $-\pi ab/(b-a)$ and $-a/e$. The change of variables
-of \cref{lem:transform} needs a constant phase.
+\cref{thm:convex} in closed form, or at least the exact exponent in
+\cref{cor:rate}; we only know that it lies between $-\pi ab/(b-a)$ and
+$-C_{a,b}$ of \cref{cor:rate}. \Cref{thm:construction} computes the optimum at each fixed delay
+but gives no rate of convergence, and it says nothing about the limit
+$\tau\to\infty$. The change of variables of \cref{lem:transform} needs a
+constant phase, and whether $H_{\theta+\tau\omega}$ is continuous at $a$ and $b$
+is not known.
 \item[(2)] \emph{General phase without zeros.} \Cref{cor:compare} is sharp
 whenever $h_g+\max\{0,-\beta_g\}R/z$ is a Herglotz function. For an affine
 phase \cref{thm:exactmean} finds the cheapest measure off the band in every
 case; for a phase that is not affine and for which $v_g$ changes sign it is
 not known.
 \item[(3)] \emph{Several channels.} \Cref{thm:trace} is sharp for
-$\Theta\succeq0$. For indefinite $\Theta$ the least trace is not known, and by
+$\Theta\succeq0$, and \cref{prop:commuting} reduces commuting $\Theta,T$ to
+scalars. For indefinite $\Theta$ not commuting with $T$ the least trace is not
+known, and by
 \cref{thm:noloewner} there is in general no least attenuation in the
 Loewner order.
 \item[(4)] \emph{Several bands.} \Cref{thm:multiband} decides when a given
-compensation works. The sharp constant, a period of a hyperelliptic
-differential in place of $\Lambda$, has not been computed.
+compensation works, and with zeros allowed \cref{cor:allbands} gives the
+optimum as a limit. The sharp constant without zeros, a period of a
+hyperelliptic differential in place of $\Lambda$, has not been computed.
 \item[(5)] \emph{Reflection and matching.} The Fano bound \cite{fano} and the
 present bound constrain different parts of a reflection coefficient. A
 joint bound on its modulus and argument over a band would combine them.

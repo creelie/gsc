@@ -85,3 +85,11 @@
 'PhaseShiftCost.eta_assembly' depends on axioms: [propext, Classical.choice, Quot.sound]
 'PhaseShiftCost.octave_rate' does not depend on any axioms
 'PhaseShiftCost.noloewner_dets' does not depend on any axioms
+'PhaseShiftCost.SixTap.sixtap_derivative' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PhaseShiftCost.SixTap.sixtap_harmonics' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PhaseShiftCost.SixTap.sixtap_normalisation' does not depend on any axioms
+'PhaseShiftCost.SixTap.sixtap_amplitude' does not depend on any axioms
+'PhaseShiftCost.SixTap.sixtap_amplitude_bounds' does not depend on any axioms
+'PhaseShiftCost.SixTap.sixtap_certificate' does not depend on any axioms
+'PhaseShiftCost.SixTap.sixtap_certificate_den' does not depend on any axioms
+'PhaseShiftCost.SixTap.sixtap_taps' does not depend on any axioms
