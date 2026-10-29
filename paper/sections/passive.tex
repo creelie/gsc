@@ -1,0 +1,149 @@
+\section{Passive systems and Herglotz functions}\label{sec:passive}
+
+\subsection{Passive systems}
+
+\begin{definition}\label{def:passive}
+A \emph{passive system} is a function $H$ analytic in $\Cp$ with
+$\abs{H(z)}\le1$ there and with the real symmetry
+$H(-\bar z)=\overline{H(z)}$. Its frequency response is the boundary
+function $H(\omega)=\lim_{\varepsilon\downarrow0}H(\omega+i\varepsilon)$,
+which exists for almost every real $\omega$.\footnote{Fatou's theorem: a bounded analytic function in $\Cp$ has nontangential limits at almost every point of $\R$ \cite[Ch.~I]{garnett}.}
+\end{definition}
+
+The definition encodes three physical requirements. A time-invariant
+system that never puts out more energy than it receives acts on signals of
+finite energy by a multiplier of norm at most one; causality makes the
+multiplier the boundary value of a bounded analytic function in $\Cp$; and a
+real impulse response gives the symmetry. That these requirements are
+equivalent to \cref{def:passive} is classical \cite{toll,nussenzveig,garnett}.
+The transmission coefficient of a passive two-port, the reflection
+coefficient of a passive one-port and the propagation factor of a passive
+medium (\cref{sec:waves}) are passive systems.
+
+The zeros of a passive system that is not identically zero satisfy the
+Blaschke condition, and $H=BG$ where $B$ is the Blaschke product of the
+zeros and $G$ is passive and has no zeros in $\Cp$ \cite[Ch.~II]{garnett}.
+Since the zeros of $H$ come in pairs $\zeta,-\bar\zeta$, $B$ can be chosen
+with the real symmetry.\footnote{With $B_\zeta(z)=(z-\zeta)/(z-\bar\zeta)$ one has $B_\zeta(-\bar z)=\overline{B_{-\bar\zeta}(z)}$, so the product $B_\zeta B_{-\bar\zeta}$ has the symmetry, and so does the Blaschke product over such pairs, with the usual unimodular convergence factors chosen in pairs.} We call $H$ \emph{zero-free} when $B$ is constant.
+This includes every minimum-phase system, and also the singular inner
+functions, which are not minimum-phase in the usual sense: the factor
+$\exp(i\gamma/(\omega_0-z))$, $\gamma>0$, is the lossless resonance of a
+reactance at $\omega_0$ in the sense of Foster \cite{foster}.
+
+\subsection{The Herglotz function of a zero-free system}
+
+A \emph{Herglotz function} is an analytic map $h$ from $\Cp$ to the closed
+upper half-plane. Every such function has the representation
+\cite{nussenzveig,garnett,bernland}
+\begin{equation}\label{eq:herglotz}
+h(z)=c+\beta z+\int_\R\Big(\frac1{t-z}-\frac t{1+t^2}\Big)\dd\mu(t),
+\end{equation}
+with $c\in\R$, $\beta\ge0$ and a positive measure $\mu$ with
+$\int\dd\mu/(1+t^2)<\infty$. The measure is recovered by the Stieltjes
+inversion formula,
+\begin{equation}\label{eq:stieltjes}
+\mu\big((x_1,x_2)\big)+\tfrac12\mu(\{x_1,x_2\})
+=\lim_{y\downarrow0}\frac1\pi\int_{x_1}^{x_2}\Im h(x+iy)\dd x,
+\end{equation}
+and $\beta=\lim_{y\to\infty}h(iy)/(iy)$.
+
+\begin{lemma}\label{lem:log}
+Let $H$ be a zero-free passive system, $H\not\equiv0$. There are a sign
+$\sigma\in\{1,-1\}$ and a unique Herglotz function $h$ with
+\begin{equation}\label{eq:Hh}
+H=\sigma e^{ih},\qquad h(iy)\in i\R\ (y>0),\qquad h(-\bar z)=-\overline{h(z)} .
+\end{equation}
+In the representation \eqref{eq:herglotz} of $h$ one has $c=0$ and $\mu$ is
+even, so that
+\begin{equation}\label{eq:foster}
+h(z)=\beta z-\frac{\mu(\{0\})}{z}+\int_{(0,\infty)}\frac{2z}{t^2-z^2}\dd\mu(t).
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+On the imaginary axis $H(iy)=\overline{H(iy)}$ is real and, having no zeros,
+of constant sign $\sigma$. Since $\Cp$ is simply connected, $\sigma H$ has an
+analytic logarithm, which we fix to be real on $i\R_+$. Put
+$h=-i\log(\sigma H)$. Then $\Im h=-\log\abs H\ge0$, so $h$ is a Herglotz
+function, and $h(iy)\in i\R$. The function $g(z)=-\overline{h(-\bar z)}$ is
+analytic, satisfies $e^{ig}=\overline{\sigma H(-\bar z)}=\sigma H=e^{ih}$, and
+agrees with $h$ on $i\R_+$; hence $g=h$. In \eqref{eq:herglotz}, $c=\Re h(i)=0$;
+the symmetry and \eqref{eq:stieltjes} show that $\mu$ is even, and pairing
+$t$ with $-t$ in \eqref{eq:herglotz} gives \eqref{eq:foster}. Uniqueness holds
+because two such logarithms differ by a constant in $2\pi\Z$ that vanishes
+on $i\R_+$.
+\end{proof}
+
+We call
+\begin{gather*}
+\varphi(\omega)=\Re h(\omega+i0),\\
+\alpha(\omega)=\Im h(\omega+i0)=-\log\abs{H(\omega)}
+\end{gather*}
+the \emph{phase} and the \emph{attenuation} of $H$. Then $\arg H(\omega)
+=\varphi(\omega)+\frac{1-\sigma}2\pi$ modulo $2\pi$. The phase $\varphi$ is the
+argument of $\sigma H$ continued from the imaginary axis, where it vanishes;
+when $H$ is continuous and positive at $\omega=0$ and nonzero on $[0,b]$, it
+is simply the argument of $H$ unwrapped from $\varphi(0)=0$. The
+representation \eqref{eq:foster} separates the three ingredients of a
+zero-free system: the delay $\beta z$, the lossless resonances, which are the
+atoms and the singular part of $\mu$, and the losses, which are the
+absolutely continuous part of $\mu$, with density $\alpha/\pi$.
+
+\subsection{The band}
+
+Fix $0<a<b$ and write $S=[-b,-a]\cup[a,b]$.
+
+\begin{definition}\label{def:band}
+A zero-free passive system $H$ is \emph{regular on the band} if there is an
+open interval $I\supset[a,b]$, $I\subset(0,\infty)$, such that $H$ extends
+continuously to $\Cp\cup I$ and has no zeros on $I$.
+\end{definition}
+
+\begin{lemma}\label{lem:regular}
+If $H$ is regular on the band, then $h$ extends continuously to $\Cp\cup I$,
+$\varphi$ and $\alpha$ are continuous on $I$, and the restriction of $\mu$ to
+$I\cup(-I)$ is $\pi^{-1}\alpha(\abs t)\dd t$. In particular $\mu$ has no
+atoms at $\pm a,\pm b$.
+\end{lemma}
+
+\begin{proof}
+Near each point of $I$ the function $\sigma H$ is continuous and nonzero, so
+its logarithm, normalised as in \cref{lem:log}, is continuous up to $I$. The
+convergence in \eqref{eq:stieltjes} is then uniform on compact subintervals
+of $I$, which gives $\mu=\pi^{-1}\alpha\dd t$ on $I$; evenness gives the
+statement on $-I$.
+\end{proof}
+
+\subsection{Lossless bands}
+
+The following is the form of Foster's reactance theorem \cite{foster} that we
+need.
+
+\begin{proposition}\label{prop:foster}
+Let $H=B\sigma e^{ih}$ be passive, with $B$ a real-symmetric Blaschke
+product whose zeros stay away from $I$, and let $\sigma e^{ih}$ be regular on
+the band. If $\abs{H}=1$ on $I$, then the argument of $H$ is real-analytic
+and nondecreasing on $I$, and strictly increasing unless $H$ is constant.
+\end{proposition}
+
+\begin{proof}
+On $I$ we have $\alpha=0$, so by \cref{lem:regular} $\mu$ vanishes on $I$
+and \eqref{eq:foster} continues analytically across $I$, with
+\[
+\varphi'(x)=\beta+\frac{\mu(\{0\})}{x^2}+\int_{(0,\infty)\setminus I}
+\frac{2(t^2+x^2)}{(t^2-x^2)^2}\dd\mu(t)\;\ge\;0 .
+\]
+Each factor $(z-\zeta)/(z-\bar\zeta)$ of $B$, $\Im\zeta>0$, has argument with
+derivative $2\Im\zeta/\abs{x-\zeta}^2>0$ on the real line, and the series for
+$B$ converges with its derivatives on $I$. The sum is strictly positive
+unless $\beta=0$, $\mu=0$ and $B$ is constant.
+\end{proof}
+
+\begin{corollary}\label{cor:rigid}
+Under the hypotheses of \cref{prop:foster}, a passive system that is
+lossless on $I$ and has constant argument on $[a,b]$ is a constant,
+$H\equiv\pm1$.
+\end{corollary}
+
+So constant phase on a band is impossible without loss. The main theorem
+measures how much loss.
