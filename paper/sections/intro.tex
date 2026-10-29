@@ -92,6 +92,18 @@ inequality holds for the mean of $\alpha$ weighted by $ab/\omega^2$
 modulo $2\pi$ loses at least $\dist(\theta,\pi\Z)\,\Lambda$ nepers
 (\cref{cor:worst}).
 
+\emph{The extremal system wins at every frequency.} Every zero-free system
+is the extremal function plus terms, one for each unit of measure off the
+band, that each raise the attenuation at every point of the band
+(\cref{thm:reconstruction}). So for a phase $\theta+\tau\omega$ with
+$\theta\ge0$, and for a lead $-s+\tau\omega$ with $\tau\le0$, one explicit
+system has the least attenuation at every frequency at once
+(\cref{thm:affine,thm:leadpoint}): for a lag it is $e^{i\tau z}H_\star$ as
+long as $\tau\ge-\tau_\star$, for a lead it is $H_\star(-ab/z)$. The sharp
+worst-frequency loss is $\alpha_\star(m)$, which for an octave is
+$1.273\,\theta\Lambda$, and the sharp plain mean for a lead is
+$\abs\theta(E(\kappa)-\kappa'^2K(\kappa))/\kappa$ (\cref{cor:pointwisecons}).
+
 \emph{Zeros help, by an amount we determine exactly.} For
 $0<\theta<a\pi/(a+b)$ a single zero on the imaginary axis already lowers the
 attainable mean attenuation strictly below the least value among all
@@ -183,13 +195,13 @@ sharp.
 
 The theorem is a sharp inequality of classical analysis with a direct
 physical reading: a carrier--envelope phase shift over a band has a minimal
-price in absorbed energy, proportional to the shift and, for narrow bands,
+price in transmitted energy, proportional to the shift and, for narrow bands,
 to the relative bandwidth. It is not a statement about energy conservation:
 a constant phase factor is energy neutral (\cref{prop:static}), and the price
 is paid because causality and passivity tie the phase of $H$ on the band to
 its modulus everywhere. Nor does it rest on quantum mechanics; when the wave
 is quantised, the bound becomes a lower bound on the probability that a
-quantum in the band is absorbed (\cref{sec:energy}). The energy $hf$ of a
+quantum in the band is not transmitted (\cref{sec:energy}). The energy $hf$ of a
 quantum, which played the main part in \cite{tb23}, enters only through the
 kinematics of frequency shifts in \cref{sec:kinematics}; see also
 \cite{tbf23,tb23cosmic,bh22} for other uses of the photon energy by the
@@ -203,7 +215,8 @@ a constant factor, a delay, and a phase that changes in time.
 \Cref{sec:passive} sets up passive systems and their Herglotz functions, and
 \cref{sec:test} constructs the test function. The sum rule and the main
 theorem are in \cref{sec:sumrule}, the evaluation of the constant in
-\cref{sec:constant}, the extremal systems in \cref{sec:extremal}, and the
+\cref{sec:constant}, the extremal systems in \cref{sec:extremal}, the pointwise
+bounds without zeros in \cref{sec:pointwise}, and the
 effect of a single zero in \cref{sec:zeros}; \cref{sec:allzeros} finds the
 least loss over all passive systems. \Cref{sec:waves} applies the results to
 waves in passive media and returns to the 5\,MHz example.

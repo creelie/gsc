@@ -1,9 +1,9 @@
 cff-version: 1.2.0
 message: "If you use this archive, please cite it as below."
 title: "The Energy Cost of a Phase Shift"
-version: 1.0.0
+version: 1.1.0
 date-released: 2026-10-29
-doi: 10.5281/zenodo.23761044
+doi: 10.5281/zenodo.23761043
 license: MIT
 repository-code: "https://github.com/creelie/gsc"
 authors:

@@ -68,3 +68,8 @@
 'PhaseShiftCost.right_centre' depends on axioms: [propext, Classical.choice, Quot.sound]
 'PhaseShiftCost.right_mean' depends on axioms: [propext, Classical.choice, Quot.sound]
 'PhaseShiftCost.octave_right' does not depend on any axioms
+'PhaseShiftCost.kernel_sign' depends on axioms: [propext]
+'PhaseShiftCost.low_kernel_gap' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PhaseShiftCost.r_over_x_square' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PhaseShiftCost.compensated_linear' depends on axioms: [propext, Quot.sound]
+'PhaseShiftCost.branch_threshold' depends on axioms: [propext, Classical.choice, Quot.sound]
