@@ -1,0 +1,131 @@
+\documentclass[aps,pra,twocolumn,superscriptaddress,nofootinbib,longbibliography,floatfix,amsmath,amssymb,10pt]{revtex4-2}
+
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{graphicx,booktabs,xcolor}
+\usepackage[colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black,urlcolor=blue!50!black,bookmarksnumbered=true]{hyperref}
+\usepackage[capitalise,noabbrev]{cleveref}
+\usepackage{orcidlink}
+\usepackage{microtype}
+\usepackage{xurl}
+
+\makeatletter
+\AtBeginDocument{\def\NAT@bibsetup{\setlength{\labelwidth}{\z@}%
+ \setlength{\labelsep}{0.5em}\setlength{\itemindent}{\z@}%
+ \setlength{\listparindent}{\z@}\setlength{\topsep}{\z@}%
+ \setlength{\parsep}{\z@}\NATx@bibsetup}}
+\let\write@bibliographystyle\relax
+\let\bibliography@latex\@gobble
+\makeatother
+
+\renewcommand{\thesection}{\arabic{section}}
+\renewcommand{\thesubsection}{\thesection.\arabic{subsection}}
+\makeatletter
+\renewcommand{\p@subsection}{}
+\makeatother
+
+\tolerance=2000
+\emergencystretch=3em
+\hbadness=2000
+\hfuzz=1pt
+\raggedbottom
+\renewcommand{\topfraction}{.9}
+\renewcommand{\dbltopfraction}{.9}
+\renewcommand{\textfraction}{.07}
+\renewcommand{\floatpagefraction}{.8}
+\renewcommand{\dblfloatpagefraction}{.8}
+\setcounter{topnumber}{3}
+\setcounter{dbltopnumber}{3}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{problem}[theorem]{Problem}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\numberwithin{equation}{section}
+\crefname{problem}{Problem}{Problems}
+
+\newcommand{\C}{\mathbb C}
+\newcommand{\R}{\mathbb R}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\Cp}{\mathbb C_{+}}
+\newcommand{\dd}{\,\mathrm d}
+\newcommand{\abs}[1]{\left|#1\right|}
+\DeclareMathOperator{\dist}{dist}
+\DeclareMathOperator{\PV}{p.v.}
+\renewcommand{\Re}{\operatorname{Re}}
+\renewcommand{\Im}{\operatorname{Im}}
+
+\newcommand{\checkscount}{161}
+\newcommand{\leancount}{70}
+\newcommand{\leanfree}{30}
+\newcommand{\releaseTag}{v1.0.0}
+\newcommand{\Hs}{H^{\sharp}}
+\newcommand{\as}{\alpha^{\sharp}}
+
+\begin{document}
+
+\title{The Energy Cost of a Phase Shift}
+
+\author{Deep Bhattacharjee$^{*}$\,\orcidlink{0000-0003-0466-750X}}
+\email{d.bhattacharjee@erl-forschung.de}
+\thanks{$^{*}$\,Corresponding author. Further addresses:
+\nolinkurl{itsdeep@live.com}, \nolinkurl{egspl@proton.me}
+(GitHub-related contact; GitHub: \href{https://github.com/creelie}{creelie}).}
+\affiliation{Formerly, Electro-Gravitational Space Propulsion Laboratory
+(EGSPL), Bhubaneswar, Odisha 751030, India}
+\affiliation{Formerly, University of Calcutta (Heramba Chandra College),
+23/49 Gariahat Road, Golpark, Kolkata 700029, West Bengal, India}
+
+\author{Sanjeevan Singha Roy\,\orcidlink{0000-0002-6148-1421}}
+\email{sanjeevan9905@gmail.com}
+\affiliation{Formerly, Birla Institute of Technology (BIT) Mesra, India}
+
+\date{29 October 2026}
+
+\begin{abstract}
+\itshape
+We prove that a passive causal system without zeros in the upper half-plane
+cannot shift every frequency of a band $[a,b]$ by the same phase $\theta>0$
+without loss: its mean attenuation over the band is at least
+$\theta\,(K(\kappa)-E(\kappa))/\kappa$ nepers, $\kappa=(b-a)/(b+a)$, and an
+explicit system attains this. With zeros allowed, one explicit system with a
+single zero has the least attenuation at every frequency of the band at
+once. For a right angle it is algebraic, its mean attenuation is
+$\frac\pi2(\sqrt b-\sqrt a)/(\sqrt b+\sqrt a)$ nepers, and no passive system with this phase
+passes more than the fraction $a/b$ of the power at $\omega=\sqrt{ab}$.
+\end{abstract}
+
+\maketitle
+
+\begingroup
+\renewcommand\thefootnote{}\footnotesize
+\footnotetext{\footnotesize\emph{2020 Mathematics Subject Classification.}
+Primary 30E20; Secondary 78A40, 94C05, 30H10, 33E05.
+\emph{Keywords.} Kramers--Kronig relations; Herglotz functions; phase shifters; sum rules.}
+\endgroup
+\addtocounter{footnote}{-1}
+
+\input{sections/intro}
+\input{sections/audit}
+\input{sections/kinematics}
+\input{sections/passive}
+\input{sections/testfunction}
+\input{sections/sumrule}
+\input{sections/constant}
+\input{sections/extremal}
+\input{sections/zeros}
+\input{sections/allzeros}
+\input{sections/waves}
+\input{sections/discussion}
+\appendix
+\input{sections/appendix}
+\input{sections/declarations}
+\input{sections/references}
+
+\end{document}

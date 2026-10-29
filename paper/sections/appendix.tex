@@ -1,0 +1,358 @@
+\section{Complete elliptic integrals}\label{app:elliptic}
+
+This appendix derives every property of $K$ and $E$ used in the paper. The
+modulus is $k\in[0,1)$ and the complementary modulus is $k'=\sqrt{1-k^2}$;
+we write $K'=K(k')$ and $E'=E(k')$.
+
+\subsection{Power series}
+
+For $\abs u<1$, $(1-u)^{-1/2}=\sum_{n\ge0}c_nu^n$ and
+$(1-u)^{1/2}=\sum_{n\ge0}c_nu^n/(1-2n)$, with $c_n=\binom{2n}n4^{-n}$; the
+first is the binomial series, $\binom{-1/2}n(-1)^n=c_n$, and the second follows
+by integrating the first term by term. The Wallis integral
+$\frac2\pi\int_0^{\pi/2}\sin^{2n}\phi\dd\phi=c_n$ follows by induction from
+the reduction formula
+$\int_0^{\pi/2}\sin^{2n}=\frac{2n-1}{2n}\int_0^{\pi/2}\sin^{2n-2}$ and the
+recurrence $c_n=\frac{2n-1}{2n}c_{n-1}$. With $u=k^2\sin^2\phi$ and uniform
+convergence for $k<1$,
+\begin{equation}\label{eq:KEseries}
+K(k)=\frac\pi2\sum_{n\ge0}c_n^2k^{2n},\qquad
+E(k)=\frac\pi2\sum_{n\ge0}\frac{c_n^2}{1-2n}k^{2n}.
+\end{equation}
+Subtracting, $K-E=\frac\pi2\sum_{n\ge1}c_n^2\frac{2n}{2n-1}k^{2n}$, which is
+the series of \cref{prop:Lambda}(i).\footnote{The coefficients
+$d_n=c_n^2\,2n/(2n-1)$ are $\frac12,\frac3{16},\frac{15}{128},\frac{175}{2048},
+\dots$; the ratio $d_{n+1}/d_n=(2n+1)(2n-1)/((2n+2)2n)$ follows from
+$c_{n+1}/c_n=(2n+1)/(2n+2)$.}
+
+\subsection{Derivatives}
+
+Differentiating under the integral sign,
+\begin{equation}\label{eq:derivs}
+\frac{\dd E}{\dd k}=\frac{E-K}k,\qquad
+\frac{\dd K}{\dd k}=\frac{E-k'^2K}{k\,k'^2}.
+\end{equation}
+The first is immediate: $\frac{\dd}{\dd k}\sqrt{1-k^2\sin^2\phi}
+=-k\sin^2\phi/\sqrt{\cdot}$, and $-k^2\sin^2\phi=(1-k^2\sin^2\phi)-1$. For the
+second, the derivative is $\int_0^{\pi/2}k\sin^2\phi\,(1-k^2\sin^2\phi)^{-3/2}
+\dd\phi$, and the identity
+\begin{multline*}
+\frac{\dd}{\dd\phi}\frac{\sin\phi\cos\phi}{\sqrt{1-k^2\sin^2\phi}}\\
+=\frac1{k^2}\Big(\sqrt{1-k^2\sin^2\phi}-\frac{k'^2}{(1-k^2\sin^2\phi)^{3/2}}\Big),
+\end{multline*}
+integrated over $[0,\pi/2]$, gives $\int(1-k^2\sin^2)^{-3/2}=E/k'^2$; then
+$k^2\sin^2\phi(1-k^2\sin^2\phi)^{-3/2}=(1-k^2\sin^2)^{-3/2}-(1-k^2\sin^2)^{-1/2}$
+yields \eqref{eq:derivs}.\footnote{To check the displayed identity, put
+$s=\sin\phi$, $c=\cos\phi$, $\Delta=1-k^2s^2$. The derivative of $sc\,\Delta^{-1/2}$
+is $(c^2-s^2)\Delta^{-1/2}+k^2s^2c^2\Delta^{-3/2}=\Delta^{-3/2}\big((c^2-s^2)\Delta
++k^2s^2c^2\big)$, and with $c^2=1-s^2$ the bracket is
+$1-2s^2+k^2s^4=\frac1{k^2}\big(\Delta^2-k'^2\big)$.}
+
+\subsection{Legendre's relation}
+
+\begin{lemma}\label{lem:legendre}
+$E(k)K'+E'K(k)-K(k)K'=\pi/2$ for $0<k<1$.
+\end{lemma}
+
+\begin{proof}
+Let $L(k)$ be the left side. Since $\dd k'/\dd k=-k/k'$, \eqref{eq:derivs}
+applied at $k'$ gives
+\[
+\frac{\dd E'}{\dd k}=\frac{k(K'-E')}{k'^2},\qquad
+\frac{\dd K'}{\dd k}=-\frac{E'-k^2K'}{kk'^2}.
+\]
+Multiply $\dd L/\dd k$ by $kk'^2$ and insert the four derivatives:
+\begin{multline*}
+kk'^2L'=k'^2(E-K)K'-E(E'-k^2K')+k^2K(K'-E')\\
++E'(E-k'^2K)-K'(E-k'^2K)+K(E'-k^2K').
+\end{multline*}
+Expanding, the terms in $KK'$ and in $EE'$ cancel in pairs, and what
+remains is
+\[
+kk'^2L'=(k^2+k'^2-1)\,(EK'-KE')=0 .
+\]
+So $L$ is constant. As $k\to0$, $K,E\to\pi/2$ and $E'\to1$, while
+$K-E=O(k^2)$ by \eqref{eq:KEseries} and $K'=O(\log(1/k))$ by
+\eqref{eq:Klog} below; hence $L=E'K+(E-K)K'\to\pi/2$.
+\end{proof}
+
+\subsection{The arithmetic--geometric mean and Landen's transformation}
+
+For $p,q>0$ let
+\[
+I(p,q)=\int_0^{\pi/2}\frac{\dd\phi}{\sqrt{p^2\cos^2\phi+q^2\sin^2\phi}},
+\]
+so that $K(k)=I(1,k')$.
+
+\begin{lemma}[Gauss]\label{lem:gauss}
+$I(p,q)=I\big(\frac{p+q}2,\sqrt{pq}\big)$. Consequently
+$I(p,q)=\pi/(2M(p,q))$, with $M$ the arithmetic--geometric mean of $p$
+and $q$.
+\end{lemma}
+
+\begin{proof}
+With $x=q\tan\phi$, $I(p,q)=\frac12\int_\R\big((p^2+x^2)(q^2+x^2)\big)^{-1/2}\dd x$.
+Substitute $x=\frac12(t-pq/t)$, $t>0$, which maps $(0,\infty)$ increasingly
+onto $\R$, with $\dd x=\frac12(1+pq/t^2)\dd t$. Then
+$4x^2+(p+q)^2=(t^2+p^2)(t^2+q^2)/t^2$ and $x^2+pq=\frac14(t+pq/t)^2$, so
+\[
+\big((p_1^2+x^2)(q_1^2+x^2)\big)^{-1/2}\dd x
+=\frac{\dd t}{\sqrt{(t^2+p^2)(t^2+q^2)}},
+\]
+with $p_1=\frac{p+q}2$, $q_1=\sqrt{pq}$. Integrating over $t\in(0,\infty)$
+gives $I(p_1,q_1)=\frac12\int_\R((p^2+t^2)(q^2+t^2))^{-1/2}\dd t=I(p,q)$. The
+iterates converge to $M(p,q)$, and $I(M,M)=\pi/(2M)$.
+\end{proof}
+
+\begin{proposition}[Landen]\label{prop:landen}
+Let $0<k'<1$ and $\kappa=(1-k')/(1+k')$. Then
+\[
+K(k)=(1+\kappa)K(\kappa),\qquad E(k)=(1+k')E(\kappa)-k'K(k).
+\]
+\end{proposition}
+
+\begin{proof}
+By \cref{lem:gauss}, $K(k)=I(1,k')=I\big(\frac{1+k'}2,\sqrt{k'}\big)
+=\frac2{1+k'}I\big(1,\frac{2\sqrt{k'}}{1+k'}\big)$, and
+$\frac{2\sqrt{k'}}{1+k'}=\sqrt{1-\kappa^2}=\kappa'$, so
+$K(k)=\frac2{1+k'}K(\kappa)=(1+\kappa)K(\kappa)$. For $E$, regard $k$ as a
+function of $\kappa$, $k=2\sqrt\kappa/(1+\kappa)$, $k'=(1-\kappa)/(1+\kappa)$,
+and differentiate the relation for $K$ with \eqref{eq:derivs}. Since
+\begin{gather*}
+\frac{\dd k}{\dd\kappa}=\frac{1-\kappa}{\sqrt\kappa(1+\kappa)^2},\qquad
+kk'^2=\frac{2\sqrt\kappa(1-\kappa)^2}{(1+\kappa)^3},\\
+\text{so}\qquad
+\frac{\dd k/\dd\kappa}{kk'^2}=\frac{1+\kappa}{2\kappa(1-\kappa)},
+\end{gather*}
+the derivative of $K(k)$ is $\big(E(k)-k'^2K(k)\big)\frac{1+\kappa}{2\kappa(1-\kappa)}$,
+and that of $(1+\kappa)K(\kappa)$ is
+$K(\kappa)+\big(E(\kappa)-(1-\kappa^2)K(\kappa)\big)/(\kappa(1-\kappa))$.
+Equating, multiplying by $2\kappa(1-\kappa)/(1+\kappa)$ and using
+$k'^2(1+\kappa)=(1-\kappa)^2/(1+\kappa)$,
+\begin{align*}
+E(k)&=\frac{2E(\kappa)}{1+\kappa}+\frac{K(\kappa)}{1+\kappa}\Big((1-\kappa)^2
++2\kappa(1-\kappa)\\
+&\qquad-2(1-\kappa)(1+\kappa)\Big)\\
+&=\frac{2E(\kappa)}{1+\kappa}-(1-\kappa)K(\kappa).
+\end{align*}
+Since $2/(1+\kappa)=1+k'$ and $(1-\kappa)K(\kappa)=k'K(k)$, this is the
+claim.
+\end{proof}
+
+\subsection{Behaviour at the ends}
+
+As $k\to0$, \eqref{eq:KEseries} gives $K,E=\frac\pi2+O(k^2)$. As $k\to1$,
+$E(k)\to1$ and
+\begin{equation}\label{eq:Klog}
+K(k)=\log\frac4{k'}+O\big(k'^2\log k'\big).
+\end{equation}
+The limit of $E$ is dominated convergence. For $K$, the substitution
+$x=k'\tan\phi$ of \cref{lem:gauss} gives
+$K(k)=\int_0^\infty\big((1+x^2)(k'^2+x^2)\big)^{-1/2}\dd x$. Split at $x=1$:
+\[
+\int_0^1\frac{\dd x}{\sqrt{k'^2+x^2}}=\operatorname{arsinh}\frac1{k'}
+=\log\frac2{k'}+o(1),
+\]
+and, by dominated convergence,
+\begin{gather*}
+\int_0^1\frac{(1+x^2)^{-1/2}-1}{\sqrt{k'^2+x^2}}\dd x\to\log\frac2{1+\sqrt2},\\
+\int_1^\infty\frac{\dd x}{\sqrt{(1+x^2)(k'^2+x^2)}}\to\log(1+\sqrt2),
+\end{gather*}
+the first limit being
+$\int_0^1\big(\frac1{x\sqrt{1+x^2}}-\frac1x\big)\dd x=\log\frac2{1+\sqrt2}$,
+both from the primitive $-\operatorname{arsinh}(1/x)$ of
+$1/(x\sqrt{1+x^2})$. The three limits add up to $\log(4/k')$.
+The error term is \cite[19.12.1]{dlmf}.
+
+\section{The elementary integrals}\label{app:integrals}
+
+\subsection{Moments of the arcsine weight}
+
+For $A<B$ put $m=\frac{A+B}2$, $d=\frac{B-A}2$ and
+$\sigma=m-d\cos\phi$, $0\le\phi\le\pi$. Then
+$(\sigma-A)(B-\sigma)=d^2\sin^2\phi$ and $\dd\sigma=d\sin\phi\dd\phi$, so
+$\dd\sigma/\sqrt{(\sigma-A)(B-\sigma)}=\dd\phi$, and
+\begin{align*}
+\int_A^B\frac{\dd\sigma}{\sqrt{(\sigma-A)(B-\sigma)}}&=\pi,\\
+\int_A^B\frac{\sigma\dd\sigma}{\sqrt\cdot}&=\pi m=\frac\pi2(A+B),\\
+\int_A^B\frac{\sigma^2\dd\sigma}{\sqrt\cdot}&=\pi\Big(m^2+\frac{d^2}2\Big)\\
+&=\frac\pi8\big(3A^2+2AB+3B^2\big),\\
+\int_A^B\frac{\dd\sigma}{\sigma\sqrt\cdot}&=\int_0^\pi\frac{\dd\phi}{m-d\cos\phi}\\
+&=\frac\pi{\sqrt{m^2-d^2}}=\frac\pi{\sqrt{AB}} .
+\end{align*}
+The last integral is the classical $\int_0^\pi\dd\phi/(m-d\cos\phi)=\pi/\sqrt{m^2-d^2}$
+for $m>\abs d$, which follows from $u=\tan(\phi/2)$.\footnote{With
+$u=\tan(\phi/2)$, $\cos\phi=(1-u^2)/(1+u^2)$ and $\dd\phi=2\dd u/(1+u^2)$, so
+the integral is $\int_0^\infty2\dd u/\big((m-d)+(m+d)u^2\big)
+=\pi/\sqrt{(m-d)(m+d)}$.}
+
+These give \cref{lem:moments}(iii),(iv): with
+$x\,p(x)\dd x=\frac12\varpi(\sigma)\dd\sigma$ and
+$p(x)\dd x/x=\frac12\varpi(\sigma)\dd\sigma/\sigma$,
+\begin{align*}
+\int_a^b\frac{p}x\dd x&=\frac12\Big((A+B)\frac\pi{\sqrt{AB}}-2\pi\Big)\\
+&=\frac{\pi(b-a)^2}{2ab},\\
+\int_a^bx^3p\dd x&=\frac12\Big(\frac\pi2(A+B)^2\\
+&\qquad-\frac\pi4(3A^2+2AB+3B^2)\Big)\\
+&=-\frac\pi8(B-A)^2 .
+\end{align*}
+
+\subsection{The integrals $I_0$, $I_2$ and $J$}
+
+With $t^2=b^2-(b^2-a^2)\sin^2\phi$ (\cref{prop:J}),
+$t\dd t=-(b^2-a^2)\sin\phi\cos\phi\dd\phi$ and $r(t)=(b^2-a^2)\sin\phi\cos\phi$,
+so $\dd t/r=-\dd\phi/t$ and
+\begin{gather*}
+I_0=\int_0^{\pi/2}\frac{\dd\phi}{b\sqrt{1-k^2\sin^2\phi}}=\frac{K(k)}b,\\
+I_2=\int_0^{\pi/2}b\sqrt{1-k^2\sin^2\phi}\dd\phi=bE(k).
+\end{gather*}
+Hence $J=(a^2+b^2)I_0-2I_2=b\big((1+k'^2)K(k)-2E(k)\big)$. By
+\cref{prop:landen}, $-2E(k)=-2(1+k')E(\kappa)+2k'K(k)$, and
+$(1+k'^2)+2k'=(1+k')^2$, so
+\begin{align*}
+J&=b(1+k')^2K(k)-2b(1+k')E(\kappa)\\
+&=b(1+k')^2(1+\kappa)K(\kappa)-2b(1+k')E(\kappa).
+\end{align*}
+With $1+k'=(a+b)/b$ and $1+\kappa=2b/(a+b)$ the coefficients are $2(a+b)$
+and $2(a+b)$, which is \eqref{eq:J}.
+
+\subsection{The integrals on $(0,a)$}
+
+With $s=a\sin\phi$,
+\[
+\sqrt{(a^2-s^2)(b^2-s^2)}=a\cos\phi\,b\sqrt{1-k'^2\sin^2\phi},
+\]
+so
+\begin{gather*}
+\int_0^a\frac{\dd s}{\sqrt{(a^2-s^2)(b^2-s^2)}}=\frac{K(k')}b,\\
+\int_0^a\frac{s^2\dd s}{\sqrt{(a^2-s^2)(b^2-s^2)}}=b\big(K(k')-E(k')\big),
+\end{gather*}
+the second because $a^2\sin^2\phi=b^2k'^2\sin^2\phi$ and
+\[
+\int_0^{\pi/2}\frac{k'^2\sin^2\phi\,\dd\phi}{\sqrt{1-k'^2\sin^2\phi}}=K(k')-E(k').
+\]
+These are
+the integrals in the proof of \cref{thm:extremal}(ii), where
+\[
+\frac{m^2}bK'-b(K'-E')=\frac b{K}\big(EK'-KK'+E'K\big)=\frac{\pi b}{2K}
+\]
+by $m^2=b^2E/K$ and \cref{lem:legendre}.
+
+\section{The extremal profile in closed form}\label{app:profiles}
+
+\subsection{Three formulas for $\alpha_\star$}
+
+\begin{lemma}\label{lem:alphaforms}
+For $a<x<b$,
+\begin{align*}
+\alpha_\star(x)&=\tau_\star\int_a^x\frac{m^2-s^2}{r(s)}\dd s\\
+&=\frac{2x\,r(x)\theta}\pi\PV\int_a^b\frac{\dd t}{r(t)(x^2-t^2)}\\
+&=\frac{2\theta\,r(x)}\pi\int_a^b\frac{\dd t}{r(t)(x+t)} .
+\end{align*}
+\end{lemma}
+
+The last form shows at once that $\alpha_\star>0$ on $(a,b)$ and that it
+vanishes like $\sqrt{x-a}$ and $\sqrt{b-x}$ at the band edges.
+
+\begin{proof}
+The first equality is \cref{thm:extremal}(ii), the second
+\cref{prop:profile}(ii),(iv) with $g=\theta$. For the third, apply Cauchy's
+formula to $1/R$, which is analytic off $S$, $O(z^{-2})$ at infinity, and
+has the jumps $1/R(t+i0)-1/R(t-i0)=-2i/r(t)$ on $(a,b)$ and $+2i/r(t)$ on
+$(-b,-a)$ by \cref{lem:R}. Then
+\[
+\frac1{R(z)}=\frac1\pi\int_a^b\frac{\dd t}{r(t)}\Big(\frac1{z-t}-\frac1{z+t}\Big).
+\]
+At $z=x+i0$ the left side is $-i/r(x)$, purely imaginary, so the real part
+of the right side vanishes:
+$\PV\int_a^b\frac{\dd t}{r(t)(x-t)}=\int_a^b\frac{\dd t}{r(t)(x+t)}$. Since
+$\frac{2x}{x^2-t^2}=\frac1{x-t}+\frac1{x+t}$, the second form equals the
+third.
+\end{proof}
+
+\subsection{The mean of $\alpha_\star$}
+
+By Fubini's theorem applied to the first form,
+\begin{align*}
+\int_a^b\alpha_\star\dd x&=\tau_\star\int_a^b\frac{(m^2-s^2)(b-s)}{r(s)}\dd s\\
+&=\tau_\star\big(b(m^2I_0-I_2)-m^2I_1+I_3\big),
+\end{align*}
+with $I_j=\int_a^bs^j\dd s/r(s)$. The first bracket vanishes by the choice of
+$m$. With $\sigma=s^2$, $I_1=\frac\pi2$ and $I_3=\frac\pi4(a^2+b^2)$ by
+\cref{app:integrals}, so
+\begin{align*}
+\int_a^b\alpha_\star&=\tau_\star\frac\pi4\big(a^2+b^2-2m^2\big)\\
+&=\frac{\theta K(k)}{2b}\big(a^2+b^2\big)-\theta b\,E(k)
+=\frac\theta2J,
+\end{align*}
+in agreement with \cref{thm:main}.\footnote{Here
+$\tau_\star\pi/4=\theta K(k)/(2b)$ and $\tau_\star\pi m^2/2=\theta bE(k)$; the
+last expression is $\frac\theta2\big((a^2+b^2)I_0-2I_2\big)$.}
+
+\subsection{The lead extremal}
+
+The system $H_\star(-ab/z)$ of \cref{thm:lead} has, in the representation
+\eqref{eq:foster}, linear coefficient $0$, measure on $S$ given by its
+attenuation, and an atom $ab\,\tau_\star$ at the origin (\cref{thm:lead},
+proof). Its phase on the band is $-\abs\theta$. The sum rule
+\eqref{eq:sumrule}, with the atom costing $\frac\pi4W(0)\,ab\,\tau_\star$ and
+$W(0)=(b-a)^2/(ab)$, gives
+\begin{align*}
+\frac1{b-a}\int_a^b\alpha\dd\omega&=-\abs\theta\Lambda+\frac\pi4(b-a)\tau_\star\\
+&=-\abs\theta\frac{K-E}\kappa+\abs\theta\kappa K\\
+&=\abs\theta\,\frac{E(\kappa)-\kappa'^2K(\kappa)}\kappa ,
+\end{align*}
+where $K,E$ are taken at $\kappa$ and
+$\frac\pi4(b-a)\tau_\star=\abs\theta(b-a)K(\kappa)/(a+b)=\abs\theta\kappa K(\kappa)$.
+This is \cref{rem:leadmean}.
+
+\section{Verification}\label{app:verification}
+
+No statement of the paper rests on a computation: every result has a proof
+in the text. Two kinds of checks accompany the source files.
+
+\emph{Numerical checks.} The script \texttt{anc/checks.py} re-evaluates the
+identities of the paper in high-precision arithmetic: the boundary values
+of $W$ and the kernel identity \eqref{eq:kernel} at sample points; the
+moments of \cref{lem:moments}; the three forms of $J$ and the Landen
+relations; the bounds on $\Lambda$ and \cref{tab:lambda}; $m^2$, Legendre's
+relation and $\tau_\star$; the three formulas of \cref{lem:alphaforms} and the
+mean of $\alpha_\star$; the octave values of \cref{rem:extremal}; the lead
+extremal; the single-zero reduction, its asymptotics and \cref{tab:zeros};
+the ratios $J/P$ of \cref{cor:stable}; for \cref{sec:allzeros}, the root
+$\eta_\star=\sqrt{ab}$ at a right angle, the agreement of the Cauchy integral
+$v_{g_\sharp}$ with both closed forms \eqref{eq:alpharight}, the integral
+\eqref{eq:lambdaright}, the value at the geometric centre and the symmetry,
+every entry of \cref{tab:allzeros}, the positivity of $\as_\theta$ on the band for
+three band ratios and three phases, the mean of $\as_\theta$ and the pointwise
+comparison with $\alpha_\star$ at $\theta=1$, the narrow-band ratios after
+\cref{cor:narrowzeros} and the nomes and the case of equality of
+\cref{cor:nome}; and the numbers of \cref{sec:audit,sec:waves}. It reports
+\checkscount\ checks passed and none failed.
+
+\emph{Lean.} The file \texttt{lean/PhaseShiftCost.lean} is checked by the
+kernel of Lean~4 (version 4.34.0, core library only). It contains
+\leancount\ theorems and no \texttt{sorry}. It verifies the dimensional
+analysis and the arithmetic of \cref{sec:audit}; the coefficients $d_n$ of
+the series of $\Lambda$, their identification with
+$\binom{2n}n^24^{-2n}\,2n/(2n-1)$ for $n\le60$, and their monotonicity for
+every $n$; enclosures of $\Lambda/\pi$ to nine decimals for six band ratios,
+from partial sums of the series and the coefficient bound behind the tail
+estimate; and the polynomial identities used in
+\cref{sec:test,sec:constant,sec:sumrule,sec:zeros,sec:allzeros} and in the
+appendices; for \cref{sec:allzeros} these are the identities behind
+\eqref{eq:Hright}, both forms of \eqref{eq:alpharight}, the symmetry
+$\omega\mapsto ab/\omega$, the value at $\sqrt{ab}$ and \eqref{eq:lambdaright}.
+Of the \leancount\ theorems, \leanfree\ depend on no axiom, one on
+\texttt{propext} only, one on \texttt{propext} and \texttt{Quot.sound}, and the others on Lean's three standard axioms
+(\texttt{propext}, \texttt{Classical.choice}, \texttt{Quot.sound}), through
+the tactics \texttt{grind} and \texttt{omega}.
+
+The analytic theorems are not formalised. The sum rule
+(\cref{thm:sumrule}), the identification of $\Lambda$ with elliptic integrals
+and with its series, the extremal system, and the results on zeros rest on
+boundary values of Cauchy integrals, the M.~Riesz theorem, Hardy spaces,
+conformal maps and extremal length, Landen's
+transformation and the summation of a geometric series, none of which is
+formalised in the file. They are proved in the text and in
+\cref{app:elliptic,app:integrals,app:profiles}.

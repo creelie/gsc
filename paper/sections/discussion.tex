@@ -1,0 +1,74 @@
+\section{Discussion and open problems}\label{sec:discussion}
+
+\subsection{What has been shown}
+
+A passive system can delay a band of frequencies for free, but it cannot
+shift the phase of the whole band by a constant without absorbing. The
+least mean absorption is $\theta\Lambda$, with $\Lambda=(K(\kappa)-E(\kappa))/\kappa$
+an explicit function of the band ratio, and the bound is attained. The proof
+is a single sum rule, \eqref{eq:sumrule}, built from the test function $W$,
+and every other statement of the paper is a consequence of it or of the
+explicit extremal system: the lead bound, the worst-frequency and
+geometric-mean bounds, the bound for anomalous dispersion in a medium, and
+the stability under perturbations of the phase.
+
+With zeros allowed the sum rule is no longer available, and the problem
+changes character. After the change of variables of \cref{lem:transform}
+the zeros disappear, the phase condition becomes a curve, and a comparison
+argument gives a bound at every frequency, attained by one system with a
+single zero. At a right angle that system is algebraic, and the bound
+reads $\abs{H(\sqrt{ab})}^2\le a/b$.
+
+The ingredients are classical: the Herglotz representation, Kramers--Kronig
+relations, a Cauchy integral, an elliptic integral reduced by Landen's
+transformation, Hardy spaces and a conformal map with a free parameter. What
+is new, as far as we can tell, is the pair of sharp bounds, the
+identification of the price of a constant phase with a single number
+$\Lambda$ for zero-free systems, and the pointwise optimality of a single
+system once zeros are allowed.
+
+\subsection{Open problems}
+
+\begin{enumerate}
+\item[(1)] \emph{Delay together with zeros.} \Cref{thm:allzeros} solves
+\cref{prob:zeros}, and \cref{cor:allweights}(ii) extends it to a phase
+$\theta-\tau\omega$ with $\tau\ge0$. For $\arg H\equiv\theta+\tau\omega$ with
+$\tau>0$ the system $e^{i\tau z}\Hs_\theta$ still has the loss $\as_\theta$; is it
+optimal, or can a delay combined with zeros do better? The change of
+variables of \cref{lem:transform} needs a constant phase.
+\item[(2)] \emph{The plain mean for a lead.} \Cref{thm:lead} is sharp for the
+weighted mean. Is the system $H_\star(-ab/z)$ of \cref{rem:leadmean}
+optimal for the plain mean, with value $\abs\theta(E-\kappa'^2K)/\kappa$?
+\item[(3)] \emph{The worst frequency.} \Cref{cor:worst} bounds $\max\alpha$ by
+the mean. The sharp bound on $\max\alpha$ is an extremal problem of
+Chebyshev type: minimise $\sup_{[a,b]}\Im h$ among Herglotz functions with
+$\Re h=\theta$ on the band. The extremal $H_\star$ has
+$\max\alpha_\star/\theta\Lambda=1.273$ for an octave, so the sharp constant
+lies between $\Lambda$ and $1.273\Lambda$ there; \cref{cor:allweights}(iii)
+gives the further lower bound $\max\as_\theta$, which for $\theta=1$ is
+$0.29204=1.068\,\theta\Lambda$. With zeros allowed the problem
+is solved by \cref{cor:allweights}(i).
+\item[(4)] \emph{Several bands.} For a phase that is constant on each of
+several disjoint bands, the test function is built from a hyperelliptic
+square root, and the constant becomes a period of a hyperelliptic
+differential. We expect the sum rule to carry over with the same proof.
+\item[(5)] \emph{Reflection and matching.} For reflection coefficients,
+the Fano bound \cite{fano} and the present bound constrain different parts
+of the same function. A joint bound on the modulus and the argument of a
+reflection coefficient on a band would combine the two.
+\item[(6)] \emph{The optimal system in closed form.} For $\theta\ne\pi/2$,
+$\Hs_\theta$ comes from a conformal map onto the slit domain $D_T$ of
+\cref{prop:exist}. The Joukowski map $G\mapsto\frac12(G+1/G)$ straightens the
+semicircle of its boundary but bends the slit unless $\cos\theta=0$, which is
+why the right angle is elementary. Is there a closed form for other
+$\theta$, for instance through the Schwarz equation of the circular
+quadrilateral?
+\item[(7)] \emph{Formalisation.} The finite arithmetic of the paper is
+checked in Lean (\cref{app:verification}). The analytic part, the sum rule
+and the evaluation of $\Lambda$, would require a formalisation of boundary
+values of Cauchy integrals, of the M.~Riesz theorem and of the complete
+elliptic integrals with Landen's transformation, and the results on zeros
+would need Hardy spaces, the M\"obius change of variables, extremal length
+and the Carath\'eodory extension of conformal maps. We have not done this,
+and the analytic theorems of the paper are not machine-checked.
+\end{enumerate}

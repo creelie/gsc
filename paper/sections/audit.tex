@@ -1,0 +1,116 @@
+\section{The equations of the earlier paper}\label{sec:audit}
+
+We first go through the formulas of \cite{tb23}, since the rest of the paper
+replaces them. They fall into two groups: kinematic relations between phase,
+time and frequency, which are correct, and formulas for an energy loss
+$\Delta E$, which are not.
+
+\subsection{Phase, time and frequency}
+
+For a sinusoid of frequency $f$, a delay $\Delta t$ produces the phase
+\begin{equation}\label{eq:audit-phase}
+\Phi^\circ=360^\circ f\,\Delta t ,
+\end{equation}
+and \cite{tb23} rewrites this as $\Delta t=\Phi^\circ/(360^\circ f)$ and
+$f=\Phi^\circ/(360^\circ\Delta t)$. These are correct, with the
+understanding that the last one gives the frequency at which a \emph{given}
+delay produces a \emph{given} phase; it does not describe a change of
+frequency. The delay that produces one degree is
+\[
+T(\mathrm{deg})=\frac{1}{360f},
+\]
+which at $f=5$\,MHz is $555.6$\,ps, as stated in \cite{tb23}. Two of the
+phrasings there should be read with care. The equation ``$1^\circ$ phase
+shift $=T/360$'' equates an angle with a time; what is meant is that a delay
+of $T/360$ produces a phase of $1^\circ$, where $T=1/f$ is the period. The
+name ``time distortion'' for $\Delta t$ suggests something more than a delay;
+the quantity in \eqref{eq:audit-phase} is just the delay. Finally, the
+statement that $T(\mathrm{deg})\propto1/f$ is true of the delay needed for one
+degree, and it is the reason why a delay cannot produce the same phase at
+two frequencies.
+
+\subsection{The energy formulas}
+
+The paper \cite{tb23} proposes three formulas for an ``infinitesimal loss of
+wave energy'',
+\begin{equation}\label{eq:audit-dE}
+\begin{gathered}
+\Delta E=hf\Delta t,\qquad
+\Delta E=\frac{2\pi hf_1}{360}\,T(\mathrm{deg}),\\
+\Delta E=\frac{2\pi h}{360}\,\frac{T(\mathrm{deg})}{\Delta t},
+\end{gathered}
+\end{equation}
+with $h$ Planck's constant, and evaluates the first one for $f=4{,}986{,}111.11$\,Hz and
+$\Delta t=555$\,ps. Four things go wrong.
+
+\emph{Units.} Planck's constant is an action, measured in J\,s; $hf$ is an
+energy and $hf\Delta t$ is again an action. The same holds for the other two
+formulas in \eqref{eq:audit-dE}, in which $T(\mathrm{deg})/\Delta t$ is a pure
+number and $f_1T(\mathrm{deg})$ is the number $1/360$. None of the three
+expressions is an energy.\footnote{If $T(\mathrm{deg})$ is read as the angle
+$1^\circ=\pi/180$ rather than as a time, the second formula has units of
+energy, but it then reads $\Delta E=(\pi/180)\,hf_1\,(2\pi/360)$, a fixed
+multiple of $hf_1$ without any connection to the delay.}
+
+\emph{Arithmetic.} The product evaluated in \cite{tb23} is
+\[
+(6.626\times10^{-34})(4.986\times10^{6})(555\times10^{-12})
+=1.834\times10^{-36},
+\]
+in J\,s, not $1.848\times10^{-27}$\,J. The stated value is larger by a factor
+of about $10^{9}$, and it would amount to $56\%$ of the energy
+$E_1=hf_1=3.313\times10^{-27}$\,J of a quantum at $5$\,MHz, which can hardly
+be called infinitesimal.
+
+\emph{A fixed phase shift does not change the frequency.} The second example
+of \cite{tb23} assigns to a $1^\circ$ phase shift the new frequency
+$f_2=f_1-f_1/360=4{,}986{,}111.11$\,Hz. Multiplying a wave by a constant
+$e^{i\theta}$, or delaying it, leaves its frequency unchanged
+(\cref{prop:static}). A frequency change of $f_1/360$ occurs when the phase
+\emph{slips} by one degree in every period, that is, when the phase grows
+at the rate $\dot\theta=2\pi f_1/360$ (\cref{prop:slip}). In that case the
+energy of a quantum changes by
+\[
+E_1-E_2=\frac{hf_1}{360}=9.20\times10^{-30}\ \mathrm J ,
+\]
+and this is the only energy difference of the size suggested by the example.
+The paper also gives $E_2=hf_2\approx3.313\times10^{-27}$\,J; the correct
+value is $3.304\times10^{-27}$\,J, and the difference from $E_1$ is the number
+just computed, not $1.848\times10^{-27}$\,J.
+
+\emph{What $hf$ measures.} The energy $hf$ is that of one quantum. The energy
+of a classical wave is fixed by its amplitude, which the formulas
+\eqref{eq:audit-dE} do not contain. A loss caused by a passive element is a
+fraction of the incident energy, whether the wave is classical or quantised,
+and the quantity to compute is therefore the transmission $\abs{H}^2$, or,
+per quantum, the probability of absorption.
+
+\subsection{What remains}
+
+\Cref{tab:audit} lists the corrections. The kinematic part of \cite{tb23}
+stands. The energy part asks a good question in the wrong variables: the
+phase shift that has a price is the one applied uniformly over a band, the
+price is a fraction of the energy rather than a multiple of $h$, and its
+size is governed by the bandwidth. Sections~\ref{sec:passive}--\ref{sec:waves}
+compute it.
+
+\begin{table}[t]
+\caption{The formulas of \cite{tb23} and their status.}
+\label{tab:audit}
+\centering
+\small
+\begin{tabular}{@{}p{0.43\columnwidth}p{0.51\columnwidth}@{}}
+\toprule
+Formula in \cite{tb23} & Status \tabularnewline
+\midrule
+\raggedright $\Phi^\circ=360^\circ f\Delta t$ and its inversions & \raggedright correct\tabularnewline
+\raggedright $T(\mathrm{deg})=1/(360f)$, $555$\,ps at $5$\,MHz & \raggedright correct\tabularnewline
+\raggedright ``$1^\circ$ phase shift $=T/360$'' & \raggedright angle equated with time; a delay $T/360$ gives $1^\circ$\tabularnewline
+\raggedright $\Delta E=hf\Delta t$ & \raggedright an action, in J\,s; its value is $1.83\times10^{-36}$, not $1.848\times10^{-27}$\tabularnewline
+\raggedright $\Delta E=(2\pi hf_1/360)T(\mathrm{deg})$ & \raggedright an action; equals $2\pi h/360^2$\tabularnewline
+\raggedright $\Delta E=(2\pi h/360)\,T(\mathrm{deg})/\Delta t$ & \raggedright an action\tabularnewline
+\raggedright $f_2=f_1-f_1/360$ after a $1^\circ$ shift & \raggedright only if the phase slips $1^\circ$ per period\tabularnewline
+\raggedright $E_2\approx3.313\times10^{-27}$\,J & \raggedright $3.304\times10^{-27}$\,J; $E_1-E_2=9.20\times10^{-30}$\,J\tabularnewline
+\bottomrule
+\end{tabular}
+\end{table}

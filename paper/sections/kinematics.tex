@@ -1,0 +1,128 @@
+\section{Phase, delay and frequency}\label{sec:kinematics}
+
+\subsection{Conventions}
+
+A signal is a real function $s(t)$ of finite energy, with Fourier transform
+$\hat s(\omega)=\int_\R s(t)e^{i\omega t}\dd t$, so that
+$\hat s(-\omega)=\overline{\hat s(\omega)}$. A linear time-invariant system
+acts by $\widehat{s_{\rm out}}=H\hat s_{\rm in}$. With this convention a
+delay by $\tau$ has $H(\omega)=e^{i\omega\tau}$, so a positive phase of $H$
+is a \emph{lag}, and causality means that $H$ extends analytically to the
+upper half-plane $\Cp=\{\Im z>0\}$ (\cref{sec:passive}). The analytic signal
+of $s$ is
+\[
+\psi(t)=\frac1\pi\int_0^\infty\hat s(\omega)e^{-i\omega t}\dd\omega ,
+\qquad s=\Re\psi .
+\]
+For a narrowband pulse we write $\psi(t)=A(t)e^{-i(\omega_0t+\phi)}$ with a
+slowly varying envelope $A\ge0$, a carrier frequency $\omega_0$ and a
+carrier--envelope phase $\phi$. The phase $\phi$ locates the crests of the
+carrier relative to the peak of the envelope; it is the quantity controlled
+in frequency combs \cite{telle,apolonski}.\footnote{In a mode-locked laser $\phi$ advances by a fixed amount from one pulse to the next; the rate of this slip is the carrier--envelope offset frequency of the comb, which is measured and locked in \cite{telle,apolonski}.}
+
+Three different operations go under the name of a phase shift. We treat
+them in turn.
+
+\subsection{A constant phase factor}
+
+The \emph{ideal phase shifter} by $\theta$ multiplies every positive
+frequency by $e^{i\theta}$ and, to keep the signal real, every negative
+frequency by $e^{-i\theta}$:
+\begin{equation}\label{eq:ideal}
+H_\theta(\omega)=e^{i\theta\operatorname{sgn}\omega},\qquad
+\psi_{\rm out}=e^{i\theta}\psi .
+\end{equation}
+It is not causal.\footnote{With our Fourier convention the multiplier $i\operatorname{sgn}\omega$ has the kernel $1/(\pi t)$, since $\PV\int\operatorname{sgn}\omega\,e^{-i\omega t}\dd\omega=-2i/t$. Hence $H_\theta=\cos\theta+i\sin\theta\operatorname{sgn}\omega$ has the impulse response $\cos\theta\,\delta(t)+\sin\theta/(\pi t)$, which does not vanish for $t<0$ unless $\sin\theta=0$.}
+
+\begin{proposition}\label{prop:static}
+The ideal phase shifter preserves the energy $\int s^2\dd t$, the power
+spectrum $\abs{\hat s}^2$ and hence every frequency present in the signal.
+For a single quantised mode of frequency $\omega$ the operator
+$U=e^{-i\theta N}$, $N$ the number operator, commutes with the Hamiltonian
+$\hbar\omega(N+\frac12)$, so the probability distribution of the energy is
+unchanged. If $\sin\theta\ne0$, the ideal phase shifter is not causal.
+\end{proposition}
+
+\begin{proof}
+The first statements follow from $\abs{H_\theta}=1$ and Parseval's
+identity, and from $[N,U]=0$. For the last, $H_\theta=\cos\theta
++i\sin\theta\operatorname{sgn}\omega$, and $i\operatorname{sgn}\omega$ is the
+transfer function of convolution with the Hilbert kernel $\pm1/(\pi t)$,
+which does not vanish for $t<0$.
+\end{proof}
+
+So a phase shift, as such, neither changes the frequency nor costs energy.
+What it costs is causality, and the price of restoring causality in a
+passive system is the subject of the rest of the paper.
+
+\subsection{A delay}
+
+A delay $\tau$ gives $\psi_{\rm out}(t)=\psi(t-\tau)$ and the phase
+$\omega\tau$ at frequency $\omega$, which is the relation
+\eqref{eq:audit-phase}. It is causal and lossless, and it realises any
+prescribed phase at one frequency. On a band it realises a phase that is
+proportional to frequency, never a constant one.
+
+\subsection{A phase that changes in time}
+
+Let a device multiply the analytic signal by $e^{i\theta(t)}$.
+
+\begin{proposition}\label{prop:slip}
+If $\theta(t)=\theta_0+\Omega t$, then
+$\widehat{\psi_{\rm out}}(\omega)=e^{i\theta_0}\hat\psi(\omega+\Omega)$: the
+spectrum is moved down by $\Omega$, and a component of frequency $\omega$ leaves
+with frequency $\omega-\Omega$ and energy $\hbar(\omega-\Omega)$ per
+quantum. If the device conserves the number of quanta, the energy of the
+signal changes by the fraction $\Omega/\omega$ at each frequency, the
+difference being exchanged with the agent that drives $\theta$.
+\end{proposition}
+
+\begin{proof}
+The Fourier transform of $e^{i\Omega t}\psi(t)$ is $\hat\psi(\omega+\Omega)$
+in our convention. The rest is the relation $E=\hbar\omega$ for each
+quantum.
+\end{proof}
+
+The conservation of the number of quanta is what the Manley--Rowe relations
+\cite{manley} give for a lossless parametric modulator, and the linear phase
+ramp is the serrodyne frequency translator \cite{cumming}. A phase that slips
+by one degree per period has $\Omega=\omega/360$; at $5$\,MHz this is a shift
+of $13{,}888.89$\,Hz and an energy of $hf/360=9.20\times10^{-30}$\,J per
+quantum, the numbers of \cref{sec:audit}. This is the only reading under
+which a ``$1^\circ$ phase shift'' changes frequency. It is an active
+operation, not a passive one.
+
+\subsection{Constant phase on a band}
+
+The operation that keeps the envelope and moves the carrier is the following.
+
+\begin{proposition}\label{prop:cep}
+Let $0<a<b$ and let $H$ satisfy $H(-\omega)=\overline{H(\omega)}$ and
+\begin{equation}\label{eq:affine}
+H(\omega)=e^{-\alpha(\omega)}e^{i(\theta+\tau\omega)},\qquad a\le\omega\le b .
+\end{equation}
+If the spectrum of $s$ lies in $[-b,-a]\cup[a,b]$ and $\alpha=0$ on $[a,b]$,
+then $\psi_{\rm out}(t)=e^{i\theta}\psi(t-\tau)$. In particular a pulse
+$A(t)e^{-i(\omega_0t+\phi)}$ leaves as $A(t-\tau)e^{-i(\omega_0(t-\tau)+\phi-\theta)}$:
+the envelope is delayed by $\tau$ and the carrier--envelope phase is moved
+by $-\theta$. Conversely, if $\psi_{\rm out}=e^{i\theta}\psi(\cdot-\tau)$ for
+every such signal, then \eqref{eq:affine} holds with $\alpha=0$.
+\end{proposition}
+
+\begin{proof}
+On positive frequencies $\widehat{\psi_{\rm out}}=H\hat\psi
+=e^{i\theta}e^{i\tau\omega}\hat\psi$, which is the transform of
+$e^{i\theta}\psi(t-\tau)$. The converse follows by testing with signals whose
+spectra are concentrated near each $\omega\in[a,b]$.
+\end{proof}
+
+The phase of $H$ on the band is then $\varphi(\omega)=\theta+\tau\omega$. Its
+slope $\tau$ is the group delay; its intercept
+\[
+\theta=\varphi(\omega)-\omega\varphi'(\omega)=\omega\big(\tau_{\rm ph}-\tau_{\rm gr}\big),
+\qquad \tau_{\rm ph}=\frac{\varphi}{\omega},\ \tau_{\rm gr}=\varphi',
+\]
+is the carrier--envelope offset, $\omega$ times the excess of phase delay
+over group delay. A delay has $\theta=0$. The main theorem says that a passive
+zero-free system can have $\theta>0$ only by absorbing, on average over the
+band, at least $\theta\Lambda$ nepers.
