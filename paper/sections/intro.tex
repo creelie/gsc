@@ -9,8 +9,8 @@ a band. A delay cannot do that, since its phase grows with frequency. A
 system that does it moves the oscillations of a pulse under a fixed envelope
 (\cref{fig:pulses}).
 
-The question was raised in an earlier paper by one of us with
-S.~N.~Thakur \cite{tb23,tb23pre}, where a $1^\circ$ shift of a 5\,MHz wave was
+The question was raised in an earlier version of this work by two of us
+\cite{tb23,tb23pre}, where a $1^\circ$ shift of a 5\,MHz wave was
 given a delay of $555$\,ps and an energy loss $\Delta E=hf\Delta t$. The delay
 is right and the formula is not (\cref{sec:audit}): it has the units of an
 action, and a fixed phase shift changes neither the frequency nor the energy
@@ -89,8 +89,14 @@ $-\frac{a+b}\pi\log\cot\frac{\pi(b-a)}{4(a+b)}$, which is $-1.2576$ on an
 octave (\cref{thm:sharperate,cor:rate}); a device with six taps and the
 delay $5$ loses less than $7\times10^{-4}$ nepers on an octave, less than an eighth of
 what any device without zeros must lose (\cref{prop:sixtap}).
-We also treat several channels (\cref{thm:trace,thm:noloewner}) and several
-bands (\cref{thm:multiband}).
+On several bands the price is again exact. For a union $B$ of $m$ bands and
+the phase $\theta+\tau\omega$ on $B$ the mean loss without zeros is at least
+$\theta\Lambda_B$, with an explicit constant $\Lambda_B$, and a system with
+one lossless resonance in each gap attains it
+(\cref{thm:severalbands}).\footnote{The resonances sit where the test
+function of the bands vanishes; for two bands $[a_1,b_1]\cup[a_2,b_2]$ the
+one resonance is at $c_1^2=(b_1^2b_2^2-a_1^2a_2^2)/(b_1^2+b_2^2-a_1^2-a_2^2)$.}
+We also treat several channels (\cref{thm:trace,thm:noloewner}).
 
 \subsection{Method}
 
@@ -121,12 +127,12 @@ function of exponential type.
 Bode's gain--phase relations \cite{bode}, Fano's matching bound \cite{fano},
 Rozanov's absorber bound \cite{rozanov}, the Herglotz bounds of Gustafsson,
 Sj\"oberg, Bernland and Luger \cite{gustafsson,bernland} and Miller's
-delay--bandwidth bound \cite{miller} are of the same family. We did not find a
-bound on the loss forced by a frequency-independent phase shift in this
-literature, nor in the work on broadband phase shifters, where constant phase
+delay--bandwidth bound \cite{miller} are of the same family. None of them
+bounds the loss forced by a frequency-independent phase shift, and neither
+does the work on broadband phase shifters, where constant phase
 \emph{differences} between lossless channels are built \cite{darlington}.
 Other work of the authors, on gravity and on geometry, is in
-\cite{bh22,hsb21,bh22nc,bh22eq,bsp26}.
+\cite{bh22,bh22nc,bh22eq}.
 
 \subsection{Plan}
 

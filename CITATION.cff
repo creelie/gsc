@@ -1,9 +1,9 @@
 cff-version: 1.2.0
 message: "If you use this archive, please cite it as below."
-title: "Least Loss of Passive Phase Shifters"
-version: 1.3.0
-date-released: 2026-10-29
-doi: 10.5281/zenodo.23772796
+title: "The Exact Price of a Phase Shift"
+version: 2.0.0
+date-released: 2026-10-30
+doi: 10.5281/zenodo.23761043
 license: MIT
 repository-code: "https://github.com/creelie/gsc"
 authors:
@@ -12,10 +12,10 @@ authors:
     orcid: "https://orcid.org/0000-0003-0466-750X"
     email: d.bhattacharjee@erl-forschung.de
     affiliation: "Formerly, Electro-Gravitational Space Propulsion Laboratory (EGSPL), Bhubaneswar, Odisha 751030, India; Formerly, University of Calcutta (Heramba Chandra College), 23/49 Gariahat Road, Golpark, Kolkata 700029, West Bengal, India"
-  - family-names: Singha Roy
-    given-names: Sanjeevan
-    orcid: "https://orcid.org/0000-0002-6148-1421"
-    affiliation: "Formerly, Birla Institute of Technology (BIT) Mesra, India"
+  - family-names: Thakur
+    given-names: Soumendra Nath
+    orcid: "https://orcid.org/0000-0003-1871-7803"
+    affiliation: "Tagore's Electronic Lab, Kolkata, West Bengal, India"
   - family-names: Bhattacharya
     given-names: Ushashi
     orcid: "https://orcid.org/0009-0002-2254-3914"

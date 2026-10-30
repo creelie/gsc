@@ -9,10 +9,9 @@ every frequency at once. For matrix phases there is in general no least
 attenuation in the Loewner order, but the least trace is explicit. With
 zeros allowed and a delay, the optimum exists and is unique, and its loss
 falls off exponentially in the delay, while without zeros it stays above a
-fixed positive floor.\footnote{\Cref{thm:exactmean,thm:delay,thm:trace,thm:noloewner,thm:multiband}
-and \cref{lem:meandual,lem:multicomp} were found with OpenAI's ChatGPT,
-starting from \cref{thm:reconstruction,thm:allzeros}; every number was
-recomputed (\cref{app:verification}).}
+fixed positive floor. On several bands the exact price of a constant phase
+is found in \cref{ssec:severalexact}.\footnote{The results without zeros rest on
+\cref{thm:reconstruction}, those with zeros on \cref{thm:allzeros}.}
 
 \subsection{A lead with a delay}\label{ssec:exactmean}
 
@@ -536,11 +535,9 @@ P_\theta$. Hence $H_\theta=\Hs_\theta$ for $0<\theta<\pi$, and by
 $\int_a^b\abs G/\abs{\Hs_\theta}\le b-a$. For $\psi=\theta+\tau\omega$ with $\tau>0$
 we have not found $H_\psi$ in closed form, but it is the limit of explicit
 passive polynomials, each of them the solution of a finite convex problem.%
-\footnote{Parts (iii) and (iv) of \cref{thm:convex}, \cref{lem:toeplitz,lem:tail,lem:chebnorm},
-\cref{thm:construction,thm:regularity,thm:sharperate}, \cref{prop:sixtap,prop:commuting}
-and \cref{cor:allbands} were found with OpenAI's Codex, starting from
-\cref{thm:convex,thm:expdecay}; the proofs were checked step by step and every
-number recomputed (\cref{app:verification}).}
+\footnote{Each finite problem is a linear matrix inequality for a lower
+triangular Toeplitz matrix (\cref{lem:toeplitz}), that is, a semidefinite
+program.}
 
 Fix $\sigma>0$ and put $w(z)=(z-i\sigma)/(z+i\sigma)$, which maps $\Cp$ onto the
 unit disc $\mathbb D$. A function $f$ on $\mathbb D$ with $\abs f\le1$ gives the
@@ -1142,6 +1139,249 @@ unchanged. \Cref{thm:multiband} with $n=1$ gives a zero-free system with phase
 $\psi$, continuous and nonzero on $B$, so of finite loss.
 \end{proof}
 
-The least loss over zero-free systems on several bands, the behaviour of
-$H_\psi$ at the ends of the bands, and the matrix problem with zeros are not
-known.
+For an affine phase the least loss over zero-free systems on several bands
+is found in \cref{ssec:severalexact}. For a phase that is not affine there,
+the behaviour of $H_\psi$ at the ends of the bands and the matrix problem with
+zeros remain open.
+
+\subsection{The exact price on several bands}\label{ssec:severalexact}
+
+The test function of \cref{sec:test} has a natural analogue for several
+bands, and it gives the exact least loss for an affine phase. Keep
+$0<a_1<b_1<\dots<a_m<b_m$, write $B=\bigcup_j[a_j,b_j]$, $S_B=B\cup(-B)$,
+$\abs B=\sum_j(b_j-a_j)$ and $\delta=\sum_j(b_j^2-a_j^2)$, and put
+\[
+X(\sigma)=\prod_{j=1}^m(\sigma-a_j^2),\qquad Y(\sigma)=\prod_{j=1}^m(\sigma-b_j^2).
+\]
+Let $\rho_j$ be the function $\rho$ of \cref{sec:test} for the band
+$[a_j,b_j]$, and
+\begin{gather*}
+\rho_B=\prod_{j=1}^m\rho_j,\qquad W_B=\frac{(\rho_B-1)^2}{\rho_B},\\
+p_B(x)=\frac1{s_B(x)}-s_B(x)\quad(x\in B),
+\end{gather*}
+where $s_B(x)=\sqrt{\abs{X(x^2)/Y(x^2)}}$. For $m=1$ these are $\rho$, $W$
+and $p$.\footnote{$W_B$ is not the product of the single-band test
+functions. It is the single-band formula applied to the product $\rho_B$,
+and this is what keeps $\Re W_B=-2$ on every band.}
+
+\begin{lemma}\label{lem:WB}
+\begin{enumerate}
+\item[(i)] $\rho_B(-\bar z)=\overline{\rho_B(z)}$, $\rho_B$ is analytic and
+zero-free in $\Cp$, and $W_B(z)=\delta^2/(4z^4)+O(z^{-6})$ at infinity in
+$\overline{\Cp}$.
+\item[(ii)] $\rho_B$ and $W_B$ are continuous on $\overline{\Cp}$ except at
+the endpoints $e=\pm a_j,\pm b_j$, where $\abs{W_B(z)}=O(\abs{z-e}^{-1/2})$.
+\item[(iii)] On $\R\setminus S_B$, $\rho_B=\sqrt{X(t^2)/Y(t^2)}>0$ and
+$W_B\ge0$. The polynomial $X-Y$ has exactly one root $\gamma_j$ in each gap
+$(b_j^2,a_{j+1}^2)$, $j<m$, and no other root; with $c_j=\sqrt{\gamma_j}$,
+$W_B$ vanishes on $\R\setminus S_B$ exactly at $\pm c_1,\dots,\pm c_{m-1}$.
+\item[(iv)] For $x\in B$ not an endpoint, $\rho_B(x+i0)=-i\,s_B(x)$,
+$W_B(x+i0)=-2+i\,p_B(x)$ and $W_B(-x+i0)=-2-i\,p_B(x)$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(i), (ii) Each $\rho_j$ has these properties by \cref{lem:W}, and
+$\rho_j=1+(b_j^2-a_j^2)/(2z^2)+O(z^{-4})$. So $\rho_B=1+u$ with
+$u=\delta/(2z^2)+O(z^{-4})$, and $W_B=u^2/(1+u)$.
+(iii) Each $\rho_j$ is positive on $\R\setminus S_B$ by \cref{lem:W}(iii),
+and $\rho_B^2=X(t^2)/Y(t^2)$. Hence $W_B=(\rho_B-1)^2/\rho_B\ge0$, with
+equality exactly where $\rho_B=1$, that is where $X(t^2)=Y(t^2)$. The
+polynomial $X-Y$ has degree $m-1$ and leading coefficient $\delta>0$. At
+$\sigma=b_j^2$ it equals $X(b_j^2)$, of sign $(-1)^{m-j}$, and at
+$\sigma=a_{j+1}^2$ it equals $-Y(a_{j+1}^2)$, of sign $-(-1)^{m-j}$. So it
+has a root in each of the $m-1$ gaps, and these are all its roots.
+(iv) On the $j$-th band $\rho_j(x+i0)=-is_j(x)$ by \cref{lem:W}(iv), and
+every other factor is positive. So $\rho_B=-is_B$ and
+$W_B=-is_B-2+i/s_B$. The value at $-x$ follows from (i).
+\end{proof}
+
+\begin{lemma}\label{lem:kernelB}
+For $s>0$ not an endpoint,
+\[
+\frac1\pi\PV\int_Bp_B(x)\frac{2x}{x^2-s^2}\dd x=
+\begin{cases}-2,&s\in B,\\ W_B(s),&s\notin B.\end{cases}
+\]
+Consequently
+\begin{gather*}
+\int_Bx\,p_B\dd x=0,\qquad \int_Bx^3p_B\dd x=-\frac{\pi\delta^2}8,\\
+\int_B\frac{p_B}x\dd x=\frac\pi2W_B(0).
+\end{gather*}
+\end{lemma}
+
+\begin{proof}
+The proof of \cref{lem:kernel} uses only parts (i)--(iv) of \cref{lem:W},
+which \cref{lem:WB} supplies; the contour is now indented above every
+endpoint. For $s>b_m$ expand
+$2x/(x^2-s^2)=-2xs^{-2}-2x^3s^{-4}+O(s^{-6})$, uniformly on $B$, and compare
+with $W_B(s)=\delta^2/(4s^4)+O(s^{-6})$: the coefficients of $s^{-2}$ and
+$s^{-4}$ give the first two moments. For $0<s\le a_1/2$ the kernel is
+at most $8/(3a_1)$ on $B$ and $p_B$ is integrable, so letting $s\to0$ gives $\frac2\pi\int_Bp_B/x\dd x=W_B(0)$.
+\end{proof}
+
+\begin{theorem}\label{thm:sumruleB}
+\Cref{thm:sumrule} holds with $[a,b]$, $S$, $p$, $W$ replaced by $B$, $S_B$,
+$p_B$, $W_B$: for a zero-free passive system regular on every band,
+\[
+\int_B\alpha\dd\omega=\frac12\int_B\varphi\,p_B\dd\omega+\frac\pi4\int_{\R\setminus S_B}W_B\dd\mu .
+\]
+The last term is nonnegative, and it vanishes if and only if $\mu$ restricted
+to $\R\setminus S_B$ is carried by $\{\pm c_1,\dots,\pm c_{m-1}\}$.
+\end{theorem}
+
+\begin{proof}
+Repeat the proof of \cref{thm:sumrule} with a neighbourhood $I_j$ of each band
+in place of $I$. It uses \cref{lem:W}, \cref{lem:kernel}, the vanishing of the
+first moment and the value of $\int p/x$; their analogues are
+\cref{lem:WB,lem:kernelB}. Near the bands $\mu$ has the density
+$\pi^{-1}\alpha$, so the points $\pm c_j$ carry no mass of it, and
+\cref{lem:WB}(iii) gives the case of equality.
+\end{proof}
+
+Put
+\[
+J_B=\int_Bp_B\dd\omega,\qquad \Lambda_B=\frac{J_B}{2\abs B}.
+\]
+For $m=1$, $\Lambda_B=\Lambda$. The positivity of $J_B$ is proved in
+\cref{thm:severalbands}(iv) by exhibiting a system; nothing before it uses
+the sign of $J_B$.
+
+\begin{lemma}\label{lem:glauertB}
+Let $c_j\in(b_j,a_{j+1})$ be any points and let $\rho$ be the band density of
+\cref{ssec:bands}. Then
+\[
+\PV\int_B\frac{\dd t}{\rho(t)\,(x-t)}=\int_B\frac{\dd t}{\rho(t)\,(x+t)}
+\]
+for $x$ inside the bands, and the same identity, with an ordinary integral,
+holds at $x=c_1,\dots,c_{m-1}$.
+\end{lemma}
+
+\begin{proof}
+Let $\Phi=1/D_m=p/R_m$. It is even, analytic off $S_B$, real on $\R\setminus
+S_B$, $O(z^{-2})$ at infinity and $O(\abs{z-e}^{-1/2})$ near each endpoint
+$e$, and it vanishes at $\pm c_j$. On a positive band $\Phi(x+i0)=-i/\rho(x)$,
+and by evenness and $\Phi(\bar z)=\overline{\Phi(z)}$,
+$\Phi(-x+i0)=i/\rho(x)$. Let $g(z)=\pi^{-1}\int_{S_B}\Im\Phi(t+i0)\dd t/(t-z)$.
+By the Plemelj formula $\Im g(x+i0)=\Im\Phi(x+i0)$ inside the bands, so
+$\Phi-g$ is real on both sides of every band, has no jump there, is bounded
+by $O(\abs{z-e}^{-1/2})$ at the endpoints and tends to $0$; it is entire, so
+$\Phi=g$, as in the proof of \cref{lem:atoms}. Inside a band
+$0=\Re\Phi(x+i0)=\Re g(x+i0)$, and at $c_j$, $0=\Phi(c_j)=g(c_j)$. Writing
+out $g$ with the two boundary values above gives
+\[
+\pi g(x)=\PV\int_B\frac{\dd t}{\rho(t)}\Big(\frac1{x-t}-\frac1{x+t}\Big),
+\]
+which is the claim.
+\end{proof}
+
+\begin{theorem}\label{thm:severalbands}
+Let $\theta\ge0$ and let $F_\theta$ be the function $F_G$ of
+\cref{ssec:bands} with $G_j\equiv\theta$ on every band, for any choice of
+the points $c_j$ in the gaps.
+\begin{enumerate}
+\item[(i)] $F_\theta$ is a generator: its linear coefficient, its atoms and
+its density on the bands are
+\begin{gather*}
+\beta=\frac{2\theta}\pi\int_B\frac{\dd t}{\rho(t)},\qquad
+M_j=\frac{2\theta c_j\nu_j}\pi\int_B\frac{\dd t}{\rho(t)(c_j+t)},\\
+\alpha(x)=\frac{2\theta\rho(x)}\pi\int_B\frac{\dd t}{\rho(t)(x+t)},
+\end{gather*}
+with $\nu_j>0$ from \cref{lem:multicomp}, and it has no atom at $0$. In
+\cref{thm:multiband}, $c_*=0$.
+\item[(ii)] The mean attenuation of $e^{iF_\theta}$ over $B$ is
+$\theta\Lambda_B+\frac\pi{2\abs B}\sum_jW_B(c_j)M_j$.
+\item[(iii)] Let $H$ be a zero-free passive system, regular on every band,
+with phase $\theta+\tau\omega$ on $B$, $\tau\in\R$. Then
+\[
+\frac1{\abs B}\int_B\alpha\dd\omega\ \ge\ \theta\,\Lambda_B ,
+\]
+with equality if and only if $\mu$ restricted to $\R\setminus S_B$ is
+carried by the points $\pm c_j$ of \cref{lem:WB}(iii). With these points,
+$H_B=e^{iF_\theta}$ attains the bound, and so does $e^{i\tau z}H_B$ for every
+$\tau\ge-\beta$.
+\item[(iv)] $J_B>0$, and $J_B>\sum_jJ_{[a_j,b_j]}$ when $m\ge2$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(i) Write $F_\theta=\frac{\theta D_m}\pi\int_B\rho(t)^{-1}
+\big(\frac1{z-t}+\frac1{z+t}\big)\dd t$. Since $D_m=z^2(1+O(z^{-2}))$, the
+linear coefficient is $\beta$. At $c_j$, $\operatorname{Res}D_m=c_j
+\operatorname{Res}Q_m=-c_j\nu_j$, so the residue of $F_\theta$ is
+$-\frac{\theta c_j\nu_j}\pi\int_B\rho^{-1}\big(\frac1{c_j-t}+\frac1{c_j+t}\big)\dd t$,
+which by \cref{lem:glauertB} is $-M_j$. On a band $D_m(x+i0)=i\rho(x)$ and
+the Plemelj formula gives the bracket
+$\PV\int\frac{\dd t}{\rho(x-t)}+\int\frac{\dd t}{\rho(x+t)}-\frac{i\pi}{\rho(x)}$;
+so $\Re F_\theta=\theta$, and by \cref{lem:glauertB} the imaginary part is
+$\alpha(x)$. Since $F_\theta/z$ is analytic at $0$ there is no atom there.
+All these coefficients are nonnegative, so in the definition of $c_*$ every
+term after the $0$ is nonpositive.
+(ii) Apply \cref{thm:sumruleB} with $\varphi=\theta$: the band term is
+$\frac12\theta J_B=\abs B\theta\Lambda_B$, and the atoms $M_j$ at $\pm c_j$
+contribute $\frac\pi4\cdot2W_B(c_j)M_j$ each.
+(iii) By \cref{lem:kernelB}, $\int_B\omega p_B\dd\omega=0$, so
+$\frac12\int_B(\theta+\tau\omega)p_B=\abs B\theta\Lambda_B$, and
+\cref{thm:sumruleB} gives the inequality and the case of equality. With the
+points $c_j$ of \cref{lem:WB}(iii), $W_B(c_j)=0$ and (ii) gives equality for
+$H_B$. Multiplying by $e^{i\tau z}$ adds $\tau$ to the linear coefficient,
+which stays nonnegative for $\tau\ge-\beta$, and adds $\tau\omega$ to the
+phase without changing $\alpha$.
+(iv) For $\theta=1$ and the points of \cref{lem:WB}(iii), (iii) gives
+$J_B=2\abs B\Lambda_B=2\int_B\alpha\dd\omega$, which is positive because
+$\alpha>0$ inside the bands by (i). For $m\ge2$, \cref{thm:main} on the band
+$[a_j,b_j]$ alone gives $\int_{a_j}^{b_j}\alpha\dd\omega\ge\frac12J_{[a_j,b_j]}$,
+with equality only if $\mu$ has no mass off $\pm[a_j,b_j]$; but $\mu$ has the
+positive density $\pi^{-1}\alpha$ on the other bands. Summing over $j$ gives the
+strict inequality.
+\end{proof}
+
+So on several bands a constant phase has an exact price, and it is paid
+with one lossless resonance in each gap, placed where the test function
+vanishes.\footnote{For $\tau=0$ no gap can be left empty. If $\mu$ has no mass in
+the gap $(b_j,a_{j+1})$, then $h$ is real and analytic across it, with
+$h'(x)=\beta+\mu_0x^{-2}+\int2(t^2+x^2)(t^2-x^2)^{-2}\dd\mu(t)>0$ there,
+while its real part equals $\theta$ at both ends of the gap.} For two
+bands the points are explicit,
+\[
+c_1^2=\frac{b_1^2b_2^2-a_1^2a_2^2}{b_1^2+b_2^2-a_1^2-a_2^2},
+\]
+since $X-Y=(b_1^2+b_2^2-a_1^2-a_2^2)\sigma+a_1^2a_2^2-b_1^2b_2^2$. On
+$[1,2]\cup[3,4]$ this gives $c_1=\sqrt{11/2}$ and $\Lambda_B=0.36445$, against
+$\Lambda=0.27353$ on $[1,2]$ alone; one device for both bands loses
+$0.72890\,\theta$ nepers in total, separate devices
+$0.38660\,\theta$.\footnote{A device for $[1,2]$ alone loses
+$\theta\Lambda_{[1,2]}=0.27353\,\theta$ in total and one for $[3,4]$
+loses $0.11307\,\theta$; the extra cost of serving both is the part of
+\cref{thm:severalbands}(iv) that is strict.} \Cref{fig:bandtest,fig:bandloss,fig:bandprice}
+show the test function, the optimal attenuation on up to four bands and the
+extra cost of one device.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig_bandtest.png}
+\caption{The real part of $W_B$ over the upper half-plane for
+$B=[1,2]\cup[3,4]$ (clipped at $\pm2.2$). It is $-2$ on the bands and
+positive elsewhere on the real axis except at $c_1=\sqrt{11/2}$, where the
+optimal system has its one resonance.}
+\label{fig:bandtest}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig_bandloss.png}
+\caption{The least attenuation $\alpha/\theta$ of \cref{thm:severalbands} on
+$[1,2]\cup\dots\cup[2m-1,2m]$ for $m=1,2,3,4$, with the resonances $c_j$ in
+red. The constants are $\Lambda_B=0.27353$, $0.36445$, $0.41420$ and
+$0.44683$.}
+\label{fig:bandloss}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig_bandprice.png}
+\caption{The ratio $J_B/(J_{[1,2]}+J_{[a_2,b_2]})$ for $B=[1,2]\cup[a_2,b_2]$:
+the price of one device for both bands over the price of two separate
+devices. It exceeds $1$ everywhere, by \cref{thm:severalbands}(iv), and
+grows as the gap closes.}
+\label{fig:bandprice}
+\end{figure}

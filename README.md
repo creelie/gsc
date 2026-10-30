@@ -1,63 +1,53 @@
-# Least Loss of Passive Phase Shifters
+# The Exact Price of a Phase Shift
 
-Deep Bhattacharjee (corresponding author), Sanjeevan Singha Roy and Ushashi
+Deep Bhattacharjee (corresponding author), Soumendra Nath Thakur and Ushashi
 Bhattacharya.
 
-The paper proves that a passive causal system without zeros in the upper
-half-plane cannot shift every frequency of a band [a, b] by the same phase
-θ > 0 without loss. Its mean attenuation over the band is at least
+A passive causal system without zeros in the upper half-plane cannot shift
+every frequency of a band [a, b] by the same phase θ > 0 without loss. The
+paper finds the least loss exactly. Its mean attenuation over the band is at
+least
 
     θ · (K(κ) − E(κ)) / κ   nepers,   κ = (b − a)/(b + a),
 
 with K, E the complete elliptic integrals, and an explicit system attains the
-bound. Delays are free and lossless resonances raise the bound. For a phase
-θ + τω on the band the same explicit system, or its inversion ω ↦ ab/ω for a
-lead, has the least attenuation at every frequency of the band at once. With
-zeros in the upper half-plane allowed, one explicit system with a single zero
-has the least attenuation at every frequency of the band at once; for a right
-angle it is algebraic, its mean attenuation is (π/2)(√b − √a)/(√b + √a)
-nepers, and no passive system with this phase passes more than the fraction
-a/b of the power at the geometric centre √(ab) (at least 3.01 dB of loss over
-an octave). The paper also checks the formulas of the earlier paper by
+bound at every frequency of the band at once. Delays are free and lossless
+resonances raise the bound. On any finite union B of bands the least mean
+loss for the phase θ + τω is θ·Λ_B for an explicit constant Λ_B, attained by
+a system with one lossless resonance in each gap, placed where the test
+function of the bands vanishes; for two bands [a₁, b₁] ∪ [a₂, b₂] the
+resonance is at c² = (b₁²b₂² − a₁²a₂²)/(b₁² + b₂² − a₁² − a₂²). One device
+for several bands always costs more than separate devices. With zeros
+allowed, one explicit system with a single zero has the least attenuation at
+every frequency of the band; for a right angle its mean attenuation is
+(π/2)(√b − √a)/(√b + √a) nepers and at least 3.01 dB is lost at the centre of
+an octave. With a delay and zeros the optimum exists, is unique, is the limit
+of finite convex problems, and its loss decays exponentially in the delay.
+
+The paper also checks and corrects the formulas of its earlier version,
 S. N. Thakur and D. Bhattacharjee, "Phase shift and infinitesimal wave energy
-loss equations" (J. Phys. Chem. Biophys. 13 (2023) 365), and corrects them.
+loss equations", Preprints.org, doi:10.20944/preprints202309.1831.v1 (2023),
+published in J. Phys. Chem. Biophys. 13 (2023) 365. A later version is the
+Hexagon preprint 2610.00657v1.
 
-Release 1.3.0 adds to Section 12, with zeros and a delay: a construction of
-the optimal system as the limit of explicit passive polynomials, each the
-solution of a finite convex problem over Toeplitz contractions, with a
-stability estimate, the absence of zeros inside the band, and the same on
-several bands; a sharper decay rate, the exponent now lying between
-−πab/(b − a) and −((a + b)/π) log cot(π(b − a)/(4(a + b))), which is −1.2576
-on an octave (it was −a/e); an explicit device with six taps and the delay 5
-whose mean loss on an octave is proved below 7·10⁻⁴ nepers, less than an
-eighth of the least loss without zeros; and the reduction of commuting
-matrix phases to scalars. These results were found with OpenAI's Codex and
-checked line by line. Ushashi Bhattacharya's affiliation is National Taiwan
-University. Still not known: the optimal system with zeros and a delay in
-closed form and its exact exponent, its behaviour at the ends of the band,
-nonaffine phases without zeros where the velocity changes sign, the least
-trace for an indefinite weight that does not commute with the slope, the
-sharp multiband constant without zeros, joint bounds with reflection, and a
-formal proof of the analysis.
-
-Release 1.2.0 gave the paper its title, added Ushashi Bhattacharya as third
-author and added Section 12, on a phase θ + τω with a delay τ > 0, with several
-channels and with several bands: without zeros the least mean loss in closed
-form for every slope and a positive floor; with zeros, existence and
-uniqueness of the optimum with a test for optimality, and exponential decay
-in the delay; a trace bound for several channels and the absence of a least
-attenuation in the Loewner order; a compensation criterion for several bands.
+Still open: the optimum with zeros and a delay in closed form and its exact
+decay exponent, its behaviour at the ends of the band, nonaffine phases
+without zeros where the velocity changes sign, a strong lead and nonaffine
+phases on several bands, the least trace for an indefinite weight that does
+not commute with the slope, joint bounds with reflection, and a formal proof
+of the analysis.
 
 ## Layout
 
-- `LeastLossOfPassivePhaseShifters.pdf`: the compiled paper (REVTeX, two columns, 44 pages).
+- `TheExactPriceOfAPhaseShift.pdf`: the compiled paper (REVTeX, two columns, 46 pages).
 - `paper/`: the LaTeX source (`main.tex`, `sections/`, `figures/`).
 - `paper/anc/checks.py`: high-precision re-evaluation of every identity and
   numerical value of the paper (needs `mpmath`, and `scipy` for
-  `paper/anc/zero_lp.py`; 444 checks).
+  `paper/anc/zero_lp.py`; 456 checks).
 - `paper/anc/make_figures.py`, `paper/anc/make_schematics.py`,
   `paper/anc/make_figures_zeros.py`,
-  `paper/anc/make_figures_pointwise.py`, `paper/anc/make_figures_beyond.py`: the figures (needs `numpy`, `scipy`,
+  `paper/anc/make_figures_pointwise.py`, `paper/anc/make_figures_beyond.py`,
+  `paper/anc/make_figures_bands.py`: the figures (needs `numpy`, `scipy`,
   `matplotlib`, `mpmath`).
 - `lean/PhaseShiftCost.lean`: a Lean 4 certificate of the finite and
   algebraic parts (95 theorems, no `sorry`, core library only); the axiom
@@ -65,7 +55,7 @@ attenuation in the Loewner order; a compensation criterion for several bands.
 
 ## Running the checks
 
-    cd paper && python3 anc/checks.py        # 444 checks passed, 0 failed
+    cd paper && python3 anc/checks.py        # 456 checks passed, 0 failed
     cd lean && lean PhaseShiftCost.lean      # Lean 4.34.0, a few seconds
     cd paper && pdflatex -jobname=output main.tex   # three passes
 
@@ -95,6 +85,7 @@ zeros, and the elliptic-integral identities) is not formalised.
 | 1.1.0 | `v1.1.0` | [10.5281/zenodo.23764158](https://doi.org/10.5281/zenodo.23764158) |
 | 1.2.0 | `v1.2.0` | [10.5281/zenodo.23768958](https://doi.org/10.5281/zenodo.23768958) |
 | 1.3.0 | `v1.3.0` | [10.5281/zenodo.23772796](https://doi.org/10.5281/zenodo.23772796) |
+| 2.0.0 | `v2.0.0` | issued on release; see the concept DOI |
 
 Concept DOI of all versions: [10.5281/zenodo.23761043](https://doi.org/10.5281/zenodo.23761043).
 

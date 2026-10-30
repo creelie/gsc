@@ -1,4 +1,4 @@
-"""Schematics and further 3D plots for 'Least Loss of Passive Phase Shifters'.
+"""Schematics and further 3D plots for 'The Exact Price of a Phase Shift'.
 
 Run from the paper directory: python3 anc/make_schematics.py
 Writes figures/fig_slab.png, fig_contour.png, fig_hstar.png, fig_cost.png,

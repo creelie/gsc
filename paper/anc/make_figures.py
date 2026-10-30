@@ -1,4 +1,4 @@
-"""Figures for 'Least Loss of Passive Phase Shifters' (matplotlib, PNG).
+"""Figures for 'The Exact Price of a Phase Shift' (matplotlib, PNG).
 
 Run from the paper directory: python3 anc/make_figures.py
 """

@@ -1,4 +1,4 @@
-"""Numerical cross-checks for the paper 'Least Loss of Passive Phase Shifters'.
+"""Numerical cross-checks for the paper 'The Exact Price of a Phase Shift'.
 
 Every statement of the paper is proved analytically; this script only
 re-evaluates the identities and constants at sample bands.  mpmath's
@@ -906,5 +906,76 @@ check("lem:multicomp D_m = i rho, rho > 0, on both bands", all(abs(mp.re(Dm(mp.m
 check("lem:multicomp nu_0 = a1 b1 a2 b2 / c^2", abs(-Dm(mp.mpc(0, mp.mpf('1e-18'))) - 24/cg**2) < 1e-12)
 hh = mp.mpf('1e-8')
 check("lem:multicomp gap residue negative, linear coefficient 1", mp.re(Qm(cg+hh))*hh < 0 and abs(Qm(mp.mpc(0, 10**6))/mp.mpc(0, 10**6)-1) < 1e-10)
+
+# ssec:severalexact, the exact price on several bands
+def sev_setup(ends):
+    a = [mp.mpf(v) for v in ends[0::2]]; b = [mp.mpf(v) for v in ends[1::2]]; m = len(a)
+    A = [x*x for x in a]; B = [x*x for x in b]
+    X = lambda s: mp.fprod([s-u for u in A]); Y = lambda s: mp.fprod([s-u for u in B])
+    g = [mp.findroot(lambda s: X(s)-Y(s), (B[j], A[j+1]), solver='bisect') for j in range(m-1)]
+    P = lambda s: mp.fprod([s-x for x in g])
+    def br(F):
+        tot = 0
+        for j in range(m):
+            oth = [k for k in range(m) if k != j]
+            def hfun(ph, j=j, oth=oth):
+                s = A[j]+(B[j]-A[j])*(1-mp.cos(ph))/2
+                o = mp.fprod([abs((s-A[k])*(s-B[k])) for k in oth])
+                return F(mp.sqrt(s))/(2*mp.sqrt(s)*mp.sqrt(o))
+            tot += mp.quad(hfun, [0, mp.pi])
+        return tot
+    def rhoB(z):
+        out = mp.mpc(1)
+        for aa, bb in zip(a, b):
+            out *= mp.sqrt((z-aa)/(z-bb))*mp.sqrt((z+aa)/(z+bb))
+        return out
+    WB = lambda z: (rhoB(z)-1)**2/rhoB(z)
+    return a, b, m, A, B, X, Y, g, P, br, WB
+sev_ok = {k: True for k in ["roots", "W", "band", "mom", "glauert", "equal", "alpha", "super"]}
+for ends in [(1, 2, 3, 4), (1, '1.5', 4, 5), (1, 2, 3, 4, 5, 6), (1, '1.2', 2, 3, '3.1', 7)]:
+    a, b, m, A, B, X, Y, g, P, br, WB = sev_setup(ends)
+    c = [mp.sqrt(x) for x in g]
+    sev_ok["roots"] &= all(B[j] < g[j] < A[j+1] for j in range(m-1))
+    offs = [mp.mpf('0.3')*a[0], (b[0]+a[1])/2] + [b[-1]+1, 3*b[-1]] + [(b[j]+c[j])/2 for j in range(m-1)]
+    sev_ok["W"] &= all(mp.re(WB(mp.mpc(t, mp.mpf('1e-30')))) > 0 for t in offs) and all(abs(WB(mp.mpc(cc, mp.mpf('1e-30')))) < 1e-15 for cc in c)
+    pB = lambda t: (abs(Y(t*t))-abs(X(t*t)))
+    for j in range(m):
+        x = (a[j]+2*b[j])/3; w = WB(mp.mpc(x, mp.mpf('1e-30')))
+        sev_ok["band"] &= abs(mp.re(w)+2) < 1e-12 and abs(mp.im(w)-pB(x)/mp.sqrt(abs(X(x*x)*Y(x*x)))) < 1e-10
+    d = sum(B)-sum(A)
+    sev_ok["mom"] &= abs(br(lambda t: t*pB(t))) < 1e-15 and abs(br(lambda t: t**3*pB(t))+mp.pi*d*d/8) < 1e-12
+    W0 = WB(mp.mpc(mp.mpf('1e-30'), mp.mpf('1e-30')))
+    sev_ok["mom"] &= abs(br(lambda t: pB(t)/t)-mp.pi/2*mp.re(W0)) < 1e-12
+    ip = lambda t: abs(P(t*t))
+    sev_ok["glauert"] &= all(abs(br(lambda t: ip(t)/(cc-t))-br(lambda t: ip(t)/(cc+t))) < 1e-14 for cc in c)
+    rho = lambda x: mp.sqrt(abs(X(x*x)*Y(x*x)))/abs(P(x*x))
+    alpha = lambda x: 2*rho(x)/mp.pi*br(lambda t: ip(t)/(x+t))
+    loss = sum(mp.quad(alpha, [a[j], (a[j]+b[j])/2, b[j]]) for j in range(m))
+    JB = br(pB)
+    sev_ok["equal"] &= abs(loss-JB/2) < 1e-12
+    sev_ok["alpha"] &= all(alpha(a[j]+(b[j]-a[j])*k/7) > 0 for j in range(m) for k in range(1, 7))
+    Js = sum(sev_setup((a[j], b[j]))[9](lambda t, j=j: (b[j]**2-t*t)-(t*t-a[j]**2)) for j in range(m))
+    sev_ok["super"] &= JB > Js
+check("lem:WB(iii) one root of X-Y in each gap", sev_ok["roots"])
+check("lem:WB(iii) W_B > 0 off the bands, = 0 at c_j", sev_ok["W"])
+check("lem:WB(iv) W_B = -2 + i p_B on the bands", sev_ok["band"])
+check("lem:kernelB moments: first 0, third -pi delta^2/8, p_B/x = pi W_B(0)/2", sev_ok["mom"])
+check("lem:glauertB identity at the gap points", sev_ok["glauert"])
+check("thm:severalbands(iii) loss of H_B equals theta J_B/2", sev_ok["equal"])
+check("thm:severalbands(i) alpha > 0 on the bands", sev_ok["alpha"])
+check("thm:severalbands(iv) J_B > sum of single-band J", sev_ok["super"])
+a, b, m, A, B, X, Y, g, P, br, WB = sev_setup((1, 2, 3, 4))
+JB = br(lambda t: (abs(Y(t*t))-abs(X(t*t))))
+check("two bands: c_1^2 = 11/2 on [1,2]u[3,4]", abs(g[0]-mp.mpf(11)/2) < 1e-20)
+check("two bands: Lambda_B = 0.36445, total 0.72890", abs(JB/4-mp.mpf('0.36445')) < 5e-6 and abs(JB/2-mp.mpf('0.72890')) < 5e-6)
+L34 = (K(mp.mpf(1)/7)-E(mp.mpf(1)/7))*7; L12 = (K(mp.mpf(1)/3)-E(mp.mpf(1)/3))*3
+check("single bands: 0.27353 + 0.11307 = 0.38660", abs(L12-mp.mpf('0.27353')) < 5e-6 and abs(L34-mp.mpf('0.11307')) < 5e-6 and abs(L12+L34-mp.mpf('0.38660')) < 5e-6)
+lams = []
+for mm in range(1, 5):
+    ee = []
+    for j in range(mm): ee += [2*j+1, 2*j+2]
+    _a, _b, _m, _A, _B, _X, _Y, _g, _P, _br, _W = sev_setup(ee)
+    lams.append(_br(lambda t: (abs(_Y(t*t))-abs(_X(t*t))))/(2*mm))
+check("fig:bandloss constants 0.27353, 0.36445, 0.41420, 0.44683", all(abs(l-mp.mpf(v)) < 5e-6 for l, v in zip(lams, ['0.27353', '0.36445', '0.41420', '0.44683'])))
 
 print("%d checks passed, %d failed" % (passed, failed))
