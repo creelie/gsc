@@ -85,7 +85,7 @@ zeros, and the elliptic-integral identities) is not formalised.
 | 1.1.0 | `v1.1.0` | [10.5281/zenodo.23764158](https://doi.org/10.5281/zenodo.23764158) |
 | 1.2.0 | `v1.2.0` | [10.5281/zenodo.23768958](https://doi.org/10.5281/zenodo.23768958) |
 | 1.3.0 | `v1.3.0` | [10.5281/zenodo.23772796](https://doi.org/10.5281/zenodo.23772796) |
-| 2.0.0 | `v2.0.0` | issued on release; see the concept DOI |
+| 2.0.0 | `v2.0.0` | [10.5281/zenodo.23800767](https://doi.org/10.5281/zenodo.23800767) |
 
 Concept DOI of all versions: [10.5281/zenodo.23761043](https://doi.org/10.5281/zenodo.23761043).
 
