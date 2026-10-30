@@ -19,6 +19,11 @@ optimum, attained by a system with one zero, whose profile is elliptic
 (\cref{thm:ellipticprofile}). At a right angle the system is algebraic and
 $\abs{H(\sqrt{ab})}^2\le a/b$.
 
+On several bands the test function has a direct analogue $W_B$, built from
+the product of the single-band functions $\rho_j$; it vanishes at one point
+of each gap, and a system with one lossless resonance at each of these
+points attains the bound (\cref{thm:severalbands}).
+
 With a delay the picture changes. Without zeros the least mean loss is
 known exactly for every slope and stays above a positive floor. With zeros
 the optimum exists, is unique and is characterised by the inequality of
@@ -34,7 +39,7 @@ at a rate at least $\frac{a+b}\pi\log\cot\frac{\pi(b-a)}{4(a+b)}$
 \item[(1)] \emph{The optimum for a delay with zeros.} For
 $\arg H\equiv\theta+\tau\omega$ with $\tau>0$, find $H_{\theta+\tau\omega}$ of
 \cref{thm:convex} in closed form, or at least the exact exponent in
-\cref{cor:rate}; we only know that it lies between $-\pi ab/(b-a)$ and
+\cref{cor:rate}, which lies between $-\pi ab/(b-a)$ and
 $-C_{a,b}$ of \cref{cor:rate}. \Cref{thm:construction} computes the optimum at each fixed delay
 but gives no rate of convergence, and it says nothing about the limit
 $\tau\to\infty$. The change of variables of \cref{lem:transform} needs a
@@ -51,10 +56,12 @@ scalars. For indefinite $\Theta$ not commuting with $T$ the least trace is not
 known, and by
 \cref{thm:noloewner} there is in general no least attenuation in the
 Loewner order.
-\item[(4)] \emph{Several bands.} \Cref{thm:multiband} decides when a given
-compensation works, and with zeros allowed \cref{cor:allbands} gives the
-optimum as a limit. The sharp constant without zeros, a period of a
-hyperelliptic differential in place of $\Lambda$, has not been computed.
+\item[(4)] \emph{Several bands.} Without zeros \cref{thm:severalbands}
+gives the exact price $\theta\Lambda_B$ of an affine phase on any finite
+union of bands, attained for $\tau\ge-\beta$. Open are a strong lead
+$\tau<-\beta$ on several bands, a phase that is not affine there, and the
+optimum with zeros in closed form; \cref{cor:allbands} gives the last only
+as a limit.
 \item[(5)] \emph{Reflection and matching.} The Fano bound \cite{fano} and the
 present bound constrain different parts of a reflection coefficient. A
 joint bound on its modulus and argument over a band would combine them.

@@ -2,8 +2,8 @@
 PhaseShiftCost.lean
 
 A machine check, by the kernel of Lean 4 (core library only, no Mathlib),
-of the finite and algebraic parts of "Least Loss of Passive Phase Shifters"
-by D. Bhattacharjee, S. Singha Roy and U. Bhattacharya.
+of the finite and algebraic parts of "The Exact Price of a Phase Shift"
+by D. Bhattacharjee, S. N. Thakur and U. Bhattacharya.
 
 What is checked here, and what is not.
 

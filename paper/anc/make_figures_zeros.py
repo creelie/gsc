@@ -1,4 +1,4 @@
-"""Figures of Section 8 (the least loss with zeros) of 'Least Loss of Passive Phase Shifters'.
+"""Figures of Section 8 (the least loss with zeros) of 'The Exact Price of a Phase Shift'.
 
 Run from the paper directory: python3 anc/make_figures_zeros.py
 Writes figures/fig_allzeros.png, fig_lambdaall.png, fig_slitmap.png.

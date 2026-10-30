@@ -61,17 +61,17 @@
 \renewcommand{\Re}{\operatorname{Re}}
 \renewcommand{\Im}{\operatorname{Im}}
 
-\newcommand{\checkscount}{444}
+\newcommand{\checkscount}{456}
 \newcommand{\leancount}{95}
 \newcommand{\leanfree}{40}
-\newcommand{\releaseTag}{v1.3.0}
-\newcommand{\zenodoCodeID}{10.5281/zenodo.23772796}
+\newcommand{\releaseTag}{v2.0.0}
+\newcommand{\zenodoCodeID}{10.5281/zenodo.23761043}
 \newcommand{\Hs}{H^{\sharp}}
 \newcommand{\as}{{\alpha^{\sharp}}}
 
 \begin{document}
 
-\title{Least Loss of Passive Phase Shifters}
+\title{The Exact Price of a Phase Shift}
 
 \author{Deep Bhattacharjee$^{*}$\,\orcidlink{0000-0003-0466-750X}}
 \email{d.bhattacharjee@erl-forschung.de}
@@ -83,26 +83,28 @@
 \affiliation{Formerly, University of Calcutta (Heramba Chandra College),
 23/49 Gariahat Road, Golpark, Kolkata 700029, West Bengal, India}
 
-\author{Sanjeevan Singha Roy\,\orcidlink{0000-0002-6148-1421}}
-\email{sanjeevan9905@gmail.com}
-\affiliation{Formerly, Birla Institute of Technology (BIT) Mesra, India}
+\author{Soumendra Nath Thakur\,\orcidlink{0000-0003-1871-7803}}
+\email{postmasterenator@gmail.com}
+\affiliation{Tagore's Electronic Lab, Kolkata, West Bengal, India}
 
 \author{Ushashi Bhattacharya\,\orcidlink{0009-0002-2254-3914}}
 \affiliation{National Taiwan University, Taipei, Taiwan}
 
-\date{29 October 2026}
+\date{30 October 2026}
 
 \begin{abstract}
 A passive device that shifts the phase of every frequency in a band
-$[a,b]$ by the same angle $\theta$ must lose energy. We find the least loss.
-Without zeros the mean loss is at least $\theta\,(K(\kappa)-E(\kappa))/\kappa$
-nepers, $\kappa=(b-a)/(b+a)$, and one explicit device has the least loss at
-every frequency at once. With zeros a device with one zero does the same;
-for a right angle its mean loss is $\frac\pi2(\sqrt b-\sqrt a)/(\sqrt b+\sqrt a)$.
-If a delay $\tau$ is added, the best device with zeros exists, is unique and
-is the limit of finite convex problems, and its loss falls exponentially in
-$\tau$, at a rate between $\frac{a+b}\pi\log\cot\frac{\pi(b-a)}{4(a+b)}$ and
-$\pi ab/(b-a)$. Without zeros the loss stays above a fixed floor.
+$[a,b]$ by the same angle $\theta$ must lose energy, and we find the least
+loss exactly. Without zeros the mean loss is at least
+$\theta\,(K(\kappa)-E(\kappa))/\kappa$ nepers, $\kappa=(b-a)/(b+a)$, and one
+explicit device has the least loss at every frequency at once. On any finite
+union of bands the least mean loss is $\theta\Lambda_B$ for an explicit
+constant $\Lambda_B$, attained by a device with one lossless resonance in
+each gap. With zeros a device with one zero is optimal at every frequency;
+for a right angle its mean loss is
+$\frac\pi2(\sqrt b-\sqrt a)/(\sqrt b+\sqrt a)$. With a delay $\tau$ the best
+device with zeros exists, is unique, is the limit of finite convex problems,
+and its loss falls exponentially in $\tau$.
 \end{abstract}
 
 \maketitle
@@ -111,7 +113,15 @@ $\pi ab/(b-a)$. Without zeros the loss stays above a fixed floor.
 \renewcommand\thefootnote{}\footnotesize
 \footnotetext{\footnotesize\emph{2020 Mathematics Subject Classification.}
 Primary 30E20; Secondary 78A40, 94C05, 30H10, 33E05.
-\emph{Keywords.} Kramers--Kronig relations; Herglotz functions; phase shifters; sum rules.}
+\emph{Keywords.} Kramers--Kronig relations; Herglotz functions; phase shifters; sum rules.
+\emph{Earlier versions.} An earlier version of this work, by the second and
+first authors, is the preprint \emph{Phase shift and infinitesimal wave energy
+loss equations}, Preprints.org, version~1, 27 September 2023,
+\href{https://doi.org/10.20944/preprints202309.1831.v1}{doi:10.20944/preprints202309.1831.v1},
+published in J. Phys. Chem. Biophys. \textbf{13} (2023), no.~6, 365. A later
+version is the Hexagon preprint 2610.00657v1,
+\url{https://hexagonmath.org/2610.00657v1}. This version revises both
+substantially.}
 \endgroup
 \addtocounter{footnote}{-1}
 
